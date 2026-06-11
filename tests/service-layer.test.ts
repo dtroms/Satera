@@ -1,0 +1,404 @@
+import { describe, expect, it, vi } from "vitest";
+import type { InventoryItem } from "@/lib/core/inventory/types";
+import {
+  createInventoryItem,
+  sanitizeSafeInventoryUpdate,
+  updateInventoryItemSafeFields,
+} from "@/lib/core/inventory/mutations";
+import { filterInventoryByCategoryIds } from "@/lib/core/products/queries";
+import { buildPortfolioSummary } from "@/lib/core/portfolio/queries";
+import { calculatePurchaseBasis } from "@/lib/calculations/basis";
+import {
+  createPurchaseTransaction,
+  createStartingInventoryTransaction,
+  createTradeTransaction,
+  normalizeInitialBasis,
+} from "@/lib/core/transactions/mutations";
+
+function inventoryItem(
+  overrides: Partial<InventoryItem> & { id: string },
+): InventoryItem {
+  const { id, ...rest } = overrides;
+
+  return {
+    id,
+    owner_user_id: "user-1",
+    workspace_id: null,
+    organization_id: null,
+    category_id: "category-1",
+    asset_variant_id: "variant-1",
+    condition_type: "raw",
+    status: "active",
+    availability: "available",
+    intent: "hold",
+    location_id: null,
+    true_basis: null,
+    current_value_snapshot_id: null,
+    acquired_at: null,
+    notes: null,
+    created_by: "user-1",
+    updated_by: "user-1",
+    created_at: "2026-01-01T00:00:00.000Z",
+    updated_at: "2026-01-01T00:00:00.000Z",
+    ...rest,
+  };
+}
+
+function createRpcMockDb() {
+  const rpc = vi.fn().mockResolvedValue({
+    data: [
+      {
+        inventory_item_id: "inventory-1",
+        transaction_id: "transaction-1",
+      },
+    ],
+    error: null,
+  });
+
+  return {
+    rpc,
+    db: {
+      from: vi.fn(),
+      rpc,
+    },
+  };
+}
+
+describe("inventory service protections", () => {
+  it("direct inventory creation is disabled", async () => {
+    await expect(
+      createInventoryItem(
+        { from: vi.fn(), rpc: vi.fn() },
+        {
+          ownerUserId: "user-1",
+          categoryId: "category-1",
+          assetVariantId: "variant-1",
+          createdBy: "user-1",
+        },
+      ),
+    ).rejects.toThrow(
+      "Direct inventory creation is disabled. Use a transaction workflow instead.",
+    );
+  });
+
+  it("safe inventory update rejects true_basis mutation", () => {
+    expect(() =>
+      sanitizeSafeInventoryUpdate({
+        notes: "allowed",
+        true_basis: 100,
+      }),
+    ).toThrow("Direct inventory mutation of true_basis is not allowed.");
+  });
+
+  it("safe inventory update keeps only allowed fields", () => {
+    expect(
+      sanitizeSafeInventoryUpdate({
+        notes: "new note",
+        intent: "sell",
+        location_id: "location-1",
+        availability: "committed",
+        ignored_field: "ignored",
+      }),
+    ).toEqual({
+      notes: "new note",
+      intent: "sell",
+      location_id: "location-1",
+      availability: "committed",
+    });
+  });
+
+  it("safe inventory update calls the RPC with allowed fields", async () => {
+    const rpc = vi.fn().mockResolvedValue({
+      data: inventoryItem({
+        id: "inventory-1",
+        notes: "new note",
+        intent: "sell",
+        location_id: "location-1",
+        availability: "committed",
+      }),
+      error: null,
+    });
+    const db = { from: vi.fn(), rpc };
+
+    await updateInventoryItemSafeFields(
+      db,
+      "inventory-1",
+      {
+        notes: "new note",
+        intent: "sell",
+        location_id: "location-1",
+        availability: "committed",
+        ignored_field: "ignored",
+      },
+      "user-1",
+    );
+
+    expect(rpc).toHaveBeenCalledWith("update_inventory_item_safe_fields", {
+      p_target_inventory_item_id: "inventory-1",
+      p_new_notes: "new note",
+      p_new_intent: "sell",
+      p_new_location_id: "location-1",
+      p_new_availability: "committed",
+      p_update_notes: true,
+      p_update_intent: true,
+      p_update_location_id: true,
+      p_update_availability: true,
+    });
+  });
+
+  it("safe inventory update rejects blocked fields before RPC call", async () => {
+    const rpc = vi.fn();
+    const db = { from: vi.fn(), rpc };
+
+    await expect(
+      updateInventoryItemSafeFields(
+        db,
+        "inventory-1",
+        { notes: "allowed", true_basis: 100 },
+        "user-1",
+      ),
+    ).rejects.toThrow("Direct inventory mutation of true_basis is not allowed.");
+
+    expect(rpc).not.toHaveBeenCalled();
+  });
+});
+
+describe("transaction service basis rules", () => {
+  it("service preserves missing starting basis and calls the atomic RPC", async () => {
+    expect(normalizeInitialBasis(undefined)).toEqual({
+      basisProvided: false,
+      trueBasis: null,
+    });
+    expect(normalizeInitialBasis(null)).toEqual({
+      basisProvided: false,
+      trueBasis: null,
+    });
+
+    const { db, rpc } = createRpcMockDb();
+
+    await expect(
+      createStartingInventoryTransaction(db, {
+      ownerUserId: "user-1",
+      categoryId: "category-1",
+      assetVariantId: "variant-1",
+      transactionDate: "2026-01-01T00:00:00.000Z",
+      createdBy: "user-1",
+      }),
+    ).resolves.toEqual({
+      inventoryItemId: "inventory-1",
+      transactionId: "transaction-1",
+    });
+
+    expect(rpc).toHaveBeenCalledWith("create_starting_inventory_transaction", {
+      p_owner_user_id: "user-1",
+      p_workspace_id: null,
+      p_organization_id: null,
+      p_category_id: "category-1",
+      p_asset_variant_id: "variant-1",
+      p_condition_type: "unknown",
+      p_status: "active",
+      p_availability: "available",
+      p_intent: "hold",
+      p_location_id: null,
+      p_initial_basis: null,
+      p_acquired_at: null,
+      p_notes: null,
+      p_transaction_date: "2026-01-01T00:00:00.000Z",
+      p_source: null,
+    });
+  });
+
+  it("service preserves zero starting basis and calls the atomic RPC", async () => {
+    expect(normalizeInitialBasis(0)).toEqual({
+      basisProvided: true,
+      trueBasis: 0,
+    });
+
+    const { db, rpc } = createRpcMockDb();
+
+    await createStartingInventoryTransaction(db, {
+      ownerUserId: "user-1",
+      categoryId: "category-1",
+      assetVariantId: "variant-1",
+      transactionDate: "2026-01-01T00:00:00.000Z",
+      initialBasis: 0,
+      createdBy: "user-1",
+    });
+
+    expect(rpc).toHaveBeenCalledWith(
+      "create_starting_inventory_transaction",
+      expect.objectContaining({
+        p_initial_basis: 0,
+      }),
+    );
+  });
+
+  it("purchase transaction calls the atomic RPC with basis inputs", async () => {
+    expect(
+      calculatePurchaseBasis({
+        purchasePrice: 100,
+        buyerFees: 5,
+        tax: 8,
+        shipping: 7,
+        directAcquisitionCosts: 10,
+      }),
+    ).toBe(130);
+
+    const { db, rpc } = createRpcMockDb();
+
+    await expect(
+      createPurchaseTransaction(db, {
+      ownerUserId: "user-1",
+      categoryId: "category-1",
+      assetVariantId: "variant-1",
+      transactionDate: "2026-01-01T00:00:00.000Z",
+      marketValueAtTime: 999,
+      purchaseBasis: {
+        purchasePrice: 100,
+        buyerFees: 5,
+        tax: 8,
+        shipping: 7,
+        directAcquisitionCosts: 10,
+      },
+      createdBy: "user-1",
+      }),
+    ).resolves.toEqual({
+      inventoryItemId: "inventory-1",
+      transactionId: "transaction-1",
+    });
+
+    expect(rpc).toHaveBeenCalledWith("create_purchase_transaction", {
+      p_owner_user_id: "user-1",
+      p_workspace_id: null,
+      p_organization_id: null,
+      p_category_id: "category-1",
+      p_asset_variant_id: "variant-1",
+      p_condition_type: "unknown",
+      p_status: "active",
+      p_availability: "available",
+      p_intent: "hold",
+      p_location_id: null,
+      p_purchase_price: 100,
+      p_buyer_fees: 5,
+      p_tax: 8,
+      p_shipping: 7,
+      p_direct_acquisition_costs: 10,
+      p_acquired_at: null,
+      p_notes: null,
+      p_transaction_date: "2026-01-01T00:00:00.000Z",
+      p_source: null,
+      p_counterparty: null,
+    });
+  });
+
+  it("trade transaction calls the atomic RPC with trade payloads", async () => {
+    const rpc = vi.fn().mockResolvedValue({
+      data: [
+        {
+          transaction_id: "trade-transaction-1",
+          incoming_inventory_item_ids: ["incoming-1"],
+          outgoing_inventory_item_ids: ["outgoing-1"],
+        },
+      ],
+      error: null,
+    });
+    const db = { from: vi.fn(), rpc };
+
+    await expect(
+      createTradeTransaction(db, {
+        ownerUserId: "user-1",
+        transactionDate: "2026-01-01T00:00:00.000Z",
+        source: "manual",
+        counterparty: "Trade partner",
+        notes: "Trade note",
+        outgoingItems: [{ inventoryItemId: "outgoing-1", tradeValue: 125 }],
+        incomingItems: [
+          {
+            categoryId: "category-1",
+            assetVariantId: "variant-2",
+            conditionType: "raw",
+            tradeValue: 175,
+            notes: "Incoming note",
+          },
+        ],
+        cashPaid: 25,
+        cashReceived: 0,
+        tradeRelatedCosts: 5,
+        createdBy: "user-1",
+      }),
+    ).resolves.toEqual({
+      transactionId: "trade-transaction-1",
+      incomingInventoryItemIds: ["incoming-1"],
+      outgoingInventoryItemIds: ["outgoing-1"],
+    });
+
+    expect(rpc).toHaveBeenCalledWith("create_trade_transaction", {
+      p_owner_user_id: "user-1",
+      p_workspace_id: null,
+      p_organization_id: null,
+      p_transaction_date: "2026-01-01T00:00:00.000Z",
+      p_source: "manual",
+      p_counterparty: "Trade partner",
+      p_notes: "Trade note",
+      p_outgoing_items: [
+        { inventory_item_id: "outgoing-1", trade_value: 125 },
+      ],
+      p_incoming_items: [
+        {
+          category_id: "category-1",
+          asset_variant_id: "variant-2",
+          condition_type: "raw",
+          status: "active",
+          availability: "available",
+          intent: "hold",
+          location_id: null,
+          trade_value: 175,
+          notes: "Incoming note",
+        },
+      ],
+      p_cash_paid: 25,
+      p_cash_received: 0,
+      p_trade_related_costs: 5,
+    });
+  });
+});
+
+describe("product and portfolio service helpers", () => {
+  it("product-scoped inventory filters by product category", () => {
+    const items = [
+      inventoryItem({ id: "sports-card", category_id: "sports_cards" }),
+      inventoryItem({ id: "comic", category_id: "comics" }),
+    ];
+
+    expect(filterInventoryByCategoryIds(items, ["sports_cards"])).toEqual([
+      items[0],
+    ]);
+  });
+
+  it("portfolio summary counts missing basis separately from zero basis", () => {
+    const summary = buildPortfolioSummary([
+      inventoryItem({ id: "missing", true_basis: null }),
+      inventoryItem({ id: "zero", true_basis: 0 }),
+      inventoryItem({
+        id: "known",
+        true_basis: 125,
+        current_value_snapshot_id: "snapshot-1",
+        current_value_snapshot: {
+          id: "snapshot-1",
+          market_value: 200,
+          currency_code: "USD",
+          observed_at: "2026-01-01T00:00:00.000Z",
+        },
+      }),
+    ]);
+
+    expect(summary).toEqual({
+      itemCount: 3,
+      missingBasisCount: 1,
+      knownZeroBasisCount: 1,
+      totalKnownBasis: 125,
+      totalCurrentValue: 200,
+      noCompSavedCount: 2,
+    });
+  });
+});

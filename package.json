@@ -1,0 +1,35 @@
+{
+  "name": "satera-core",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "supabase:start": "mkdir -p .local-home && HOME=$PWD/.local-home supabase start",
+    "supabase:stop": "mkdir -p .local-home && HOME=$PWD/.local-home supabase stop",
+    "supabase:reset": "mkdir -p .local-home && HOME=$PWD/.local-home supabase db reset",
+    "supabase:status": "mkdir -p .local-home && HOME=$PWD/.local-home supabase status",
+    "db:test": "bash scripts/run-supabase-tests.sh"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.6.1",
+    "@supabase/supabase-js": "^2.49.4",
+    "next": "^15.3.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "@types/react": "^19.0.12",
+    "@types/react-dom": "^19.0.4",
+    "supabase": "^2.106.0",
+    "tailwindcss": "^4.1.3",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.1"
+  },
+  "overrides": {
+    "postcss": "^8.5.15"
+  }
+}
