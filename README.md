@@ -140,3 +140,16 @@ npm run test
 npm run typecheck
 npm run build
 ```
+
+## Internal Inspector
+
+The `/internal` surface is a read-only development/internal inspector for
+Satera Core truth records. It exists to inspect inventory, transactions,
+ownership events, basis events, basis lineage, and audit records while the Core
+backbone is being verified.
+
+It is not Card Vertex. It is not Satera Portfolio. It is not Vertex Pro.
+
+Before production use, the inspector must be protected by real `platform_admin`
+authorization. It must never introduce unsafe write paths or bypass the RPC
+workflows that protect ownership history and cost basis.
