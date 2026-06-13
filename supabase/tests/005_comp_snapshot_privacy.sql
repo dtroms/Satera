@@ -29,6 +29,8 @@ select pg_temp.satera_assert(
   'Seed item starts with known zero basis.'
 );
 
+reset role;
+
 insert into comp_snapshots (
   id,
   owner_user_id,
@@ -46,7 +48,7 @@ insert into comp_snapshots (
   created_by
 ) values (
   '80000000-0000-0000-0000-000000000002',
-  auth.uid(),
+  '00000000-0000-0000-0000-0000000000a1',
   '20000000-0000-0000-0000-000000000002',
   '50000000-0000-0000-0000-000000000002',
   '60000000-0000-0000-0000-000000000002',
@@ -58,8 +60,11 @@ insert into comp_snapshots (
   2,
   'raw demo condition',
   '{"demo":true,"note":"second owner-scoped comp"}'::jsonb,
-  auth.uid()
+  '00000000-0000-0000-0000-0000000000a1'
 );
+
+set local role authenticated;
+set local request.jwt.claim.sub = '00000000-0000-0000-0000-0000000000a1';
 
 select pg_temp.satera_assert(
   (select true_basis = 0 from inventory_items where id = '70000000-0000-0000-0000-000000000002'),

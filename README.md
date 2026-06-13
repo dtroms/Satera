@@ -36,6 +36,9 @@ privacy.
 Direct authenticated writes to core financial and history tables are blocked by
 table grants. RLS still controls which rows can be read, while grants prevent
 unsafe client-side insert, update, or delete bypasses around the RPC workflows.
+Direct authenticated writes to `comp_snapshots` are also blocked while the comp
+workflow remains early infrastructure. Future comp submissions should go through
+a reviewed service/RPC workflow before any UI or extension can create records.
 
 Trades are atomic RPC workflows. A trade freezes outgoing item basis in
 `transaction_lines`, marks outgoing items as traded and archived without
@@ -153,3 +156,19 @@ It is not Card Vertex. It is not Satera Portfolio. It is not Vertex Pro.
 Before production use, the inspector must be protected by real `platform_admin`
 authorization. It must never introduce unsafe write paths or bypass the RPC
 workflows that protect ownership history and cost basis.
+
+Current internal inspector routes include inventory, transactions, lineage,
+audit, and products/category/catalog views. The products view exists to verify
+that Card Vertex, Vertex Pro, and Satera Portfolio are product/category lenses,
+not inventory owners.
+
+## Card Vertex Planning
+
+Card Vertex crowdsourced comp planning lives in
+`docs/products/card-vertex/CROWDSOURCED_COMP_SYSTEM.md`. No Card Vertex UI,
+browser extension, public comp creation route, or internal inspector write path
+has been implemented.
+
+The current comp schema is early Core value-evidence infrastructure only. It
+keeps market value separate from cost basis: comps and current value snapshots
+must not mutate `true_basis` or create basis events.

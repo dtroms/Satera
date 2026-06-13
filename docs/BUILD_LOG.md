@@ -12,3 +12,6 @@ The current Satera Core foundation includes:
 - Direct-write hardening for critical financial and history tables.
 - TypeScript service layer that routes application code through safe workflows.
 - Tests for calculations, service-layer protections, atomic transaction inputs, and product/portfolio read helpers.
+- Internal Inspector Slice 2 with read-only lineage, audit, and products/category/catalog views.
+- Card Vertex crowdsourced comp system documentation under `docs/products/card-vertex/`.
+- Early comp evidence schema extensions remain in Core as value-evidence infrastructure only. Direct app/client comp writes are not active, and comp mutations are not exposed through UI.

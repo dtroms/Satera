@@ -56,8 +56,9 @@ select pg_temp.satera_assert(
     and not has_table_privilege('ownership_events', 'INSERT')
     and not has_table_privilege('basis_events', 'INSERT')
     and not has_table_privilege('basis_lineage_edges', 'INSERT')
+    and not has_table_privilege('comp_snapshots', 'INSERT')
     and not has_table_privilege('audit_events', 'INSERT'),
-  'authenticated direct financial/history inserts are revoked.'
+  'authenticated direct financial/history and comp snapshot inserts are revoked.'
 );
 
 select pg_temp.satera_expect_insufficient_privilege(
@@ -201,6 +202,29 @@ select pg_temp.satera_expect_insufficient_privilege(
     )
   $sql$,
   'authenticated user cannot directly insert basis_lineage_edges.'
+);
+
+select pg_temp.satera_expect_insufficient_privilege(
+  $sql$
+    insert into comp_snapshots (
+      owner_user_id,
+      category_id,
+      asset_variant_id,
+      source,
+      market_value,
+      currency_code,
+      created_by
+    ) values (
+      auth.uid(),
+      '20000000-0000-0000-0000-000000000001',
+      '60000000-0000-0000-0000-000000000001',
+      'unsafe_direct_insert',
+      1,
+      'USD',
+      auth.uid()
+    )
+  $sql$,
+  'authenticated user cannot directly insert comp_snapshots.'
 );
 
 select pg_temp.satera_expect_insufficient_privilege(

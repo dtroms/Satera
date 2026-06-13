@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   formatBasis,
   formatCurrentValue,
+  formatEnumLabel,
   formatOwnerContext,
   formatShortId,
 } from "@/lib/core/internal/format";
@@ -21,6 +22,13 @@ describe("internal formatting helpers", () => {
 
   it("formats missing current value distinctly", () => {
     expect(formatCurrentValue(null)).toBe("No comp saved");
+  });
+
+  it("formats enum labels for internal display", () => {
+    expect(formatEnumLabel("same_card_different_grade")).toBe(
+      "Same Card Different Grade",
+    );
+    expect(formatEnumLabel(null)).toBe("-");
   });
 
   it("shortens UUIDs and handles null safely", () => {

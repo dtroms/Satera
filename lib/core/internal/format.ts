@@ -96,3 +96,30 @@ export function formatDateTime(value: string | null | undefined): string {
     timeStyle: "short",
   }).format(date);
 }
+
+export function formatDate(value: string | null | undefined): string {
+  if (!value) {
+    return "-";
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
+    dateStyle: "medium",
+  }).format(date);
+}
+
+export function formatEnumLabel(value: string | null | undefined): string {
+  if (!value) {
+    return "-";
+  }
+
+  return value
+    .split("_")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}

@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import type { CompSnapshot } from "@/lib/core/comps/types";
 
 export type InternalRecord = Record<string, any>;
 
@@ -15,6 +16,7 @@ const INVENTORY_SELECT = `
 `;
 
 const TRANSACTION_SELECT = "*";
+const COMP_SNAPSHOT_SELECT = "*";
 
 function throwIfError(error: unknown): void {
   if (error) {
@@ -129,6 +131,102 @@ export async function getInternalTransactionLinesForItem(
     .select("*, transaction:transactions(id, transaction_type, transaction_date)")
     .eq("inventory_item_id", inventoryItemId)
     .order("created_at", { ascending: true });
+
+  throwIfError(error);
+  return data ?? [];
+}
+
+export async function getInternalCompSnapshotsForItem(
+  inventoryItemId: string,
+): Promise<CompSnapshot[]> {
+  const db = await createClient();
+  const { data, error } = await db
+    .from("comp_snapshots")
+    .select(COMP_SNAPSHOT_SELECT)
+    .eq("inventory_item_id", inventoryItemId)
+    .order("sale_date", { ascending: false, nullsFirst: false })
+    .order("observed_at", { ascending: false });
+
+  throwIfError(error);
+  return (data ?? []) as CompSnapshot[];
+}
+
+export async function getInternalBasisLineageEdges(): Promise<InternalRecord[]> {
+  const db = await createClient();
+  const { data, error } = await db
+    .from("basis_lineage_edges")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  throwIfError(error);
+  return data ?? [];
+}
+
+export async function getInternalAuditEvents(): Promise<InternalRecord[]> {
+  const db = await createClient();
+  const { data, error } = await db
+    .from("audit_events")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  throwIfError(error);
+  return data ?? [];
+}
+
+export async function getInternalProducts(): Promise<InternalRecord[]> {
+  const db = await createClient();
+  const { data, error } = await db
+    .from("products")
+    .select("*")
+    .order("slug", { ascending: true });
+
+  throwIfError(error);
+  return data ?? [];
+}
+
+export async function getInternalProductCategories(): Promise<InternalRecord[]> {
+  const db = await createClient();
+  const { data, error } = await db
+    .from("product_categories")
+    .select("*, product:products(id, slug, name), category:categories(id, slug, name)")
+    .order("created_at", { ascending: true });
+
+  throwIfError(error);
+  return data ?? [];
+}
+
+export async function getInternalCategories(): Promise<InternalRecord[]> {
+  const db = await createClient();
+  const { data, error } = await db
+    .from("categories")
+    .select("*")
+    .order("slug", { ascending: true });
+
+  throwIfError(error);
+  return data ?? [];
+}
+
+export async function getInternalAssetFamilies(): Promise<InternalRecord[]> {
+  const db = await createClient();
+  const { data, error } = await db
+    .from("asset_families")
+    .select("*, category:categories(id, slug, name), collection:collections(id, slug, name)")
+    .order("created_at", { ascending: false })
+    .limit(50);
+
+  throwIfError(error);
+  return data ?? [];
+}
+
+export async function getInternalAssetVariants(): Promise<InternalRecord[]> {
+  const db = await createClient();
+  const { data, error } = await db
+    .from("asset_variants")
+    .select("*, asset_family:asset_families(id, name), category:categories(id, slug, name)")
+    .order("created_at", { ascending: false })
+    .limit(100);
 
   throwIfError(error);
   return data ?? [];

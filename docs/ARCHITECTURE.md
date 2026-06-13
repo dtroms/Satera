@@ -17,3 +17,10 @@ Ownership lineage is a core platform concept. Ownership and status changes must 
 Trade lineage is a core platform concept. Trades must be explainable through `basis_lineage_edges`, frozen transaction line values, basis events, and ownership events.
 
 Audit events record important system actions so Core workflows remain inspectable.
+
+Value evidence is separate from cost basis. Core may store owner-scoped
+`comp_snapshots` as early market-value evidence infrastructure, but comps do not
+own inventory, do not mutate `true_basis`, and do not create `basis_events`.
+Excluded comps may remain visible as research evidence, but they must not affect
+estimated value summaries. Future Card Vertex comp workflows must respect Core
+RLS/privacy and should be reviewed before any write path is exposed.
