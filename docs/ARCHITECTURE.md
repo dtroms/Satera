@@ -68,6 +68,15 @@ basic moderation reports/actions, audit events, and RLS visibility controls.
 Pass 2 adds TypeScript read helpers and RPC-only mutation services for those
 Community Core workflows, plus read-only Internal Inspector visibility for
 communities, messages, references, reports, and actions.
+
+Satera Moderation Foundation now hardens Core trust and safety infrastructure
+with durable user restrictions, moderator/admin notes, appeal records,
+restriction-aware posting checks, moderation RPCs, RLS policies, and audit
+events. Satera owns moderation state, enforcement, decisions, appeals, and
+audit trail. External moderation providers may provide future signals, but
+they do not own final moderation state. Normal users should not see hidden,
+removed, or deleted community messages; moderators and admins can inspect
+moderated content in scope.
 Messages, trade posts, listings, showcases, and future Card Vertex drag/drop
 sharing must attach safe public object references instead of private inventory
 rows. The same Core pattern should work for cards, comics, watches, games, and
@@ -80,13 +89,15 @@ history, or evaluation/certification costs such as grading costs.
 
 Community Core is not a visible generic Satera social network. There is no
 global Satera feed, algorithmic feed, public viral profile network, Card Vertex
-Community Dock, Vertex Pro UI, realtime presence, LiveKit, voice, video,
-screenshare, uploaded video, media processing, or advanced moderation
+Community Dock, Vertex Pro UI, product-facing moderation dashboard, realtime
+presence, LiveKit, voice, video, screenshare, uploaded video, media processing,
+AI moderation, automated moderation providers, or advanced moderation
 automation in this pass.
 
-Internal Inspector coverage for Community Core is read-only. It exists for Core
-audit and debugging visibility and must not add edit buttons, forms, message
-composition, moderation write UI, or product-specific community experiences.
+Internal Inspector coverage for Community Core and moderation records is
+read-only. It exists for Core audit and debugging visibility and must not add
+edit buttons, forms, message composition, moderation write UI, product-facing
+moderation dashboards, or product-specific community experiences.
 
 Community architecture is documented in `docs/architecture/COMMUNITY_CORE.md`.
 Future media and moderation alignment is documented in

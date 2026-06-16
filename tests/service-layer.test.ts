@@ -21,12 +21,15 @@ import {
   updatePublicObjectReferenceDisplay,
 } from "@/lib/core/public-references/mutations";
 import {
+  addModerationNote,
   createCommunity,
   createCommunityChannel,
   createCommunityMessage,
   joinCommunity,
+  liftUserRestriction,
   moderateCommunityContent,
   reportCommunityContent,
+  submitModerationAppeal,
 } from "@/lib/core/community/mutations";
 import type { CreateCommunityMessageInput } from "@/lib/core/community/types";
 
@@ -645,6 +648,72 @@ describe("community service protections", () => {
       p_action_type: "hide",
       p_reason: "moderation",
       p_metadata: { safe_note: "reviewed" },
+    });
+    expect(db.from).not.toHaveBeenCalled();
+  });
+
+  it("lifting a user restriction calls the RPC and not direct table writes", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: "restriction-1", error: null });
+    const db = { from: vi.fn(), rpc };
+
+    await liftUserRestriction(db, {
+      restrictionId: "restriction-1",
+      reason: "reviewed",
+    });
+
+    expect(rpc).toHaveBeenCalledWith("lift_user_restriction", {
+      p_restriction_id: "restriction-1",
+      p_reason: "reviewed",
+    });
+    expect(db.from).not.toHaveBeenCalled();
+  });
+
+  it("adding a moderation note calls the RPC and not direct table writes", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: "note-1", error: null });
+    const db = { from: vi.fn(), rpc };
+
+    await addModerationNote(db, {
+      productId: "product-1",
+      communityId: "community-1",
+      reportId: "report-1",
+      actionId: "action-1",
+      subjectUserId: "user-1",
+      note: "Internal note",
+      visibility: "moderators",
+    });
+
+    expect(rpc).toHaveBeenCalledWith("add_moderation_note", {
+      p_product_id: "product-1",
+      p_community_id: "community-1",
+      p_report_id: "report-1",
+      p_action_id: "action-1",
+      p_subject_user_id: "user-1",
+      p_note: "Internal note",
+      p_visibility: "moderators",
+    });
+    expect(db.from).not.toHaveBeenCalled();
+  });
+
+  it("submitting a moderation appeal calls the RPC and not direct table writes", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: "appeal-1", error: null });
+    const db = { from: vi.fn(), rpc };
+
+    await submitModerationAppeal(db, {
+      productId: "product-1",
+      communityId: "community-1",
+      reportId: "report-1",
+      actionId: "action-1",
+      restrictionId: "restriction-1",
+      reason: "appeal reason",
+    });
+
+    expect(rpc).toHaveBeenCalledWith("submit_moderation_appeal", {
+      p_product_id: "product-1",
+      p_community_id: "community-1",
+      p_report_id: "report-1",
+      p_action_id: "action-1",
+      p_restriction_id: "restriction-1",
+      p_reason: "appeal reason",
     });
     expect(db.from).not.toHaveBeenCalled();
   });

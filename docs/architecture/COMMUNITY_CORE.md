@@ -38,6 +38,9 @@ Satera Community Core should eventually own:
 - moderation reports
 - moderation actions
 - moderation events
+- durable user restrictions
+- internal moderation notes
+- appeals
 - audit trail
 - notifications
 - presence metadata later
@@ -92,6 +95,18 @@ Pass 2 implements:
 - service-layer tests that verify community mutations use RPCs only
 - read-only Internal Inspector views for communities, messages, references,
   moderation reports, and moderation actions
+
+Moderation Foundation hardening adds:
+
+- `user_restrictions`
+- `moderation_notes`
+- `moderation_appeals`
+- restriction-aware `create_community_message` posting checks
+- expanded `moderate_community_content` enforcement behavior
+- RPCs for lifting restrictions, adding moderation notes, and submitting
+  appeals
+- RLS and direct-write hardening for enforcement records
+- audit events for moderation decisions, restrictions, notes, and appeals
 
 ## Layer 2: Product Community Templates
 
@@ -188,10 +203,14 @@ The Pass 1 schema is platform-level and product-scoped:
 - `community_message_references`
 - `moderation_reports`
 - `moderation_actions`
+- `user_restrictions`
+- `moderation_notes`
+- `moderation_appeals`
 
 The Pass 2 service and inspector layer is also platform-level. The Internal
 Inspector reads these records for debugging and audit visibility only; it does
-not provide edit buttons, forms, create message UI, or moderation write UI.
+not provide edit buttons, forms, create message UI, moderation write UI, or
+product-facing moderation dashboard behavior.
 
 The following remain future concepts:
 
@@ -201,9 +220,6 @@ The following remain future concepts:
 - `community_comments`
 - richer attachment models beyond public object references
 - `moderation_events`
-- `user_restrictions`
-- `community_bans`
-- `channel_mutes`
 - `notifications`
 
 Any future schema must preserve Satera Core privacy boundaries and product lens
@@ -234,9 +250,26 @@ Community Phase 1 does not include:
 - realtime implementation
 - notifications
 - advanced automated moderation
+- AI moderation
 - marketplace payments
 - global discovery feed
 - generic social-network UI
 - Card Vertex Community Dock
 - Card Vertex pages
 - Vertex Pro community management UI
+
+## Moderation Foundation
+
+Moderation belongs in Satera Core, not Card Vertex or any other product lens.
+Satera owns moderation state, enforcement, decisions, appeals, and audit.
+External moderation providers may provide future signals, but final moderation
+state remains in Core.
+
+Normal users should not see hidden, removed, or deleted community messages.
+Moderators and admins can inspect moderated content in scope. Community message
+attachments must continue to use safe public object references and must not
+expose private inventory data.
+
+This pass does not build product-facing moderation dashboards, automated or AI
+moderation, realtime moderation workflows, LiveKit, voice, video, screenshare,
+uploaded video, or media processing.

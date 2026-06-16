@@ -25,6 +25,9 @@ const COMMUNITY_MESSAGE_SELECT = "*";
 const COMMUNITY_MESSAGE_REFERENCE_SELECT = "*";
 const MODERATION_REPORT_SELECT = "*";
 const MODERATION_ACTION_SELECT = "*";
+const USER_RESTRICTION_SELECT = "*";
+const MODERATION_NOTE_SELECT = "*";
+const MODERATION_APPEAL_SELECT = "*";
 
 function throwIfError(error: unknown): void {
   if (error) {
@@ -523,6 +526,126 @@ export async function getInternalModerationActions(filters: {
 
   if (filters.reportId) {
     query = query.eq("report_id", filters.reportId);
+  }
+
+  const { data, error } = await query;
+
+  throwIfError(error);
+  return data ?? [];
+}
+
+export async function getInternalUserRestrictions(filters: {
+  communityId?: string;
+  productId?: string;
+  userId?: string;
+  status?: string;
+} = {}): Promise<InternalRecord[]> {
+  const db = await createClient();
+  let query = db
+    .from("user_restrictions")
+    .select(USER_RESTRICTION_SELECT)
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  if (filters.communityId) {
+    query = query.eq("community_id", filters.communityId);
+  }
+
+  if (filters.productId) {
+    query = query.eq("product_id", filters.productId);
+  }
+
+  if (filters.userId) {
+    query = query.eq("user_id", filters.userId);
+  }
+
+  if (filters.status) {
+    query = query.eq("status", filters.status);
+  }
+
+  const { data, error } = await query;
+
+  throwIfError(error);
+  return data ?? [];
+}
+
+export async function getInternalModerationNotes(filters: {
+  communityId?: string;
+  productId?: string;
+  reportId?: string;
+  actionId?: string;
+  subjectUserId?: string;
+} = {}): Promise<InternalRecord[]> {
+  const db = await createClient();
+  let query = db
+    .from("moderation_notes")
+    .select(MODERATION_NOTE_SELECT)
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  if (filters.communityId) {
+    query = query.eq("community_id", filters.communityId);
+  }
+
+  if (filters.productId) {
+    query = query.eq("product_id", filters.productId);
+  }
+
+  if (filters.reportId) {
+    query = query.eq("report_id", filters.reportId);
+  }
+
+  if (filters.actionId) {
+    query = query.eq("action_id", filters.actionId);
+  }
+
+  if (filters.subjectUserId) {
+    query = query.eq("subject_user_id", filters.subjectUserId);
+  }
+
+  const { data, error } = await query;
+
+  throwIfError(error);
+  return data ?? [];
+}
+
+export async function getInternalModerationAppeals(filters: {
+  communityId?: string;
+  productId?: string;
+  submittedBy?: string;
+  status?: string;
+  actionId?: string;
+  restrictionId?: string;
+} = {}): Promise<InternalRecord[]> {
+  const db = await createClient();
+  let query = db
+    .from("moderation_appeals")
+    .select(MODERATION_APPEAL_SELECT)
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  if (filters.communityId) {
+    query = query.eq("community_id", filters.communityId);
+  }
+
+  if (filters.productId) {
+    query = query.eq("product_id", filters.productId);
+  }
+
+  if (filters.submittedBy) {
+    query = query.eq("submitted_by", filters.submittedBy);
+  }
+
+  if (filters.status) {
+    query = query.eq("status", filters.status);
+  }
+
+  if (filters.actionId) {
+    query = query.eq("action_id", filters.actionId);
+  }
+
+  if (filters.restrictionId) {
+    query = query.eq("restriction_id", filters.restrictionId);
   }
 
   const { data, error } = await query;

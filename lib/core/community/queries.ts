@@ -6,7 +6,10 @@ import type {
   CommunityMessageReference,
   CoreDbClient,
   ModerationAction,
+  ModerationAppeal,
+  ModerationNote,
   ModerationReport,
+  UserRestriction,
 } from "./types";
 
 const COMMUNITY_SELECT = "*";
@@ -16,6 +19,9 @@ const MESSAGE_SELECT = "*";
 const MESSAGE_REFERENCE_SELECT = "*";
 const MODERATION_REPORT_SELECT = "*";
 const MODERATION_ACTION_SELECT = "*";
+const USER_RESTRICTION_SELECT = "*";
+const MODERATION_NOTE_SELECT = "*";
+const MODERATION_APPEAL_SELECT = "*";
 
 export async function getCommunityById(
   db: CoreDbClient,
@@ -215,6 +221,174 @@ export async function getModerationActions(
 
   if (filters.messageId) {
     query = query.eq("message_id", filters.messageId);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    throw error;
+  }
+
+  return data ?? [];
+}
+
+export async function getUserRestrictions(
+  db: CoreDbClient,
+  filters: {
+    communityId?: string;
+    productId?: string;
+    channelId?: string;
+    status?: string;
+  } = {},
+): Promise<UserRestriction[]> {
+  let query = db
+    .from("user_restrictions")
+    .select(USER_RESTRICTION_SELECT)
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  if (filters.communityId) {
+    query = query.eq("community_id", filters.communityId);
+  }
+
+  if (filters.productId) {
+    query = query.eq("product_id", filters.productId);
+  }
+
+  if (filters.channelId) {
+    query = query.eq("channel_id", filters.channelId);
+  }
+
+  if (filters.status) {
+    query = query.eq("status", filters.status);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    throw error;
+  }
+
+  return data ?? [];
+}
+
+export async function getUserRestrictionsForUser(
+  db: CoreDbClient,
+  userId: string,
+  filters: { productId?: string; communityId?: string; status?: string } = {},
+): Promise<UserRestriction[]> {
+  let query = db
+    .from("user_restrictions")
+    .select(USER_RESTRICTION_SELECT)
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  if (filters.productId) {
+    query = query.eq("product_id", filters.productId);
+  }
+
+  if (filters.communityId) {
+    query = query.eq("community_id", filters.communityId);
+  }
+
+  if (filters.status) {
+    query = query.eq("status", filters.status);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    throw error;
+  }
+
+  return data ?? [];
+}
+
+export async function getModerationNotes(
+  db: CoreDbClient,
+  filters: {
+    communityId?: string;
+    productId?: string;
+    reportId?: string;
+    actionId?: string;
+    subjectUserId?: string;
+  } = {},
+): Promise<ModerationNote[]> {
+  let query = db
+    .from("moderation_notes")
+    .select(MODERATION_NOTE_SELECT)
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  if (filters.communityId) {
+    query = query.eq("community_id", filters.communityId);
+  }
+
+  if (filters.productId) {
+    query = query.eq("product_id", filters.productId);
+  }
+
+  if (filters.reportId) {
+    query = query.eq("report_id", filters.reportId);
+  }
+
+  if (filters.actionId) {
+    query = query.eq("action_id", filters.actionId);
+  }
+
+  if (filters.subjectUserId) {
+    query = query.eq("subject_user_id", filters.subjectUserId);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    throw error;
+  }
+
+  return data ?? [];
+}
+
+export async function getModerationAppeals(
+  db: CoreDbClient,
+  filters: {
+    communityId?: string;
+    productId?: string;
+    submittedBy?: string;
+    status?: string;
+    actionId?: string;
+    restrictionId?: string;
+  } = {},
+): Promise<ModerationAppeal[]> {
+  let query = db
+    .from("moderation_appeals")
+    .select(MODERATION_APPEAL_SELECT)
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  if (filters.communityId) {
+    query = query.eq("community_id", filters.communityId);
+  }
+
+  if (filters.productId) {
+    query = query.eq("product_id", filters.productId);
+  }
+
+  if (filters.submittedBy) {
+    query = query.eq("submitted_by", filters.submittedBy);
+  }
+
+  if (filters.status) {
+    query = query.eq("status", filters.status);
+  }
+
+  if (filters.actionId) {
+    query = query.eq("action_id", filters.actionId);
+  }
+
+  if (filters.restrictionId) {
+    query = query.eq("restriction_id", filters.restrictionId);
   }
 
   const { data, error } = await query;

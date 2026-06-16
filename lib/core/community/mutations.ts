@@ -1,11 +1,14 @@
 import type {
   CoreDbClient,
+  AddModerationNoteInput,
   CreateCommunityChannelInput,
   CreateCommunityInput,
   CreateCommunityMessageInput,
   JoinCommunityInput,
+  LiftUserRestrictionInput,
   ModerateCommunityContentInput,
   ReportCommunityContentInput,
+  SubmitModerationAppealInput,
 } from "./types";
 
 function requireRpcId(data: string | { id?: string } | null): string {
@@ -135,6 +138,63 @@ export async function moderateCommunityContent(
     p_action_type: input.actionType,
     p_reason: input.reason ?? null,
     p_metadata: input.metadata ?? {},
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  return requireRpcId(data);
+}
+
+export async function liftUserRestriction(
+  db: CoreDbClient,
+  input: LiftUserRestrictionInput,
+): Promise<string> {
+  const { data, error } = await db.rpc("lift_user_restriction", {
+    p_restriction_id: input.restrictionId,
+    p_reason: input.reason ?? null,
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  return requireRpcId(data);
+}
+
+export async function addModerationNote(
+  db: CoreDbClient,
+  input: AddModerationNoteInput,
+): Promise<string> {
+  const { data, error } = await db.rpc("add_moderation_note", {
+    p_product_id: input.productId,
+    p_community_id: input.communityId ?? null,
+    p_report_id: input.reportId ?? null,
+    p_action_id: input.actionId ?? null,
+    p_subject_user_id: input.subjectUserId ?? null,
+    p_note: input.note,
+    p_visibility: input.visibility ?? "moderators",
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  return requireRpcId(data);
+}
+
+export async function submitModerationAppeal(
+  db: CoreDbClient,
+  input: SubmitModerationAppealInput,
+): Promise<string> {
+  const { data, error } = await db.rpc("submit_moderation_appeal", {
+    p_product_id: input.productId,
+    p_community_id: input.communityId ?? null,
+    p_report_id: input.reportId ?? null,
+    p_action_id: input.actionId ?? null,
+    p_restriction_id: input.restrictionId ?? null,
+    p_reason: input.reason,
   });
 
   if (error) {

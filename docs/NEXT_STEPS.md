@@ -2,20 +2,25 @@
 
 ## Current Priority
 
-1. Satera Moderation Foundation hardening.
-2. Notification Foundation.
-3. Sale Transaction RPC.
-4. Lot Purchase RPC.
-5. Evaluation / Certification Lifecycle.
-6. Product Lens Framework hardening.
-7. Card Vertex product shell later.
+1. Notification Foundation.
+2. Sale Transaction RPC.
+3. Lot Purchase RPC.
+4. Evaluation / Certification Lifecycle.
+5. Product Lens Framework hardening.
+6. Card Vertex product shell later.
 
-Satera Community Core MVP Pass 2 now exists as platform infrastructure.
+Satera Moderation Foundation hardening now exists as platform infrastructure.
+Core owns durable user restrictions, internal moderation notes, appeal records,
+moderation decisions, enforcement state, and audit trail. Community messages
+respect active restrictions, normal users do not see hidden/removed/deleted
+content, and moderators/admins can inspect moderated content in scope.
+
+Satera Community Core MVP Pass 2 also exists as platform infrastructure.
 Community messages can attach safe public object references instead of private
 inventory rows, TypeScript mutations route through RPCs only, and the Internal
-Inspector can inspect community records through read-only views. Product-specific
-community UI, including Card Vertex community surfaces and the Community Dock,
-comes later.
+Inspector can inspect community and moderation records through read-only views.
+Product-specific community UI and product-facing moderation UI, including Card
+Vertex community surfaces and the Community Dock, come later.
 
 Satera Core should model evaluation/certification as a product-neutral
 lifecycle. Products can translate that backbone into niche-specific workflows:
@@ -59,11 +64,10 @@ incurred.
 
 ## Future Satera Community Core
 
-1. Moderation Foundation hardening.
-2. Notification hooks.
-3. Future post/listing/trade-specific workflows.
-4. Realtime presence later.
-5. LiveKit, uploaded media, and media processing later.
+1. Notification hooks.
+2. Future post/listing/trade-specific workflows.
+3. Realtime presence later.
+4. LiveKit, uploaded media, and media processing later.
 
 Public references follow the reusable Core pattern:
 
@@ -87,3 +91,6 @@ notes, private tags, ownership history, or private transaction history.
 1. LiveKit for branded voice and screen-share rooms.
 2. Mux or Cloudflare Stream for uploaded video playback.
 3. External moderation providers only as signal sources.
+
+Automated moderation providers remain future signal sources only. Satera owns
+moderation state, enforcement, decisions, appeals, and audit.

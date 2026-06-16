@@ -19,6 +19,11 @@ The current Satera Core foundation includes:
 - Satera Community Core MVP Pass 2 TypeScript services for read helpers and
   RPC-only mutations covering communities, channels, joins, messages,
   reporting, and moderation actions.
+- Satera Moderation Foundation hardening with durable user restrictions,
+  internal moderation notes, appeal records, restriction-aware message posting,
+  expanded moderation RPC behavior, restriction lifting, note/appeal RPCs,
+  RLS policies, direct-write hardening, audit events, TypeScript service
+  helpers, SQL verification, and read-only Internal Inspector visibility.
 - Direct-write hardening for critical financial and history tables.
 - TypeScript service layer that routes application code through safe workflows.
 - Tests for calculations, service-layer protections, atomic transaction inputs,
@@ -38,8 +43,10 @@ The current Satera Core foundation includes:
   ownership history, and private transaction history.
 - Community message references attach `public_object_references` and snapshot
   only safe public display fields. They do not expose private inventory fields.
-- Internal Community Inspector views are read-only and do not add edit forms,
-  create-message UI, or internal write paths.
-- No Card Vertex community UI, Community Dock, Vertex Pro UI, realtime,
-  LiveKit, voice, video, screenshare, uploaded video, media processing, or
-  advanced moderation automation has been built.
+- Internal Community and Moderation Inspector views are read-only and do not
+  add edit forms, create-message UI, moderation write paths, or product-facing
+  moderation dashboards.
+- No Card Vertex community UI, Card Vertex pages, Community Dock, Vertex Pro
+  UI, realtime, LiveKit, voice, video, screenshare, uploaded video, media
+  processing, AI moderation, automated moderation providers, or advanced
+  moderation automation has been built.

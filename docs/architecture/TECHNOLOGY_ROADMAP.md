@@ -53,7 +53,7 @@ Satera owns:
 - moderation state
 - enforcement
 - decisions
-- appeals later
+- appeals
 - audit trail
 
 Moderatable content should include:
@@ -82,6 +82,11 @@ Suggested moderation actions:
 - ban_from_community
 - platform_suspend
 - escalate_to_admin
+
+Satera Moderation Foundation now includes durable user restrictions, internal
+moderation notes, appeal records, and audit-backed RPC workflows. Product-facing
+moderation UI comes later. Automated moderation and AI moderation remain future
+signal-source integrations only; Satera Core owns final state and decisions.
 
 ## Community Phase Guidance
 

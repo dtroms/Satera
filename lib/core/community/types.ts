@@ -85,6 +85,33 @@ export type ModerationActionType =
   | "platform_suspend"
   | "escalate_to_admin";
 
+export type UserRestrictionType =
+  | "muted"
+  | "restricted"
+  | "read_only"
+  | "posting_disabled"
+  | "community_banned"
+  | "channel_banned"
+  | "platform_suspended";
+
+export type UserRestrictionStatus =
+  | "active"
+  | "expired"
+  | "lifted"
+  | "replaced";
+
+export type ModerationNoteVisibility =
+  | "moderators"
+  | "product_admins"
+  | "platform_admins";
+
+export type ModerationAppealStatus =
+  | "open"
+  | "reviewing"
+  | "accepted"
+  | "denied"
+  | "closed";
+
 export type Community = {
   id: string;
   product_id: string;
@@ -194,6 +221,56 @@ export type ModerationAction = {
   created_at: string;
 };
 
+export type UserRestriction = {
+  id: string;
+  product_id: string;
+  community_id: string | null;
+  channel_id: string | null;
+  user_id: string;
+  restriction_type: UserRestrictionType;
+  status: UserRestrictionStatus;
+  reason: string | null;
+  starts_at: string;
+  expires_at: string | null;
+  created_by: string;
+  lifted_by: string | null;
+  lifted_at: string | null;
+  metadata: Record<string, unknown>;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ModerationNote = {
+  id: string;
+  product_id: string;
+  community_id: string | null;
+  report_id: string | null;
+  action_id: string | null;
+  subject_user_id: string | null;
+  note: string;
+  visibility: ModerationNoteVisibility;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ModerationAppeal = {
+  id: string;
+  product_id: string;
+  community_id: string | null;
+  report_id: string | null;
+  action_id: string | null;
+  restriction_id: string | null;
+  submitted_by: string;
+  reason: string;
+  status: ModerationAppealStatus;
+  reviewed_by: string | null;
+  reviewed_at: string | null;
+  decision_reason: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
 export type CreateCommunityInput = OwnerContext & {
   productId: string;
   name: string;
@@ -247,4 +324,28 @@ export type ModerateCommunityContentInput = {
   actionType: ModerationActionType;
   reason?: string | null;
   metadata?: Record<string, unknown> | null;
+};
+
+export type LiftUserRestrictionInput = {
+  restrictionId: string;
+  reason?: string | null;
+};
+
+export type AddModerationNoteInput = {
+  productId: string;
+  communityId?: string | null;
+  reportId?: string | null;
+  actionId?: string | null;
+  subjectUserId?: string | null;
+  note: string;
+  visibility?: ModerationNoteVisibility;
+};
+
+export type SubmitModerationAppealInput = {
+  productId: string;
+  communityId?: string | null;
+  reportId?: string | null;
+  actionId?: string | null;
+  restrictionId?: string | null;
+  reason: string;
 };

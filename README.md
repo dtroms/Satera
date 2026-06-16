@@ -32,6 +32,9 @@ Critical write workflows now run through atomic Postgres RPC functions:
 - `create_community_message`
 - `report_community_content`
 - `moderate_community_content`
+- `lift_user_restriction`
+- `add_moderation_note`
+- `submit_moderation_appeal`
 
 These RPCs create inventory, transactions, transaction lines, ownership
 events, basis events, and audit events in one database transaction. They also
@@ -70,15 +73,24 @@ or Memorabilia appraisal and provenance review. Evaluation cost may increase
 
 Satera Community Core MVP now exists as platform infrastructure. Communities
 are product-scoped Core records with channels, memberships, roles, messages,
-safe public object reference attachments, basic moderation report/action
-records, audit events, RLS visibility controls, TypeScript services, and
-read-only Internal Inspector visibility. Community TypeScript mutations call
-the Community Core RPCs only; they do not directly insert, update, delete, or
-upsert community tables. Products such as Card Vertex will render their own
-community experiences later; no Card Vertex community pages, Community Dock,
-Vertex Pro UI, realtime, LiveKit, voice, video, screenshare, uploaded video,
-media processing, notifications, or advanced moderation automation have been
-implemented.
+safe public object reference attachments, durable user restrictions,
+moderation notes, moderation appeals, moderation report/action records, audit
+events, RLS visibility controls, TypeScript services, and read-only Internal
+Inspector visibility. Community TypeScript mutations call the Community Core
+RPCs only; they do not directly insert, update, delete, or upsert community or
+moderation enforcement tables. Products such as Card Vertex will render their
+own community and moderation experiences later; no Card Vertex community pages,
+Community Dock, Vertex Pro UI, product-facing moderation dashboard, realtime,
+LiveKit, voice, video, screenshare, uploaded video, media processing,
+notifications, AI moderation, automated moderation providers, or advanced
+moderation automation have been implemented.
+
+Satera Moderation Foundation is Core trust and safety infrastructure. Satera
+owns moderation state, enforcement, decisions, appeals, and audit trail.
+External moderation providers may provide signals later, but final state
+belongs in Satera Core. Normal users should not see hidden, removed, or deleted
+community messages; moderators and admins can inspect moderated content in
+scope.
 
 Trades are atomic RPC workflows. A trade freezes outgoing item basis in
 `transaction_lines`, marks outgoing items as traded and archived without
@@ -182,6 +194,10 @@ DATABASE_URL="postgresql://postgres:postgres@127.0.0.1:54322/postgres" npm run d
   RLS, RPC-only message writes, safe public object reference message
   attachments, basic reporting/moderation, hidden-message visibility, direct
   write hardening, and audit events.
+- `011_moderation_foundation_hardening.sql`: verifies durable user
+  restrictions, moderation notes, appeals, posting restriction enforcement,
+  hidden/removed/deleted visibility, RPC-only moderation writes, RLS, and audit
+  events.
 
 ## App Checks
 
@@ -206,10 +222,13 @@ workflows that protect ownership history and cost basis.
 
 Current internal inspector routes include inventory, transactions, lineage,
 audit, products/category/catalog, public reference, communities, community
-messages, and moderation views. The products view exists to verify that Card
-Vertex, Vertex Pro, and Satera Portfolio are product/category lenses, not
-inventory owners. Community inspector views are read-only and do not provide
-forms, edit buttons, create message UI, or moderation write paths.
+messages, and moderation views. The moderation inspector can read reports,
+actions, user restrictions, notes, and appeals visible to the internal session.
+The products view exists to verify that Card Vertex, Vertex Pro, and Satera
+Portfolio are product/category lenses, not inventory owners. Community and
+moderation inspector views are read-only and do not provide forms, edit
+buttons, create message UI, product-facing moderation dashboards, or
+moderation write paths.
 
 ## Card Vertex Planning
 

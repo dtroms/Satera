@@ -26,6 +26,12 @@ message attachments, moderation report/action records, and audit events are
 protected by RLS and direct-write hardening. Message references attach
 `public_object_references` and do not expose private inventory fields.
 
+Moderation Foundation workflows are also RPC-only. Durable user restrictions,
+moderation notes, and moderation appeals are protected by RLS and direct-write
+hardening. Satera Core owns moderation state, enforcement, appeals, decisions,
+and audit; product-facing moderation UI and automated moderation providers are
+future work.
+
 ## Requirements
 
 - Docker
@@ -119,3 +125,7 @@ privacy rules with a service role.
   RPC-only message writes, safe public object reference attachments, direct
   write hardening, basic reporting/moderation, hidden-message visibility, and
   audit events.
+- `011_moderation_foundation_hardening.sql`: durable restrictions, notes,
+  appeals, restriction-aware posting, hidden/removed/deleted message
+  visibility, report resolution/escalation/dismissal, audit events, RLS, and
+  direct-write hardening for moderation enforcement records.
