@@ -169,6 +169,24 @@ Card Vertex crowdsourced comp planning lives in
 browser extension, public comp creation route, or internal inspector write path
 has been implemented.
 
+Card Vertex inventory workspace, saved filters, community dock, drag/drop public
+card references, and Card Context Drawer planning lives in
+`docs/products/card-vertex/INVENTORY_WORKSPACE_AND_COMMUNITY.md`. This is
+documentation only; no communities, Card Vertex UI, realtime features, routes,
+migrations, or packages have been implemented.
+
 The current comp schema is early Core value-evidence infrastructure only. It
 keeps market value separate from cost basis: comps and current value snapshots
 must not mutate `true_basis` or create basis events.
+
+## Community And Media Planning
+
+Satera Community Core planning lives in `docs/architecture/COMMUNITY_CORE.md`.
+Vertex Pro cross-product community management planning lives in
+`docs/products/vertex-pro/CROSS_PRODUCT_COMMUNITY_MANAGEMENT.md`. Future media
+and moderation alignment lives in `docs/architecture/TECHNOLOGY_ROADMAP.md`.
+
+These documents are planning references only. Satera should own reusable
+product-scoped community infrastructure, products should render their own
+community experiences, and Vertex Pro should manage organization-owned
+community presence across product contexts.

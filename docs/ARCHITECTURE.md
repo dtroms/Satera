@@ -24,3 +24,17 @@ own inventory, do not mutate `true_basis`, and do not create `basis_events`.
 Excluded comps may remain visible as research evidence, but they must not affect
 estimated value summaries. Future Card Vertex comp workflows must respect Core
 RLS/privacy and should be reviewed before any write path is exposed.
+
+Community should follow the same product lens boundary. Satera should own the
+reusable community system, while products own product-specific community
+experiences. Community participation, product profiles, and entitlements must
+not override private inventory ownership.
+
+Future community architecture is documented in
+`docs/architecture/COMMUNITY_CORE.md`. Future media and moderation alignment is
+documented in `docs/architecture/TECHNOLOGY_ROADMAP.md`.
+
+Card Vertex inventory/community workspace planning is documented in
+`docs/products/card-vertex/INVENTORY_WORKSPACE_AND_COMMUNITY.md`. Vertex Pro
+cross-product community management planning is documented in
+`docs/products/vertex-pro/CROSS_PRODUCT_COMMUNITY_MANAGEMENT.md`.

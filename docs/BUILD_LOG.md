@@ -14,4 +14,8 @@ The current Satera Core foundation includes:
 - Tests for calculations, service-layer protections, atomic transaction inputs, and product/portfolio read helpers.
 - Internal Inspector Slice 2 with read-only lineage, audit, and products/category/catalog views.
 - Card Vertex crowdsourced comp system documentation under `docs/products/card-vertex/`.
+- Card Vertex inventory workspace and community interaction planning under `docs/products/card-vertex/`.
+- Satera Community Core architecture planning under `docs/architecture/`.
+- Vertex Pro cross-product community management planning under `docs/products/vertex-pro/`.
+- Technology roadmap planning for future community media and moderation alignment under `docs/architecture/`.
 - Early comp evidence schema extensions remain in Core as value-evidence infrastructure only. Direct app/client comp writes are not active, and comp mutations are not exposed through UI.
