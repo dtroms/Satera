@@ -26,6 +26,12 @@ Critical write workflows now run through atomic Postgres RPC functions:
 - `create_purchase_transaction`
 - `create_trade_transaction`
 - `update_inventory_item_safe_fields`
+- `create_community`
+- `create_community_channel`
+- `join_community`
+- `create_community_message`
+- `report_community_content`
+- `moderate_community_content`
 
 These RPCs create inventory, transactions, transaction lines, ownership
 events, basis events, and audit events in one database transaction. They also
@@ -52,6 +58,14 @@ Public references are intentional exposure records and are not the inventory
 source of truth. They may carry safe display and market/value signals, but must
 never expose `true_basis`, purchase price, profit, ROI, location, private notes,
 private tags, ownership history, private transaction history, or grading costs.
+
+Satera Community Core MVP now exists as platform infrastructure. Communities
+are product-scoped Core records with channels, memberships, roles, messages,
+safe public object reference attachments, basic moderation report/action
+records, audit events, and RLS visibility controls. Products such as Card
+Vertex will render their own community experiences later; no Card Vertex
+community pages, Community Dock, Vertex Pro UI, realtime, LiveKit, voice,
+video, screenshare, uploaded video, or media processing have been implemented.
 
 Trades are atomic RPC workflows. A trade freezes outgoing item basis in
 `transaction_lines`, marks outgoing items as traded and archived without
@@ -151,6 +165,10 @@ DATABASE_URL="postgresql://postgres:postgres@127.0.0.1:54322/postgres" npm run d
 - `009_public_object_references.sql`: verifies safe public object reference
   RPCs, RLS visibility, direct-write hardening, audit events, revocation, and
   absence of private inventory fields.
+- `010_community_core_mvp.sql`: verifies product-scoped Community Core tables,
+  RLS, RPC-only message writes, safe public object reference message
+  attachments, basic reporting/moderation, hidden-message visibility, direct
+  write hardening, and audit events.
 
 ## App Checks
 
@@ -188,8 +206,9 @@ has been implemented.
 Card Vertex inventory workspace, saved filters, community dock, drag/drop public
 card references, and Card Context Drawer planning lives in
 `docs/products/card-vertex/INVENTORY_WORKSPACE_AND_COMMUNITY.md`. This is
-documentation only; no communities, Card Vertex UI, realtime features, routes,
-migrations, or packages have been implemented.
+product UX planning only; the reusable Satera Community Core backend now exists,
+but no Card Vertex UI, Community Dock, realtime features, routes, or packages
+have been implemented.
 
 The current comp schema is early Core value-evidence infrastructure only. It
 keeps market value separate from cost basis: comps and current value snapshots
@@ -202,7 +221,6 @@ Vertex Pro cross-product community management planning lives in
 `docs/products/vertex-pro/CROSS_PRODUCT_COMMUNITY_MANAGEMENT.md`. Future media
 and moderation alignment lives in `docs/architecture/TECHNOLOGY_ROADMAP.md`.
 
-These documents are planning references only. Satera should own reusable
-product-scoped community infrastructure, products should render their own
-community experiences, and Vertex Pro should manage organization-owned
-community presence across product contexts.
+Satera now owns the reusable product-scoped community infrastructure in Core.
+Products should render their own community experiences, and Vertex Pro should
+eventually manage organization-owned community presence across product contexts.

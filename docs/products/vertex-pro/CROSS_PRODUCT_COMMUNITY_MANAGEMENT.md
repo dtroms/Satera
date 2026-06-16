@@ -1,8 +1,10 @@
 # Vertex Pro Cross-Product Community Management
 
-This document is product and architecture planning only. It does not describe
-implemented schema, routes, migrations, UI, messaging, realtime, or moderation
-features.
+This document is Vertex Pro product planning. Satera Community Core Pass 1 now
+implements the reusable backend schema, RLS, RPCs, safe public object reference
+message attachments, basic moderation records, and audit events. Vertex Pro
+routes, UI, realtime, operator workflows, and cross-product moderation screens
+remain future work.
 
 ## Principle
 
@@ -45,74 +47,27 @@ Vertex Pro lets the organization manage all of those from one place.
 
 ## Engineering Model
 
-Existing Core concepts already started:
+Existing Core concepts:
 
 - `organizations`
 - `organization_memberships`
 - `products`
 - `organization_product_profiles`
 
-The future community layer extends these with product-scoped community
-concepts.
+The implemented community layer extends these with product-scoped Core tables:
 
-Possible future `communities` fields:
+- `communities`
+- `community_channels`
+- `community_memberships`
+- `community_messages`
+- `community_message_references`
+- `moderation_reports`
+- `moderation_actions`
 
-- `id`
-- `organization_id` nullable
-- `product_id`
-- `name`
-- `slug`
-- `community_type`
-- `visibility`
-- `created_by`
-- `created_at`
-
-Possible future `community_channels` fields:
-
-- `id`
-- `community_id`
-- `product_id`
-- `name`
-- `channel_type`
-- `sort_order`
-- `created_at`
-
-Possible future `community_memberships` fields:
-
-- `id`
-- `community_id`
-- `user_id`
-- `role`
-- `status`
-- `joined_at`
-
-Possible future `community_roles` fields:
-
-- `id`
-- `community_id`
-- `name`
-- `permissions`
-
-Possible future `messages` fields:
-
-- `id`
-- `community_id`
-- `channel_id`
-- `product_id`
-- `author_user_id`
-- `body`
-- `created_at`
-
-Possible future `message_object_references` fields:
-
-- `id`
-- `message_id`
-- `object_type`
-- `public_reference_id`
-- `inventory_item_id` nullable but never exposed directly
-- `product_id`
-
-These are future concepts only, not implemented schema.
+Organization-owned communities can now be represented by `communities` rows
+with both `organization_id` and `product_id`. Vertex Pro should eventually
+manage those records across products without owning a separate community
+system.
 
 ## Product Scope
 
@@ -130,6 +85,10 @@ Vertex Pro can show:
 - shared moderation queue
 - staff permissions
 - cross-product community analytics
+
+The current pass provides only the backend records and authorization
+foundation. Vertex Pro UI, cross-product dashboards, notification workflows,
+realtime presence, and advanced moderation automation are still future work.
 
 Card Vertex should only show communities where `product_id = Card Vertex`.
 Comic Vertex should only show communities where `product_id = Comic Vertex`.

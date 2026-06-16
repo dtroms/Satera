@@ -2,18 +2,18 @@
 
 ## Current Priority
 
-1. Public Object Reference System.
-2. Satera Community Core MVP.
-3. Satera Moderation Foundation.
-4. Notification Foundation.
-5. Sale Transaction RPC.
-6. Lot Purchase RPC.
-7. Grading Lifecycle.
+1. Satera Community Core MVP Pass 2: TypeScript service layer + Internal Inspector.
+2. Satera Moderation Foundation hardening.
+3. Notification Foundation.
+4. Sale Transaction RPC.
+5. Lot Purchase RPC.
+6. Grading Lifecycle.
+7. Card Vertex product shell later.
 
-Communities are part of the MVP direction, but Satera Core still comes first.
-Community messages, trade posts, listings, showcases, and Card Vertex drag/drop
-sharing should attach safe public object references instead of private inventory
-rows.
+Satera Community Core MVP Pass 1 now exists as platform infrastructure.
+Community messages can attach safe public object references instead of private
+inventory rows. Product-specific community UI, including Card Vertex community
+surfaces, comes later.
 
 ## Future Product Work
 
@@ -41,12 +41,12 @@ rows.
 
 ## Future Satera Community Core
 
-1. Product-scoped community tables.
-2. Channel, membership, role, and permission model.
-3. Attach safe public object references to messages, posts, listings, and
-   trades.
-4. Moderation foundation.
-5. Audit trail.
+1. TypeScript service layer for community RPCs.
+2. Read-only Internal Inspector coverage for communities, channels,
+   memberships, messages, references, reports, actions, and audit trail.
+3. Moderation Foundation hardening.
+4. Notification hooks.
+5. Future post/listing/trade-specific workflows.
 
 Public references follow the reusable Core pattern:
 
@@ -63,6 +63,7 @@ notes, private tags, ownership history, or private transaction history.
 2. Multi-product moderation queue.
 3. Staff permissions by product, community, and channel.
 4. Cross-product community analytics.
+5. Operator UI for organization-owned communities across products.
 
 ## Future Media
 

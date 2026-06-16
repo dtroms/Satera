@@ -39,19 +39,33 @@ Excluded comps may remain visible as research evidence, but they must not affect
 estimated value summaries. Future Card Vertex comp workflows must respect Core
 RLS/privacy and should be reviewed before any write path is exposed.
 
-Community should follow the same product lens boundary. Satera should own the
-reusable community system, while products own product-specific community
+Community follows the same product lens boundary. Satera owns the reusable
+Community Core infrastructure, while products own product-specific community
 experiences. Community participation, product profiles, and entitlements must
 not override private inventory ownership.
 
-Future community messaging, trade posts, listings, showcases, and Card Vertex
-drag/drop sharing should attach safe public object references instead of private
-inventory rows. The same Core pattern should work for cards, comics, watches,
-games, and future product lenses.
+Satera Community Core MVP includes product-scoped communities, channels,
+memberships, roles, messages, safe public object reference message attachments,
+basic moderation reports/actions, audit events, and RLS visibility controls.
+Messages, trade posts, listings, showcases, and future Card Vertex drag/drop
+sharing must attach safe public object references instead of private inventory
+rows. The same Core pattern should work for cards, comics, watches, games, and
+future product lenses.
 
-Future community architecture is documented in
-`docs/architecture/COMMUNITY_CORE.md`. Future media and moderation alignment is
-documented in `docs/architecture/TECHNOLOGY_ROADMAP.md`.
+Community message references snapshot only safe `public_object_references`
+display fields. They must not include true basis, purchase price, profit, ROI,
+location, private notes, private tags, ownership history, private transaction
+history, or grading costs.
+
+Community Core is not a visible generic Satera social network. There is no
+global Satera feed, algorithmic feed, public viral profile network, Card Vertex
+Community Dock, Vertex Pro UI, realtime presence, LiveKit, voice, video,
+screenshare, uploaded video, media processing, or advanced moderation
+automation in this pass.
+
+Community architecture is documented in `docs/architecture/COMMUNITY_CORE.md`.
+Future media and moderation alignment is documented in
+`docs/architecture/TECHNOLOGY_ROADMAP.md`.
 
 Card Vertex inventory/community workspace planning is documented in
 `docs/products/card-vertex/INVENTORY_WORKSPACE_AND_COMMUNITY.md`. Vertex Pro

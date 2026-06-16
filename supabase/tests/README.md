@@ -20,6 +20,12 @@ cash and costs, and create basis events plus lineage edges. Items with missing
 outgoing basis cannot be traded until a later correction/confirmation workflow
 establishes basis.
 
+Community Core workflows are RPC-only for this pass. Product-scoped
+communities, channels, memberships, messages, safe public object reference
+message attachments, moderation report/action records, and audit events are
+protected by RLS and direct-write hardening. Message references attach
+`public_object_references` and do not expose private inventory fields.
+
 ## Requirements
 
 - Docker
@@ -106,3 +112,10 @@ privacy rules with a service role.
   incoming basis allocation, cash paid/received and fee effects, non-positive
   basis pool excess profit recording, frozen outgoing basis, and trade
   authorization failures.
+- `009_public_object_references.sql`: safe public object reference RPCs,
+  visibility, direct-write hardening, audit events, revocation, and private
+  inventory field exclusion.
+- `010_community_core_mvp.sql`: product-scoped Community Core schema, RLS,
+  RPC-only message writes, safe public object reference attachments, direct
+  write hardening, basic reporting/moderation, hidden-message visibility, and
+  audit events.

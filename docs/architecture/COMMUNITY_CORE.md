@@ -1,8 +1,10 @@
 # Satera Community Core
 
-This document is architecture planning only. It does not describe implemented
-schema, routes, migrations, realtime transport, moderation automation, or user
-interface code.
+This document describes Satera Community Core architecture. Pass 1 has now
+implemented the reusable backend MVP: schema, RLS, RPC write paths, safe public
+object reference message attachments, basic moderation records, audit events,
+and SQL verification. It still does not describe product UI, routes, realtime
+transport, media processing, or advanced moderation automation.
 
 ## Core Rule
 
@@ -28,12 +30,10 @@ Satera Community Core should eventually own:
 - channels
 - memberships
 - roles
-- permissions
 - messages
 - posts
 - comments
-- attachments
-- object references
+- attachments through safe public object references
 - moderation reports
 - moderation actions
 - moderation events
@@ -66,6 +66,21 @@ Satera Community Core is reusable across every product. It is responsible for:
 - what was reported
 - what was hidden or removed
 - what happened historically
+
+Pass 1 implements:
+
+- `communities`
+- `community_channels`
+- `community_memberships`
+- `community_messages`
+- `community_message_references`
+- `moderation_reports`
+- `moderation_actions`
+- helper authorization functions for community read/member/moderator checks
+- RPCs for creating communities, creating channels, joining open communities,
+  creating messages, reporting content, and recording moderation actions
+- audit events for important community actions
+- RLS policies and direct-write hardening so application clients use RPCs
 
 ## Layer 2: Product Community Templates
 
@@ -135,27 +150,35 @@ notes, private tags, ownership history, transaction history, and strategy must
 not leak into public object references.
 
 The implemented Core bridge for this rule is `public_object_references`. It is
-a safe display/exposure table, not an inventory truth table. Future community
-messages, posts, listings, trade attachments, showcases, and Card Vertex
-drag/drop sharing should attach these public references instead of
-`inventory_items` rows.
+a safe display/exposure table, not an inventory truth table. Community messages
+attach these public references through `community_message_references` instead
+of attaching `inventory_items` rows.
 
-## Future Schema Concepts
+`community_message_references.display_snapshot` is intentionally limited to
+safe public reference display fields such as title, subtitle, label, image,
+condition, grade, value label, visibility, and safe public metadata. It must not
+contain true basis, purchase price, profit, ROI, location, private notes,
+private tags, ownership history, private transaction history, or grading costs.
 
-The following are future concepts only, not implemented schema:
+## Implemented Schema
+
+The Pass 1 schema is platform-level and product-scoped:
 
 - `communities`
 - `community_channels`
 - `community_memberships`
-- `community_roles`
-- `community_permissions`
 - `community_messages`
-- `community_posts`
-- `community_comments`
-- `community_attachments`
-- `community_object_references`
+- `community_message_references`
 - `moderation_reports`
 - `moderation_actions`
+
+The following remain future concepts:
+
+- `community_roles`
+- `community_permissions`
+- `community_posts`
+- `community_comments`
+- richer attachment models beyond public object references
 - `moderation_events`
 - `user_restrictions`
 - `community_bans`
@@ -168,20 +191,19 @@ override private inventory ownership.
 
 ## Phase 1 Scope
 
-Community Phase 1 should include:
+Community Phase 1 includes:
 
 - Satera Community Core concepts
 - product-scoped communities
 - channels
 - memberships
 - roles
-- permissions
-- messages/posts
-- object references
-- moderation foundation
+- messages
+- safe public object references
+- basic moderation foundation records
 - audit trail
 
-Community Phase 1 should not include:
+Community Phase 1 does not include:
 
 - LiveKit implementation
 - Discord-style screen share
@@ -189,3 +211,6 @@ Community Phase 1 should not include:
 - advanced automated moderation
 - marketplace payments
 - global discovery feed
+- generic social-network UI
+- Card Vertex Community Dock
+- Vertex Pro community management UI

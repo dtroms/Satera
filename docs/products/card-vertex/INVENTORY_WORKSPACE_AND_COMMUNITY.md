@@ -1,8 +1,10 @@
 # Card Vertex Inventory Workspace And Community
 
-This document is product planning documentation only. It does not describe
-implemented UI, routes, migrations, realtime features, moderation workflows, or
-community tables.
+This document is Card Vertex product planning documentation only. It does not
+describe implemented UI, routes, realtime features, product moderation
+workflows, or Card Vertex community pages. The reusable Satera Community Core
+backend now exists in Core, but Card Vertex has not implemented the Community
+Dock or product-specific community surfaces.
 
 ## Product Philosophy
 
@@ -278,7 +280,8 @@ safe reference attached.
 Dragging creates a card reference object. No private card data is duplicated.
 The card reference updates automatically when safe public display data changes.
 The Core implementation for this bridge is `public_object_references`; Card
-Vertex should use that platform table/RPC layer when this UI is built later.
+Vertex should use that platform table/RPC layer and Satera Community Core
+message reference RPCs when this UI is built later.
 
 Critical privacy rule:
 
@@ -318,6 +321,15 @@ Public/shared references must never expose:
 - ownership history
 - private transaction history
 - internal strategy
+
+Current implementation status:
+
+- Satera Community Core Pass 1 implements product-scoped communities, channels,
+  memberships, messages, safe public reference message attachments, basic
+  moderation records, audit events, and RLS.
+- Card Vertex inventory workspace UI, Community Dock, drag/drop composer,
+  realtime presence, LiveKit, voice, video, screenshare, uploaded video, and
+  media processing remain future work.
 
 ## Card Context Drawer
 
