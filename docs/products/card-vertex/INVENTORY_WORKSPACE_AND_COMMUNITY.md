@@ -277,6 +277,8 @@ safe reference attached.
 
 Dragging creates a card reference object. No private card data is duplicated.
 The card reference updates automatically when safe public display data changes.
+The Core implementation for this bridge is `public_object_references`; Card
+Vertex should use that platform table/RPC layer when this UI is built later.
 
 Critical privacy rule:
 

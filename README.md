@@ -40,6 +40,19 @@ Direct authenticated writes to `comp_snapshots` are also blocked while the comp
 workflow remains early infrastructure. Future comp submissions should go through
 a reviewed service/RPC workflow before any UI or extension can create records.
 
+Public Object References are the Core bridge for safe sharing. A private
+inventory item is not a public object reference. Future community messages,
+trade posts, listings, showcases, and Card Vertex drag/drop sharing should use:
+
+```text
+private inventory item -> safe public object reference -> product/community/listing attachment
+```
+
+Public references are intentional exposure records and are not the inventory
+source of truth. They may carry safe display and market/value signals, but must
+never expose `true_basis`, purchase price, profit, ROI, location, private notes,
+private tags, ownership history, private transaction history, or grading costs.
+
 Trades are atomic RPC workflows. A trade freezes outgoing item basis in
 `transaction_lines`, marks outgoing items as traded and archived without
 deleting them, creates incoming inventory, records `trade_in` and `trade_out`
@@ -135,6 +148,9 @@ DATABASE_URL="postgresql://postgres:postgres@127.0.0.1:54322/postgres" npm run d
   proportional basis allocation, cash/cost effects, non-positive basis pools,
   frozen outgoing basis, ownership events, basis events, lineage edges, and
   authorization failures.
+- `009_public_object_references.sql`: verifies safe public object reference
+  RPCs, RLS visibility, direct-write hardening, audit events, revocation, and
+  absence of private inventory fields.
 
 ## App Checks
 
@@ -158,9 +174,9 @@ authorization. It must never introduce unsafe write paths or bypass the RPC
 workflows that protect ownership history and cost basis.
 
 Current internal inspector routes include inventory, transactions, lineage,
-audit, and products/category/catalog views. The products view exists to verify
-that Card Vertex, Vertex Pro, and Satera Portfolio are product/category lenses,
-not inventory owners.
+audit, products/category/catalog, and public reference views. The products view
+exists to verify that Card Vertex, Vertex Pro, and Satera Portfolio are
+product/category lenses, not inventory owners.
 
 ## Card Vertex Planning
 

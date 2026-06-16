@@ -26,6 +26,7 @@ import {
   getInternalCompSnapshotsForItem,
   getInternalInventoryItemById,
   getInternalOwnershipEventsForItem,
+  getInternalPublicObjectReferencesForItem,
   getInternalTransactionLinesForItem,
   type InternalRecord,
 } from "@/lib/core/internal/queries";
@@ -113,6 +114,7 @@ export default async function InternalInventoryDetailPage({
     transactionLines,
     auditEvents,
     compEvidence,
+    publicReferences,
   ] = await Promise.all([
     getRowsSafely("Ownership timeline", getInternalOwnershipEventsForItem(id)),
     getRowsSafely("Basis events", getInternalBasisEventsForItem(id)),
@@ -125,6 +127,10 @@ export default async function InternalInventoryDetailPage({
     getRowsSafely<CompSnapshot>(
       "Comp evidence",
       getInternalCompSnapshotsForItem(id),
+    ),
+    getRowsSafely(
+      "Public references",
+      getInternalPublicObjectReferencesForItem(id),
     ),
   ]);
 
@@ -352,6 +358,64 @@ export default async function InternalInventoryDetailPage({
               { key: "amount", header: "Amount", render: (row) => formatCurrentValue(row.amount) },
               { key: "trade", header: "Trade Value", render: (row) => formatCurrentValue(row.trade_value_at_time) },
               { key: "basis", header: "Basis At Time", render: (row) => formatBasis(row.basis_at_time) },
+            ]}
+          />
+        )}
+      </Section>
+
+      <Section title="Public Object References">
+        {publicReferences.errorMessage ? (
+          <EmptyState message={publicReferences.errorMessage} />
+        ) : (
+          <InternalTable
+            rows={publicReferences.rows}
+            emptyMessage="No public object references found for this item."
+            columns={[
+              {
+                key: "reference",
+                header: "Reference",
+                render: (row) => <ShortId id={row.id} />,
+              },
+              {
+                key: "product",
+                header: "Product",
+                render: (row) => <ShortId id={row.product_id} />,
+              },
+              {
+                key: "title",
+                header: "Title",
+                render: (row) => row.display_title,
+              },
+              {
+                key: "visibility",
+                header: "Visibility",
+                render: (row) => row.visibility,
+              },
+              {
+                key: "state",
+                header: "State",
+                render: (row) => row.exposure_state,
+              },
+              {
+                key: "created_for",
+                header: "Created For",
+                render: (row) => row.created_for ?? "-",
+              },
+              {
+                key: "created_from",
+                header: "Created From",
+                render: (row) => row.created_from ?? "-",
+              },
+              {
+                key: "created",
+                header: "Created",
+                render: (row) => formatDateTime(row.created_at),
+              },
+              {
+                key: "updated",
+                header: "Updated",
+                render: (row) => formatDateTime(row.updated_at),
+              },
             ]}
           />
         )}

@@ -46,6 +46,12 @@ export default async function InternalHomePage() {
             description:
               "Inspect products, categories, and asset structure to verify products remain lenses over Core.",
           },
+          {
+            href: "/internal/public-references",
+            title: "Public References",
+            description:
+              "Inspect safe public object references that bridge private inventory into future product/community attachments.",
+          },
         ].map((link) => (
           <Link
             key={link.href}

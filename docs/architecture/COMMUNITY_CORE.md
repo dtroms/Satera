@@ -134,6 +134,12 @@ Private fields such as true cost basis, purchase price, location, private
 notes, private tags, ownership history, transaction history, and strategy must
 not leak into public object references.
 
+The implemented Core bridge for this rule is `public_object_references`. It is
+a safe display/exposure table, not an inventory truth table. Future community
+messages, posts, listings, trade attachments, showcases, and Card Vertex
+drag/drop sharing should attach these public references instead of
+`inventory_items` rows.
+
 ## Future Schema Concepts
 
 The following are future concepts only, not implemented schema:

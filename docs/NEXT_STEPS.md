@@ -2,12 +2,18 @@
 
 ## Current Priority
 
-1. Continue Satera Core hardening.
-2. Add sale transaction RPC.
-3. Add lot purchase RPC.
-4. Add grading lifecycle.
-5. Design reviewed RPC-backed comp/value workflow before exposing any writes.
-6. Build product lens framework.
+1. Public Object Reference System.
+2. Satera Community Core MVP.
+3. Satera Moderation Foundation.
+4. Notification Foundation.
+5. Sale Transaction RPC.
+6. Lot Purchase RPC.
+7. Grading Lifecycle.
+
+Communities are part of the MVP direction, but Satera Core still comes first.
+Community messages, trade posts, listings, showcases, and Card Vertex drag/drop
+sharing should attach safe public object references instead of private inventory
+rows.
 
 ## Future Product Work
 
@@ -37,9 +43,19 @@
 
 1. Product-scoped community tables.
 2. Channel, membership, role, and permission model.
-3. Object reference model.
+3. Attach safe public object references to messages, posts, listings, and
+   trades.
 4. Moderation foundation.
 5. Audit trail.
+
+Public references follow the reusable Core pattern:
+
+```text
+private inventory item -> safe public object reference -> product/community/listing attachment
+```
+
+They must never expose true_basis, purchase price, profit, location, private
+notes, private tags, ownership history, or private transaction history.
 
 ## Future Vertex Pro
 

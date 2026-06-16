@@ -14,6 +14,12 @@ import {
   createTradeTransaction,
   normalizeInitialBasis,
 } from "@/lib/core/transactions/mutations";
+import {
+  assertPublicReferenceMetadataSafe,
+  createPublicObjectReference,
+  revokePublicObjectReference,
+  updatePublicObjectReferenceDisplay,
+} from "@/lib/core/public-references/mutations";
 
 function inventoryItem(
   overrides: Partial<InventoryItem> & { id: string },
@@ -360,6 +366,108 @@ describe("transaction service basis rules", () => {
       p_cash_received: 0,
       p_trade_related_costs: 5,
     });
+  });
+});
+
+describe("public object reference service protections", () => {
+  it("rejects private fields in public metadata", () => {
+    expect(() =>
+      assertPublicReferenceMetadataSafe({
+        display: "safe",
+        nested: { true_basis: 100 },
+      }),
+    ).toThrow(
+      "Public reference metadata cannot include private field true_basis.",
+    );
+
+    expect(() =>
+      assertPublicReferenceMetadataSafe({
+        safe_context: "community attachment",
+      }),
+    ).not.toThrow();
+  });
+
+  it("create public reference calls the RPC and not direct table writes", async () => {
+    const rpc = vi.fn().mockResolvedValue({
+      data: "public-reference-1",
+      error: null,
+    });
+    const db = { from: vi.fn(), rpc };
+
+    await expect(
+      createPublicObjectReference(db, {
+        inventoryItemId: "inventory-1",
+        productId: "product-1",
+        visibility: "community",
+        createdFor: "test",
+        displayTitle: "Safe title",
+        publicMetadata: { safe_context: "test" },
+      }),
+    ).resolves.toBe("public-reference-1");
+
+    expect(rpc).toHaveBeenCalledWith("create_public_object_reference", {
+      p_inventory_item_id: "inventory-1",
+      p_product_id: "product-1",
+      p_visibility: "community",
+      p_created_for: "test",
+      p_display_title: "Safe title",
+      p_display_subtitle: null,
+      p_display_label: null,
+      p_display_image_url: null,
+      p_condition_label: null,
+      p_grade_label: null,
+      p_value_label: null,
+      p_value_snapshot_id: null,
+      p_public_metadata: { safe_context: "test" },
+    });
+    expect(db.from).not.toHaveBeenCalled();
+  });
+
+  it("update public reference display calls the RPC and not direct table writes", async () => {
+    const rpc = vi.fn().mockResolvedValue({
+      data: "public-reference-1",
+      error: null,
+    });
+    const db = { from: vi.fn(), rpc };
+
+    await updatePublicObjectReferenceDisplay(db, {
+      publicObjectReferenceId: "public-reference-1",
+      displayTitle: "Updated title",
+      displayLabel: "Updated label",
+    });
+
+    expect(rpc).toHaveBeenCalledWith(
+      "update_public_object_reference_display",
+      {
+        p_public_object_reference_id: "public-reference-1",
+        p_display_title: "Updated title",
+        p_display_subtitle: null,
+        p_display_label: "Updated label",
+        p_display_image_url: null,
+        p_condition_label: null,
+        p_grade_label: null,
+        p_value_label: null,
+        p_value_snapshot_id: null,
+        p_public_metadata: null,
+      },
+    );
+    expect(db.from).not.toHaveBeenCalled();
+  });
+
+  it("revoke public reference calls the RPC and not direct table writes", async () => {
+    const rpc = vi.fn().mockResolvedValue({
+      data: "public-reference-1",
+      error: null,
+    });
+    const db = { from: vi.fn(), rpc };
+
+    await revokePublicObjectReference(db, "public-reference-1", "test");
+
+    expect(rpc).toHaveBeenCalledWith("revoke_public_object_reference", {
+      p_public_object_reference_id: "public-reference-1",
+      p_reason: "test",
+    });
+    expect(db.from).not.toHaveBeenCalled();
   });
 });
 

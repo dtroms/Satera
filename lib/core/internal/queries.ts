@@ -17,6 +17,7 @@ const INVENTORY_SELECT = `
 
 const TRANSACTION_SELECT = "*";
 const COMP_SNAPSHOT_SELECT = "*";
+const PUBLIC_OBJECT_REFERENCE_SELECT = "*";
 
 function throwIfError(error: unknown): void {
   if (error) {
@@ -149,6 +150,34 @@ export async function getInternalCompSnapshotsForItem(
 
   throwIfError(error);
   return (data ?? []) as CompSnapshot[];
+}
+
+export async function getInternalPublicObjectReferences(): Promise<
+  InternalRecord[]
+> {
+  const db = await createClient();
+  const { data, error } = await db
+    .from("public_object_references")
+    .select(PUBLIC_OBJECT_REFERENCE_SELECT)
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  throwIfError(error);
+  return data ?? [];
+}
+
+export async function getInternalPublicObjectReferencesForItem(
+  inventoryItemId: string,
+): Promise<InternalRecord[]> {
+  const db = await createClient();
+  const { data, error } = await db
+    .from("public_object_references")
+    .select(PUBLIC_OBJECT_REFERENCE_SELECT)
+    .eq("inventory_item_id", inventoryItemId)
+    .order("created_at", { ascending: false });
+
+  throwIfError(error);
+  return data ?? [];
 }
 
 export async function getInternalBasisLineageEdges(): Promise<InternalRecord[]> {
