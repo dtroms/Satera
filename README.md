@@ -57,15 +57,28 @@ private inventory item -> safe public object reference -> product/community/list
 Public references are intentional exposure records and are not the inventory
 source of truth. They may carry safe display and market/value signals, but must
 never expose `true_basis`, purchase price, profit, ROI, location, private notes,
-private tags, ownership history, private transaction history, or grading costs.
+private tags, ownership history, private transaction history, or
+evaluation/certification costs such as grading costs.
+
+Satera Core should model evaluation/certification as a product-neutral
+lifecycle. Products can translate that backbone into niche-specific workflows,
+such as Card Vertex grading submissions, Comic Vertex restoration review, Watch
+Vertex authentication and service records, Coin Vertex holder certification,
+or Memorabilia appraisal and provenance review. Evaluation cost may increase
+`true_basis`, but evaluation result does not automatically increase
+`true_basis`; basis and market value remain separate.
 
 Satera Community Core MVP now exists as platform infrastructure. Communities
 are product-scoped Core records with channels, memberships, roles, messages,
 safe public object reference attachments, basic moderation report/action
-records, audit events, and RLS visibility controls. Products such as Card
-Vertex will render their own community experiences later; no Card Vertex
-community pages, Community Dock, Vertex Pro UI, realtime, LiveKit, voice,
-video, screenshare, uploaded video, or media processing have been implemented.
+records, audit events, RLS visibility controls, TypeScript services, and
+read-only Internal Inspector visibility. Community TypeScript mutations call
+the Community Core RPCs only; they do not directly insert, update, delete, or
+upsert community tables. Products such as Card Vertex will render their own
+community experiences later; no Card Vertex community pages, Community Dock,
+Vertex Pro UI, realtime, LiveKit, voice, video, screenshare, uploaded video,
+media processing, notifications, or advanced moderation automation have been
+implemented.
 
 Trades are atomic RPC workflows. A trade freezes outgoing item basis in
 `transaction_lines`, marks outgoing items as traded and archived without
@@ -192,9 +205,11 @@ authorization. It must never introduce unsafe write paths or bypass the RPC
 workflows that protect ownership history and cost basis.
 
 Current internal inspector routes include inventory, transactions, lineage,
-audit, products/category/catalog, and public reference views. The products view
-exists to verify that Card Vertex, Vertex Pro, and Satera Portfolio are
-product/category lenses, not inventory owners.
+audit, products/category/catalog, public reference, communities, community
+messages, and moderation views. The products view exists to verify that Card
+Vertex, Vertex Pro, and Satera Portfolio are product/category lenses, not
+inventory owners. Community inspector views are read-only and do not provide
+forms, edit buttons, create message UI, or moderation write paths.
 
 ## Card Vertex Planning
 

@@ -1,10 +1,11 @@
 # Satera Community Core
 
-This document describes Satera Community Core architecture. Pass 1 has now
-implemented the reusable backend MVP: schema, RLS, RPC write paths, safe public
-object reference message attachments, basic moderation records, audit events,
-and SQL verification. It still does not describe product UI, routes, realtime
-transport, media processing, or advanced moderation automation.
+This document describes Satera Community Core architecture. Pass 1 implemented
+the reusable backend MVP: schema, RLS, RPC write paths, safe public object
+reference message attachments, basic moderation records, audit events, and SQL
+verification. Pass 2 adds the TypeScript service layer and read-only Internal
+Inspector visibility. It still does not describe product UI, realtime
+transport, media processing, notifications, or advanced moderation automation.
 
 ## Core Rule
 
@@ -82,6 +83,16 @@ Pass 1 implements:
 - audit events for important community actions
 - RLS policies and direct-write hardening so application clients use RPCs
 
+Pass 2 implements:
+
+- TypeScript Community Core types and read helpers
+- TypeScript mutation helpers that call `create_community`,
+  `create_community_channel`, `join_community`, `create_community_message`,
+  `report_community_content`, and `moderate_community_content`
+- service-layer tests that verify community mutations use RPCs only
+- read-only Internal Inspector views for communities, messages, references,
+  moderation reports, and moderation actions
+
 ## Layer 2: Product Community Templates
 
 Product Community Templates are reusable defaults that products can configure.
@@ -158,7 +169,13 @@ of attaching `inventory_items` rows.
 safe public reference display fields such as title, subtitle, label, image,
 condition, grade, value label, visibility, and safe public metadata. It must not
 contain true basis, purchase price, profit, ROI, location, private notes,
-private tags, ownership history, private transaction history, or grading costs.
+private tags, ownership history, private transaction history, or
+evaluation/certification costs such as grading costs.
+
+TypeScript message creation accepts public object reference ids only for
+attachments. It does not accept inventory item ids, true basis, purchase price,
+private notes, private tags, ownership history, or private transaction history
+payload fields.
 
 ## Implemented Schema
 
@@ -171,6 +188,10 @@ The Pass 1 schema is platform-level and product-scoped:
 - `community_message_references`
 - `moderation_reports`
 - `moderation_actions`
+
+The Pass 2 service and inspector layer is also platform-level. The Internal
+Inspector reads these records for debugging and audit visibility only; it does
+not provide edit buttons, forms, create message UI, or moderation write UI.
 
 The following remain future concepts:
 
@@ -202,15 +223,20 @@ Community Phase 1 includes:
 - safe public object references
 - basic moderation foundation records
 - audit trail
+- RPC-only TypeScript mutation services
+- read-only Internal Inspector visibility
 
 Community Phase 1 does not include:
 
 - LiveKit implementation
 - Discord-style screen share
 - uploaded video playback
+- realtime implementation
+- notifications
 - advanced automated moderation
 - marketplace payments
 - global discovery feed
 - generic social-network UI
 - Card Vertex Community Dock
+- Card Vertex pages
 - Vertex Pro community management UI

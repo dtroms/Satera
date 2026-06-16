@@ -2,18 +2,34 @@
 
 ## Current Priority
 
-1. Satera Community Core MVP Pass 2: TypeScript service layer + Internal Inspector.
-2. Satera Moderation Foundation hardening.
-3. Notification Foundation.
-4. Sale Transaction RPC.
-5. Lot Purchase RPC.
-6. Grading Lifecycle.
+1. Satera Moderation Foundation hardening.
+2. Notification Foundation.
+3. Sale Transaction RPC.
+4. Lot Purchase RPC.
+5. Evaluation / Certification Lifecycle.
+6. Product Lens Framework hardening.
 7. Card Vertex product shell later.
 
-Satera Community Core MVP Pass 1 now exists as platform infrastructure.
+Satera Community Core MVP Pass 2 now exists as platform infrastructure.
 Community messages can attach safe public object references instead of private
-inventory rows. Product-specific community UI, including Card Vertex community
-surfaces, comes later.
+inventory rows, TypeScript mutations route through RPCs only, and the Internal
+Inspector can inspect community records through read-only views. Product-specific
+community UI, including Card Vertex community surfaces and the Community Dock,
+comes later.
+
+Satera Core should model evaluation/certification as a product-neutral
+lifecycle. Products can translate that backbone into niche-specific workflows:
+Card Vertex grading submissions and cert numbers, Comic Vertex restoration
+review and page quality, Watch Vertex authentication and service records, Coin
+Vertex holder and mint/state details, and Memorabilia certificates of
+authenticity or provenance review.
+
+Evaluation cost may increase `true_basis`. Evaluation result does not
+automatically increase `true_basis`. A grading fee, authentication fee,
+appraisal fee, or certification fee may be capitalized into basis when
+appropriate, but a PSA 10, authenticated watch, certified comic, or appraised
+item affects market value separately from basis unless actual costs were
+incurred.
 
 ## Future Product Work
 
@@ -38,15 +54,16 @@ surfaces, comes later.
 10. Drag/drop public card references.
 11. Comp display and discussion.
 12. Trade/sale/wanted posts.
+13. Card Vertex Grading Workflow, powered by Satera Evaluation /
+    Certification Lifecycle.
 
 ## Future Satera Community Core
 
-1. TypeScript service layer for community RPCs.
-2. Read-only Internal Inspector coverage for communities, channels,
-   memberships, messages, references, reports, actions, and audit trail.
-3. Moderation Foundation hardening.
-4. Notification hooks.
-5. Future post/listing/trade-specific workflows.
+1. Moderation Foundation hardening.
+2. Notification hooks.
+3. Future post/listing/trade-specific workflows.
+4. Realtime presence later.
+5. LiveKit, uploaded media, and media processing later.
 
 Public references follow the reusable Core pattern:
 

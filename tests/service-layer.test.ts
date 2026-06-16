@@ -20,6 +20,15 @@ import {
   revokePublicObjectReference,
   updatePublicObjectReferenceDisplay,
 } from "@/lib/core/public-references/mutations";
+import {
+  createCommunity,
+  createCommunityChannel,
+  createCommunityMessage,
+  joinCommunity,
+  moderateCommunityContent,
+  reportCommunityContent,
+} from "@/lib/core/community/mutations";
+import type { CreateCommunityMessageInput } from "@/lib/core/community/types";
 
 function inventoryItem(
   overrides: Partial<InventoryItem> & { id: string },
@@ -466,6 +475,176 @@ describe("public object reference service protections", () => {
     expect(rpc).toHaveBeenCalledWith("revoke_public_object_reference", {
       p_public_object_reference_id: "public-reference-1",
       p_reason: "test",
+    });
+    expect(db.from).not.toHaveBeenCalled();
+  });
+});
+
+describe("community service protections", () => {
+  it("community creation calls the RPC and not direct table writes", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: "community-1", error: null });
+    const db = { from: vi.fn(), rpc };
+
+    await expect(
+      createCommunity(db, {
+        productId: "product-1",
+        ownerUserId: "user-1",
+        name: "Collectors",
+        slug: "collectors",
+        description: "A safe community",
+        communityType: "collector_group",
+        visibility: "private",
+      }),
+    ).resolves.toBe("community-1");
+
+    expect(rpc).toHaveBeenCalledWith("create_community", {
+      p_product_id: "product-1",
+      p_organization_id: null,
+      p_workspace_id: null,
+      p_owner_user_id: "user-1",
+      p_name: "Collectors",
+      p_slug: "collectors",
+      p_description: "A safe community",
+      p_community_type: "collector_group",
+      p_visibility: "private",
+    });
+    expect(db.from).not.toHaveBeenCalled();
+  });
+
+  it("community channel creation calls the RPC and not direct table writes", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: "channel-1", error: null });
+    const db = { from: vi.fn(), rpc };
+
+    await createCommunityChannel(db, {
+      communityId: "community-1",
+      name: "General",
+      slug: "general",
+      channelType: "conversation",
+      visibility: "community",
+      sortOrder: 10,
+    });
+
+    expect(rpc).toHaveBeenCalledWith("create_community_channel", {
+      p_community_id: "community-1",
+      p_name: "General",
+      p_slug: "general",
+      p_description: null,
+      p_channel_type: "conversation",
+      p_visibility: "community",
+      p_sort_order: 10,
+    });
+    expect(db.from).not.toHaveBeenCalled();
+  });
+
+  it("joining a community calls the RPC and not direct table writes", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: "membership-1", error: null });
+    const db = { from: vi.fn(), rpc };
+
+    await joinCommunity(db, { communityId: "community-1" });
+
+    expect(rpc).toHaveBeenCalledWith("join_community", {
+      p_community_id: "community-1",
+    });
+    expect(db.from).not.toHaveBeenCalled();
+  });
+
+  it("community message creation passes public object reference ids to the RPC", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: "message-1", error: null });
+    const db = { from: vi.fn(), rpc };
+
+    await createCommunityMessage(db, {
+      channelId: "channel-1",
+      body: "Sharing a safe reference",
+      messageType: "message",
+      replyToMessageId: "message-0",
+      publicObjectReferenceIds: ["public-reference-1"],
+    });
+
+    expect(rpc).toHaveBeenCalledWith("create_community_message", {
+      p_channel_id: "channel-1",
+      p_body: "Sharing a safe reference",
+      p_message_type: "message",
+      p_reply_to_message_id: "message-0",
+      p_public_object_reference_ids: ["public-reference-1"],
+    });
+    expect(db.from).not.toHaveBeenCalled();
+  });
+
+  it("message reference inputs do not include private inventory payload fields", () => {
+    const input = {
+      channelId: "channel-1",
+      body: "Safe public reference only",
+      publicObjectReferenceIds: ["public-reference-1"],
+    } satisfies CreateCommunityMessageInput;
+
+    expect(Object.keys(input)).toEqual([
+      "channelId",
+      "body",
+      "publicObjectReferenceIds",
+    ]);
+    expect(input).not.toHaveProperty("inventoryItemId");
+    expect(input).not.toHaveProperty("trueBasis");
+    expect(input).not.toHaveProperty("purchasePrice");
+    expect(input).not.toHaveProperty("privateNotes");
+    expect(input).not.toHaveProperty("privateTags");
+  });
+
+  it("reporting community content calls the RPC and not direct table writes", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: "report-1", error: null });
+    const db = { from: vi.fn(), rpc };
+
+    await reportCommunityContent(db, {
+      productId: "product-1",
+      communityId: "community-1",
+      channelId: "channel-1",
+      messageId: "message-1",
+      reportedEntityTable: "community_messages",
+      reportedEntityId: "message-1",
+      reason: "spam",
+      details: "Possible spam",
+    });
+
+    expect(rpc).toHaveBeenCalledWith("report_community_content", {
+      p_product_id: "product-1",
+      p_community_id: "community-1",
+      p_channel_id: "channel-1",
+      p_message_id: "message-1",
+      p_reported_entity_table: "community_messages",
+      p_reported_entity_id: "message-1",
+      p_reason: "spam",
+      p_details: "Possible spam",
+    });
+    expect(db.from).not.toHaveBeenCalled();
+  });
+
+  it("moderating community content calls the RPC and not direct table writes", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: "action-1", error: null });
+    const db = { from: vi.fn(), rpc };
+
+    await moderateCommunityContent(db, {
+      reportId: "report-1",
+      productId: "product-1",
+      communityId: "community-1",
+      channelId: "channel-1",
+      messageId: "message-1",
+      targetEntityTable: "community_messages",
+      targetEntityId: "message-1",
+      actionType: "hide",
+      reason: "moderation",
+      metadata: { safe_note: "reviewed" },
+    });
+
+    expect(rpc).toHaveBeenCalledWith("moderate_community_content", {
+      p_report_id: "report-1",
+      p_product_id: "product-1",
+      p_community_id: "community-1",
+      p_channel_id: "channel-1",
+      p_message_id: "message-1",
+      p_target_entity_table: "community_messages",
+      p_target_entity_id: "message-1",
+      p_action_type: "hide",
+      p_reason: "moderation",
+      p_metadata: { safe_note: "reviewed" },
     });
     expect(db.from).not.toHaveBeenCalled();
   });

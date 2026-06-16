@@ -52,6 +52,24 @@ export default async function InternalHomePage() {
             description:
               "Inspect safe public object references that bridge private inventory into future product/community attachments.",
           },
+          {
+            href: "/internal/communities",
+            title: "Communities",
+            description:
+              "Inspect product-scoped Community Core communities, owner context, visibility, and status.",
+          },
+          {
+            href: "/internal/community-messages",
+            title: "Community Messages",
+            description:
+              "Inspect Community Core messages and safe public object reference attachments.",
+          },
+          {
+            href: "/internal/moderation",
+            title: "Moderation",
+            description:
+              "Inspect read-only moderation reports and actions for auditable Community Core workflows.",
+          },
         ].map((link) => (
           <Link
             key={link.href}

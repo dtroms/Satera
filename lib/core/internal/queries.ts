@@ -18,6 +18,13 @@ const INVENTORY_SELECT = `
 const TRANSACTION_SELECT = "*";
 const COMP_SNAPSHOT_SELECT = "*";
 const PUBLIC_OBJECT_REFERENCE_SELECT = "*";
+const COMMUNITY_SELECT = "*";
+const COMMUNITY_CHANNEL_SELECT = "*";
+const COMMUNITY_MEMBERSHIP_SELECT = "*";
+const COMMUNITY_MESSAGE_SELECT = "*";
+const COMMUNITY_MESSAGE_REFERENCE_SELECT = "*";
+const MODERATION_REPORT_SELECT = "*";
+const MODERATION_ACTION_SELECT = "*";
 
 function throwIfError(error: unknown): void {
   if (error) {
@@ -329,6 +336,196 @@ export async function getInternalAuditEventsForEntity(
     .eq("entity_table", entityTable)
     .eq("entity_id", entityId)
     .order("created_at", { ascending: true });
+
+  throwIfError(error);
+  return data ?? [];
+}
+
+export async function getInternalCommunities(): Promise<InternalRecord[]> {
+  const db = await createClient();
+  const { data, error } = await db
+    .from("communities")
+    .select(COMMUNITY_SELECT)
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  throwIfError(error);
+  return data ?? [];
+}
+
+export async function getInternalCommunityById(
+  id: string,
+): Promise<InternalRecord | null> {
+  const db = await createClient();
+  const { data, error } = await db
+    .from("communities")
+    .select(COMMUNITY_SELECT)
+    .eq("id", id)
+    .maybeSingle();
+
+  throwIfError(error);
+  return data ?? null;
+}
+
+export async function getInternalCommunityChannels(
+  communityId?: string,
+): Promise<InternalRecord[]> {
+  const db = await createClient();
+  let query = db
+    .from("community_channels")
+    .select(COMMUNITY_CHANNEL_SELECT)
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: true });
+
+  if (communityId) {
+    query = query.eq("community_id", communityId);
+  }
+
+  const { data, error } = await query;
+
+  throwIfError(error);
+  return data ?? [];
+}
+
+export async function getInternalCommunityMemberships(
+  communityId?: string,
+): Promise<InternalRecord[]> {
+  const db = await createClient();
+  let query = db
+    .from("community_memberships")
+    .select(COMMUNITY_MEMBERSHIP_SELECT)
+    .order("joined_at", { ascending: false });
+
+  if (communityId) {
+    query = query.eq("community_id", communityId);
+  }
+
+  const { data, error } = await query;
+
+  throwIfError(error);
+  return data ?? [];
+}
+
+export async function getInternalCommunityMessages(filters: {
+  communityId?: string;
+  channelId?: string;
+  productId?: string;
+} = {}): Promise<InternalRecord[]> {
+  const db = await createClient();
+  let query = db
+    .from("community_messages")
+    .select(COMMUNITY_MESSAGE_SELECT)
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  if (filters.communityId) {
+    query = query.eq("community_id", filters.communityId);
+  }
+
+  if (filters.channelId) {
+    query = query.eq("channel_id", filters.channelId);
+  }
+
+  if (filters.productId) {
+    query = query.eq("product_id", filters.productId);
+  }
+
+  const { data, error } = await query;
+
+  throwIfError(error);
+  return data ?? [];
+}
+
+export async function getInternalCommunityMessageReferences(filters: {
+  messageId?: string;
+  communityId?: string;
+  channelId?: string;
+} = {}): Promise<InternalRecord[]> {
+  const db = await createClient();
+  let query = db
+    .from("community_message_references")
+    .select(COMMUNITY_MESSAGE_REFERENCE_SELECT)
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  if (filters.messageId) {
+    query = query.eq("message_id", filters.messageId);
+  }
+
+  if (filters.communityId) {
+    query = query.eq("community_id", filters.communityId);
+  }
+
+  if (filters.channelId) {
+    query = query.eq("channel_id", filters.channelId);
+  }
+
+  const { data, error } = await query;
+
+  throwIfError(error);
+  return data ?? [];
+}
+
+export async function getInternalModerationReports(filters: {
+  communityId?: string;
+  productId?: string;
+  messageId?: string;
+} = {}): Promise<InternalRecord[]> {
+  const db = await createClient();
+  let query = db
+    .from("moderation_reports")
+    .select(MODERATION_REPORT_SELECT)
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  if (filters.communityId) {
+    query = query.eq("community_id", filters.communityId);
+  }
+
+  if (filters.productId) {
+    query = query.eq("product_id", filters.productId);
+  }
+
+  if (filters.messageId) {
+    query = query.eq("message_id", filters.messageId);
+  }
+
+  const { data, error } = await query;
+
+  throwIfError(error);
+  return data ?? [];
+}
+
+export async function getInternalModerationActions(filters: {
+  communityId?: string;
+  productId?: string;
+  messageId?: string;
+  reportId?: string;
+} = {}): Promise<InternalRecord[]> {
+  const db = await createClient();
+  let query = db
+    .from("moderation_actions")
+    .select(MODERATION_ACTION_SELECT)
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  if (filters.communityId) {
+    query = query.eq("community_id", filters.communityId);
+  }
+
+  if (filters.productId) {
+    query = query.eq("product_id", filters.productId);
+  }
+
+  if (filters.messageId) {
+    query = query.eq("message_id", filters.messageId);
+  }
+
+  if (filters.reportId) {
+    query = query.eq("report_id", filters.reportId);
+  }
+
+  const { data, error } = await query;
 
   throwIfError(error);
   return data ?? [];
