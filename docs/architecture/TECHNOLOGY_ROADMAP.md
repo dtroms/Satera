@@ -88,6 +88,18 @@ moderation notes, appeal records, and audit-backed RPC workflows. Product-facing
 moderation UI comes later. Automated moderation and AI moderation remain future
 signal-source integrations only; Satera Core owns final state and decisions.
 
+## Notifications
+
+Satera Notification Foundation is the durable Core notification truth layer.
+It stores notification events, recipient notification state, safe metadata,
+product/entity context, audit trail, and future delivery-attempt records.
+
+Products render notification experiences later. External delivery providers
+such as Resend, push, SMS, webhooks, realtime transports, and background jobs
+remain future infrastructure only and are not implemented by the foundation.
+Notification payloads must use safe metadata only and must not expose private
+inventory fields.
+
 ## Community Phase Guidance
 
 Community Phase 1 should include:
@@ -111,3 +123,4 @@ Community Phase 1 should not include:
 - advanced automated moderation
 - marketplace payments
 - global discovery feed
+- notification UI or delivery providers

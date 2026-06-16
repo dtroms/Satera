@@ -24,6 +24,11 @@ The current Satera Core foundation includes:
   expanded moderation RPC behavior, restriction lifting, note/appeal RPCs,
   RLS policies, direct-write hardening, audit events, TypeScript service
   helpers, SQL verification, and read-only Internal Inspector visibility.
+- Satera Notification Foundation with durable notification events,
+  recipient-specific notification state, safe metadata guards, product/entity
+  context, future delivery-attempt tracking, RLS policies, direct-write
+  hardening, RPC-only status mutations, audit events, TypeScript service
+  helpers, SQL verification, and read-only Internal Inspector visibility.
 - Direct-write hardening for critical financial and history tables.
 - TypeScript service layer that routes application code through safe workflows.
 - Tests for calculations, service-layer protections, atomic transaction inputs,
@@ -46,7 +51,11 @@ The current Satera Core foundation includes:
 - Internal Community and Moderation Inspector views are read-only and do not
   add edit forms, create-message UI, moderation write paths, or product-facing
   moderation dashboards.
+- Internal Notification Inspector views are read-only and do not add
+  notification UI, forms, delivery controls, product notification surfaces, or
+  preference management.
 - No Card Vertex community UI, Card Vertex pages, Community Dock, Vertex Pro
   UI, realtime, LiveKit, voice, video, screenshare, uploaded video, media
-  processing, AI moderation, automated moderation providers, or advanced
-  moderation automation has been built.
+  processing, notification delivery, email, push, SMS, AI moderation,
+  automated moderation providers, or advanced moderation automation has been
+  built.

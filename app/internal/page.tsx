@@ -70,6 +70,12 @@ export default async function InternalHomePage() {
             description:
               "Inspect read-only moderation reports and actions for auditable Community Core workflows.",
           },
+          {
+            href: "/internal/notifications",
+            title: "Notifications",
+            description:
+              "Inspect durable Core notification events, recipient state, and future delivery attempt records.",
+          },
         ].map((link) => (
           <Link
             key={link.href}

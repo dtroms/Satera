@@ -2,12 +2,19 @@
 
 ## Current Priority
 
-1. Notification Foundation.
-2. Sale Transaction RPC.
-3. Lot Purchase RPC.
-4. Evaluation / Certification Lifecycle.
-5. Product Lens Framework hardening.
+1. Sale Transaction RPC.
+2. Lot Purchase RPC.
+3. Evaluation / Certification Lifecycle.
+4. Product Lens Framework hardening.
+5. Comp/Value Workflow write path.
 6. Card Vertex product shell later.
+
+Satera Notification Foundation now exists as platform infrastructure. Core owns
+durable notification events, recipient-specific read/dismiss/archive state,
+safe metadata, product/entity context, audit trail, and future delivery-attempt
+records. Products render notification experiences later. External delivery
+providers such as Resend, push, SMS, webhooks, realtime systems, and background
+jobs remain future infrastructure only.
 
 Satera Moderation Foundation hardening now exists as platform infrastructure.
 Core owns durable user restrictions, internal moderation notes, appeal records,
@@ -64,7 +71,8 @@ incurred.
 
 ## Future Satera Community Core
 
-1. Notification hooks.
+1. Notification hooks from community workflows into the Core notification
+   foundation.
 2. Future post/listing/trade-specific workflows.
 3. Realtime presence later.
 4. LiveKit, uploaded media, and media processing later.

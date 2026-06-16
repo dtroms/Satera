@@ -28,6 +28,9 @@ const MODERATION_ACTION_SELECT = "*";
 const USER_RESTRICTION_SELECT = "*";
 const MODERATION_NOTE_SELECT = "*";
 const MODERATION_APPEAL_SELECT = "*";
+const NOTIFICATION_EVENT_SELECT = "*";
+const NOTIFICATION_SELECT = "*";
+const NOTIFICATION_DELIVERY_ATTEMPT_SELECT = "*";
 
 function throwIfError(error: unknown): void {
   if (error) {
@@ -646,6 +649,86 @@ export async function getInternalModerationAppeals(filters: {
 
   if (filters.restrictionId) {
     query = query.eq("restriction_id", filters.restrictionId);
+  }
+
+  const { data, error } = await query;
+
+  throwIfError(error);
+  return data ?? [];
+}
+
+export async function getInternalNotificationEvents(filters: {
+  productId?: string;
+  eventType?: string;
+} = {}): Promise<InternalRecord[]> {
+  const db = await createClient();
+  let query = db
+    .from("notification_events")
+    .select(NOTIFICATION_EVENT_SELECT)
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  if (filters.productId) {
+    query = query.eq("product_id", filters.productId);
+  }
+
+  if (filters.eventType) {
+    query = query.eq("event_type", filters.eventType);
+  }
+
+  const { data, error } = await query;
+
+  throwIfError(error);
+  return data ?? [];
+}
+
+export async function getInternalNotifications(filters: {
+  productId?: string;
+  recipientUserId?: string;
+  status?: string;
+} = {}): Promise<InternalRecord[]> {
+  const db = await createClient();
+  let query = db
+    .from("notifications")
+    .select(NOTIFICATION_SELECT)
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  if (filters.productId) {
+    query = query.eq("product_id", filters.productId);
+  }
+
+  if (filters.recipientUserId) {
+    query = query.eq("recipient_user_id", filters.recipientUserId);
+  }
+
+  if (filters.status) {
+    query = query.eq("status", filters.status);
+  }
+
+  const { data, error } = await query;
+
+  throwIfError(error);
+  return data ?? [];
+}
+
+export async function getInternalNotificationDeliveryAttempts(filters: {
+  notificationId?: string;
+  status?: string;
+} = {}): Promise<InternalRecord[]> {
+  const db = await createClient();
+  let query = db
+    .from("notification_delivery_attempts")
+    .select(NOTIFICATION_DELIVERY_ATTEMPT_SELECT)
+    .order("attempted_at", { ascending: false })
+    .limit(100);
+
+  if (filters.notificationId) {
+    query = query.eq("notification_id", filters.notificationId);
+  }
+
+  if (filters.status) {
+    query = query.eq("status", filters.status);
   }
 
   const { data, error } = await query;

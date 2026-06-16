@@ -35,6 +35,11 @@ Critical write workflows now run through atomic Postgres RPC functions:
 - `lift_user_restriction`
 - `add_moderation_note`
 - `submit_moderation_appeal`
+- `create_notification_event`
+- `mark_notification_read`
+- `mark_notifications_read`
+- `dismiss_notification`
+- `archive_notification`
 
 These RPCs create inventory, transactions, transaction lines, ownership
 events, basis events, and audit events in one database transaction. They also
@@ -91,6 +96,14 @@ External moderation providers may provide signals later, but final state
 belongs in Satera Core. Normal users should not see hidden, removed, or deleted
 community messages; moderators and admins can inspect moderated content in
 scope.
+
+Satera Notification Foundation now exists as platform infrastructure. Core owns
+durable notification events, recipient notification records, read/dismiss/archive
+state, safe metadata, related entity context, delivery attempt tracking for
+future providers, and audit events. Products will render notification
+experiences later. External providers such as Resend, push, SMS, webhooks,
+realtime transports, and background delivery jobs are future delivery layers
+only and are not implemented here.
 
 Trades are atomic RPC workflows. A trade freezes outgoing item basis in
 `transaction_lines`, marks outgoing items as traded and archived without
@@ -198,6 +211,10 @@ DATABASE_URL="postgresql://postgres:postgres@127.0.0.1:54322/postgres" npm run d
   restrictions, moderation notes, appeals, posting restriction enforcement,
   hidden/removed/deleted visibility, RPC-only moderation writes, RLS, and audit
   events.
+- `012_notification_foundation.sql`: verifies durable notification events,
+  recipient notification RLS, safe metadata guards, RPC-only status mutations,
+  audit events, blocked direct writes, delivery-attempt write hardening, and
+  platform-admin inspection.
 
 ## App Checks
 
@@ -211,8 +228,8 @@ npm run build
 
 The `/internal` surface is a read-only development/internal inspector for
 Satera Core truth records. It exists to inspect inventory, transactions,
-ownership events, basis events, basis lineage, and audit records while the Core
-backbone is being verified.
+ownership events, basis events, basis lineage, notification records, and audit
+records while the Core backbone is being verified.
 
 It is not Card Vertex. It is not Satera Portfolio. It is not Vertex Pro.
 

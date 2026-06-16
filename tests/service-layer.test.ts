@@ -32,6 +32,21 @@ import {
   submitModerationAppeal,
 } from "@/lib/core/community/mutations";
 import type { CreateCommunityMessageInput } from "@/lib/core/community/types";
+import {
+  archiveNotification,
+  assertNotificationMetadataSafe,
+  createNotificationEvent,
+  dismissNotification,
+  markNotificationRead,
+  markNotificationsRead,
+} from "@/lib/core/notifications/mutations";
+import {
+  getNotificationById,
+  getNotificationDeliveryAttempts,
+  getNotificationEvents,
+  getNotificationsForCurrentUser,
+  getUnreadNotificationsForCurrentUser,
+} from "@/lib/core/notifications/queries";
 
 function inventoryItem(
   overrides: Partial<InventoryItem> & { id: string },
@@ -80,6 +95,21 @@ function createRpcMockDb() {
       rpc,
     },
   };
+}
+
+function createSelectMockDb(data: unknown[] = []) {
+  const query: any = {
+    select: vi.fn(() => query),
+    eq: vi.fn(() => query),
+    order: vi.fn(() => query),
+    limit: vi.fn(() => query),
+    maybeSingle: vi.fn(() => Promise.resolve({ data: data[0] ?? null, error: null })),
+    then: (resolve: (value: unknown) => unknown) =>
+      Promise.resolve({ data, error: null }).then(resolve),
+  };
+  const from = vi.fn(() => query);
+
+  return { db: { from, rpc: vi.fn() }, from, query };
 }
 
 describe("inventory service protections", () => {
@@ -716,6 +746,138 @@ describe("community service protections", () => {
       p_reason: "appeal reason",
     });
     expect(db.from).not.toHaveBeenCalled();
+  });
+});
+
+describe("notification service protections", () => {
+  it("rejects private fields in notification safe metadata", () => {
+    expect(() =>
+      assertNotificationMetadataSafe({
+        safe_context: "notification",
+        nested: { purchase_price: 100 },
+      }),
+    ).toThrow(
+      "Notification metadata cannot include private field purchase_price.",
+    );
+
+    expect(() =>
+      assertNotificationMetadataSafe({ safe_context: "notification" }),
+    ).not.toThrow();
+  });
+
+  it("create notification event calls the RPC and not direct table writes", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: "notification-event-1", error: null });
+    const db = { from: vi.fn(), rpc };
+
+    await expect(
+      createNotificationEvent(db, {
+        productId: "product-1",
+        actorUserId: "actor-1",
+        eventType: "community.message.created",
+        entityTable: "community_messages",
+        entityId: "message-1",
+        relatedEntityTable: "communities",
+        relatedEntityId: "community-1",
+        title: "Community message",
+        body: "Safe body",
+        safeMetadata: { safe_context: "test" },
+        recipientUserIds: ["recipient-1"],
+        notificationType: "community",
+        priority: "normal",
+      }),
+    ).resolves.toBe("notification-event-1");
+
+    expect(rpc).toHaveBeenCalledWith("create_notification_event", {
+      p_product_id: "product-1",
+      p_actor_user_id: "actor-1",
+      p_event_type: "community.message.created",
+      p_entity_table: "community_messages",
+      p_entity_id: "message-1",
+      p_related_entity_table: "communities",
+      p_related_entity_id: "community-1",
+      p_title: "Community message",
+      p_body: "Safe body",
+      p_safe_metadata: { safe_context: "test" },
+      p_recipient_user_ids: ["recipient-1"],
+      p_notification_type: "community",
+      p_priority: "normal",
+    });
+    expect(db.from).not.toHaveBeenCalled();
+  });
+
+  it("create notification event rejects private metadata before RPC call", async () => {
+    const rpc = vi.fn();
+    const db = { from: vi.fn(), rpc };
+
+    await expect(
+      createNotificationEvent(db, {
+        eventType: "unsafe",
+        title: "Unsafe",
+        safeMetadata: { private_notes: "hidden" },
+      }),
+    ).rejects.toThrow(
+      "Notification metadata cannot include private field private_notes.",
+    );
+
+    expect(rpc).not.toHaveBeenCalled();
+    expect(db.from).not.toHaveBeenCalled();
+  });
+
+  it("mark/dismiss/archive notification mutations call RPCs only", async () => {
+    const rpc = vi
+      .fn()
+      .mockResolvedValueOnce({ data: "notification-1", error: null })
+      .mockResolvedValueOnce({ data: 2, error: null })
+      .mockResolvedValueOnce({ data: "notification-1", error: null })
+      .mockResolvedValueOnce({ data: "notification-1", error: null });
+    const db = { from: vi.fn(), rpc };
+
+    await expect(
+      markNotificationRead(db, { notificationId: "notification-1" }),
+    ).resolves.toBe("notification-1");
+    await expect(
+      markNotificationsRead(db, { notificationIds: ["notification-1", "notification-2"] }),
+    ).resolves.toBe(2);
+    await expect(
+      dismissNotification(db, { notificationId: "notification-1" }),
+    ).resolves.toBe("notification-1");
+    await expect(
+      archiveNotification(db, { notificationId: "notification-1" }),
+    ).resolves.toBe("notification-1");
+
+    expect(rpc).toHaveBeenNthCalledWith(1, "mark_notification_read", {
+      p_notification_id: "notification-1",
+    });
+    expect(rpc).toHaveBeenNthCalledWith(2, "mark_notifications_read", {
+      p_notification_ids: ["notification-1", "notification-2"],
+    });
+    expect(rpc).toHaveBeenNthCalledWith(3, "dismiss_notification", {
+      p_notification_id: "notification-1",
+    });
+    expect(rpc).toHaveBeenNthCalledWith(4, "archive_notification", {
+      p_notification_id: "notification-1",
+    });
+    expect(db.from).not.toHaveBeenCalled();
+  });
+
+  it("notification query functions use the expected tables", async () => {
+    const { db, from, query } = createSelectMockDb();
+
+    await getNotificationsForCurrentUser(db);
+    await getUnreadNotificationsForCurrentUser(db);
+    await getNotificationById(db, "notification-1");
+    await getNotificationEvents(db, { productId: "product-1" });
+    await getNotificationDeliveryAttempts(db, "notification-1");
+
+    expect(from).toHaveBeenNthCalledWith(1, "notifications");
+    expect(from).toHaveBeenNthCalledWith(2, "notifications");
+    expect(from).toHaveBeenNthCalledWith(3, "notifications");
+    expect(from).toHaveBeenNthCalledWith(4, "notification_events");
+    expect(from).toHaveBeenNthCalledWith(5, "notification_delivery_attempts");
+    expect(query.eq).toHaveBeenCalledWith("status", "unread");
+    expect(query.eq).toHaveBeenCalledWith("id", "notification-1");
+    expect(query.eq).toHaveBeenCalledWith("product_id", "product-1");
+    expect(query.eq).toHaveBeenCalledWith("notification_id", "notification-1");
   });
 });
 

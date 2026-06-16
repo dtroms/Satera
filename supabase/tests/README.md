@@ -32,6 +32,12 @@ hardening. Satera Core owns moderation state, enforcement, appeals, decisions,
 and audit; product-facing moderation UI and automated moderation providers are
 future work.
 
+Notification Foundation workflows are RPC-only for writes. Satera Core owns
+durable notification events, recipient notification state, safe metadata,
+product/entity context, delivery-attempt tracking for future providers, and
+audit events. Product notification UI, preferences UI, email, push, SMS,
+realtime delivery, and background jobs are future work.
+
 ## Requirements
 
 - Docker
@@ -129,3 +135,7 @@ privacy rules with a service role.
   appeals, restriction-aware posting, hidden/removed/deleted message
   visibility, report resolution/escalation/dismissal, audit events, RLS, and
   direct-write hardening for moderation enforcement records.
+- `012_notification_foundation.sql`: durable notification events, recipient
+  notification RLS, safe metadata rejection, direct-write hardening, RPC-only
+  read/dismiss/archive state changes, audit events, delivery-attempt write
+  blocking, and platform-admin inspection.

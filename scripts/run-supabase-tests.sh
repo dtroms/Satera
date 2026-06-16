@@ -22,6 +22,7 @@ tests=(
   "supabase/tests/009_public_object_references.sql"
   "supabase/tests/010_community_core_mvp.sql"
   "supabase/tests/011_moderation_foundation_hardening.sql"
+  "supabase/tests/012_notification_foundation.sql"
 )
 
 for test_file in "${tests[@]}"; do

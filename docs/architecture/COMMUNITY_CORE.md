@@ -4,8 +4,10 @@ This document describes Satera Community Core architecture. Pass 1 implemented
 the reusable backend MVP: schema, RLS, RPC write paths, safe public object
 reference message attachments, basic moderation records, audit events, and SQL
 verification. Pass 2 adds the TypeScript service layer and read-only Internal
-Inspector visibility. It still does not describe product UI, realtime
-transport, media processing, notifications, or advanced moderation automation.
+Inspector visibility. Notification Foundation now exists separately in Satera
+Core as durable event and recipient state infrastructure. This document still
+does not describe product UI, realtime transport, media processing,
+notification UI, notification delivery, or advanced moderation automation.
 
 ## Core Rule
 
@@ -107,6 +109,20 @@ Moderation Foundation hardening adds:
   appeals
 - RLS and direct-write hardening for enforcement records
 - audit events for moderation decisions, restrictions, notes, and appeals
+
+Notification Foundation adds reusable Core infrastructure for:
+
+- durable notification events
+- recipient notification state
+- read, dismissed, and archived state
+- product, entity, and related entity context
+- safe metadata only
+- future delivery-attempt tracking
+- audit events
+
+Community workflows can emit notification events later, but products render the
+experience. No notification UI, email, push, SMS, realtime delivery, or
+background jobs are part of Community Core.
 
 ## Layer 2: Product Community Templates
 
@@ -220,7 +236,7 @@ The following remain future concepts:
 - `community_comments`
 - richer attachment models beyond public object references
 - `moderation_events`
-- `notifications`
+- community-specific notification hooks into the Core notification foundation
 
 Any future schema must preserve Satera Core privacy boundaries and product lens
 rules. Product membership, entitlement, or community participation must not
@@ -248,7 +264,8 @@ Community Phase 1 does not include:
 - Discord-style screen share
 - uploaded video playback
 - realtime implementation
-- notifications
+- notification UI
+- email, push, SMS, realtime notification delivery, or background jobs
 - advanced automated moderation
 - AI moderation
 - marketplace payments

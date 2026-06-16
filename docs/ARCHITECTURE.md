@@ -77,6 +77,16 @@ audit trail. External moderation providers may provide future signals, but
 they do not own final moderation state. Normal users should not see hidden,
 removed, or deleted community messages; moderators and admins can inspect
 moderated content in scope.
+
+Satera Notification Foundation is Core platform infrastructure. Satera owns
+durable notification events and recipient notification state, including
+read/unread, dismissed, and archived status. Notifications can be scoped to a
+product and attached to primary and related entity context. Payloads use
+`safe_metadata` only and must not expose private inventory fields. Products
+render notification experiences later. External delivery providers such as
+Resend, push, SMS, webhook, realtime, and background job systems are future
+delivery layers only; no provider delivery is implemented in this foundation.
+
 Messages, trade posts, listings, showcases, and future Card Vertex drag/drop
 sharing must attach safe public object references instead of private inventory
 rows. The same Core pattern should work for cards, comics, watches, games, and
@@ -98,6 +108,9 @@ Internal Inspector coverage for Community Core and moderation records is
 read-only. It exists for Core audit and debugging visibility and must not add
 edit buttons, forms, message composition, moderation write UI, product-facing
 moderation dashboards, or product-specific community experiences.
+Notification Inspector coverage is also read-only and must not add notification
+composition UI, product notification UI, preference UI, realtime behavior, or
+delivery-provider controls.
 
 Community architecture is documented in `docs/architecture/COMMUNITY_CORE.md`.
 Future media and moderation alignment is documented in
