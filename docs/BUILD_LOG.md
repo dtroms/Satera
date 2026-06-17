@@ -7,6 +7,16 @@ The current Satera Core foundation includes:
 - SQL verification suite covering inventory privacy, product lens access, entitlement boundaries, basis lineage, comp snapshot privacy, atomic RPC workflows, direct-write hardening, and trade lineage.
 - Atomic starting inventory RPC.
 - Atomic purchase RPC.
+- Atomic lot purchase RPC for buying multiple inventory items in one
+  acquisition. It records one `purchase_lot` transaction, preserves the total
+  lot basis formula, supports manual and equal allocation, freezes allocated
+  `true_basis` per item, writes transaction lines, ownership events, basis
+  events, basis lineage edges, and an audit event, and does not infer current
+  value from basis.
+- Atomic sale RPC for purchase -> own -> sell -> realize profit/loss
+  lifecycle. It freezes basis at sale time, writes sale transaction lines,
+  ownership event, sale realization basis event, audit event, and sold inventory
+  state, and does not rewrite `true_basis` or update current value.
 - Atomic trade RPC.
 - Safe inventory update RPC for the narrow set of allowed inventory fields.
 - Public Object Reference schema, RLS policies, and RPCs for safe exposure
@@ -32,6 +42,7 @@ The current Satera Core foundation includes:
 - Direct-write hardening for critical financial and history tables.
 - TypeScript service layer that routes application code through safe workflows.
 - Tests for calculations, service-layer protections, atomic transaction inputs,
+  sale transaction lifecycle, lot purchase allocation,
   public object reference privacy/RPC behavior, community RPC-only mutation
   behavior, and product/portfolio read helpers.
 - Internal Inspector Slice 2 with read-only lineage, audit,
@@ -42,6 +53,11 @@ The current Satera Core foundation includes:
 - Satera Community Core architecture planning under `docs/architecture/`.
 - Vertex Pro cross-product community management planning under `docs/products/vertex-pro/`.
 - Technology roadmap planning for future community media and moderation alignment under `docs/architecture/`.
+- Future Product App Boundary / Monorepo Restructure planning is documented as
+  a milestone before the Card Vertex product shell. Card Vertex may later live
+  as its own app root at `cardvertex.com`, and Satera may later live separately
+  at `satera.app`, while both continue to use the same Satera Core backend and
+  the same Satera Supabase database.
 - Early comp evidence schema extensions remain in Core as value-evidence infrastructure only. Direct app/client comp writes are not active, and comp mutations are not exposed through UI.
 - Public references are Core display records only. They intentionally exclude
   true basis, purchase price, profit, location, private notes, private tags,
@@ -56,6 +72,9 @@ The current Satera Core foundation includes:
   preference management.
 - No Card Vertex community UI, Card Vertex pages, Community Dock, Vertex Pro
   UI, realtime, LiveKit, voice, video, screenshare, uploaded video, media
-  processing, notification delivery, email, push, SMS, AI moderation,
-  automated moderation providers, or advanced moderation automation has been
-  built.
+  processing, lot purchase UI, bulk import UI, marketplace integrations,
+  receipt parsing, OCR, AI allocation, custom acquisition-cost category
+  management, notification delivery, email, push, SMS, AI moderation, automated
+  moderation providers, or advanced moderation automation has been built.
+- No app roots, packages, separate Card Vertex deployment, separate Card Vertex
+  database, or separate Card Vertex Supabase project have been created.

@@ -74,6 +74,55 @@ export type TradeTransactionInput = OwnerContext & {
   createdBy: string;
 };
 
+export type SaleTransactionInput = OwnerContext & {
+  inventoryItemId: string;
+  salePrice: number;
+  platformFees?: number;
+  paymentProcessingFees?: number;
+  shippingCost?: number;
+  suppliesCost?: number;
+  consignmentFees?: number;
+  otherSellingCosts?: number;
+  transactionDate?: string | null;
+  source?: string | null;
+  counterparty?: string | null;
+  notes?: string | null;
+  createdBy: string;
+};
+
+export type LotAllocationMethod = "manual" | "equal";
+
+export type CreateLotPurchaseItemInput = {
+  assetVariantId: string;
+  conditionType?: ConditionType;
+  allocatedBasis?: number;
+  collectionId?: string | null;
+  locationId?: string | null;
+  acquisitionNotes?: string | null;
+  privateNotes?: string | null;
+  inventoryStatus?: InventoryStatus;
+  availability?: InventoryAvailability;
+  intent?: InventoryIntent;
+};
+
+export type CreateLotPurchaseTransactionInput = {
+  workspaceId: string;
+  productId?: string | null;
+  purchasePrice: number;
+  purchasedAt?: string | null;
+  sellerReference?: string | null;
+  marketplace?: string | null;
+  orderReference?: string | null;
+  buyerFees?: number;
+  tax?: number;
+  shipping?: number;
+  otherAcquisitionCosts?: number;
+  allocationMethod?: LotAllocationMethod;
+  items: CreateLotPurchaseItemInput[];
+  notes?: string | null;
+  createdBy: string;
+};
+
 export type NormalizedBasis = {
   basisProvided: boolean;
   trueBasis: number | null;
@@ -88,4 +137,20 @@ export type TradeTransactionResult = {
   transactionId: string;
   incomingInventoryItemIds: string[];
   outgoingInventoryItemIds: string[];
+};
+
+export type SaleTransactionResult = {
+  transactionId: string;
+  inventoryItemId: string;
+  grossSalePrice: number;
+  sellingCosts: number;
+  netProceeds: number;
+  basisAtSale: number;
+  realizedProfitLoss: number;
+};
+
+export type CreateLotPurchaseTransactionResult = {
+  transactionId: string;
+  inventoryItemIds: string[];
+  totalLotBasis: number;
 };

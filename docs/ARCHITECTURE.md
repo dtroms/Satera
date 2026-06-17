@@ -4,6 +4,46 @@ Satera Core is the truth layer for Satera. It owns the durable records for priva
 
 Products are lenses over Core records. Card Vertex, Vertex Pro, Satera Portfolio, and future products may present different workflows or category-specific experiences, but they do not own inventory and must not become alternate sources of truth.
 
+Product apps may eventually become separate app roots, domains, and
+deployments, but not separate data platforms. Card Vertex should eventually
+live at `cardvertex.com` as its own standalone product surface. Satera should
+eventually live separately at `satera.app` as the platform/powering layer,
+portfolio/admin surface, or future platform home. Both surfaces should continue
+to use the same Satera Core backend and the same Satera Supabase database.
+Card Vertex should not have a separate Supabase project.
+
+Satera owns the database, auth, permissions, inventory truth, transactions,
+basis, lineage, public object references, communities, moderation,
+notifications, audit, and entitlements. Card Vertex owns the card-specific
+product experience, UI, workflows, terminology, layout, and product behavior.
+Card Vertex must call Satera Core services and RPCs instead of directly
+mutating Satera Core tables. Product UI must not contain Satera financial truth
+logic.
+
+The future Product App Boundary / Monorepo Restructure milestone may introduce
+separate app roots and shared packages before the Card Vertex product shell is
+built:
+
+```text
+Satera/
+├── apps/
+│   ├── card-vertex/        deployed to cardvertex.com
+│   ├── satera/             deployed to satera.app
+│   ├── vertex-pro/         future
+│   └── satera-portfolio/   future
+├── packages/
+│   ├── satera-core/        shared service layer / RPC wrappers
+│   ├── ui/                 shared primitives
+│   └── config/             shared config
+└── supabase/
+    ├── migrations/
+    └── tests/
+```
+
+That structure is planning only. It should preserve the service/API boundary
+so Card Vertex can become a separate app root without rewriting the Core logic.
+It should not introduce a separate Card Vertex database or Supabase project.
+
 Inventory belongs to users, workspaces, or organizations. Every inventory item carries an owner context, and privacy starts there. Row Level Security protects row visibility so a product profile, entitlement, or product-specific surface cannot override private inventory boundaries.
 
 Public Object References are the safe sharing bridge between private inventory
@@ -20,11 +60,35 @@ price, profit, ROI, location, private notes, private tags, ownership history,
 private transaction history, or evaluation/certification costs such as grading
 costs. They are not the inventory source of truth.
 
-Atomic write workflows are protected by Postgres RPCs. Starting inventory, purchase, trade, and safe inventory field updates route through database functions that create or update the required transaction, transaction line, ownership event, basis event, basis lineage, inventory, and audit records together. The TypeScript service layer routes app code through these safe workflows.
+Atomic write workflows are protected by Postgres RPCs. Starting inventory,
+purchase, lot purchase, sale, trade, and safe inventory field updates route
+through database functions that create or update the required transaction,
+transaction line, ownership event, basis event, basis lineage, inventory, and
+audit records together. The TypeScript service layer routes app code through
+these safe workflows.
 
 Direct writes to critical Core tables are hardened. App code must not directly mutate financial or history tables such as `transactions`, `transaction_lines`, `ownership_events`, `basis_events`, `basis_lineage_edges`, or `audit_events`. App code must also not directly mutate sacred inventory fields such as `true_basis`, owner context, `category_id`, `asset_variant_id`, or `current_value_snapshot_id`.
 
 Cost basis is sacred. Missing basis is `null`; known zero basis is `0`. Market value and basis are separate concepts, and trade value and basis are separate concepts. Financial basis changes must be explainable through `basis_events`.
+
+Lot purchase allocation freezes basis at acquisition time. `create_lot_purchase_transaction`
+creates multiple inventory items under one `purchase_lot` transaction and
+allocates `purchase_price + buyer_fees + tax + shipping +
+other_acquisition_costs` across the incoming items. This pass supports `manual`
+and `equal` allocation only. Manual allocations must sum to the total lot basis,
+with only a tiny rounding tolerance that is applied to the final item and
+recorded in metadata. Equal allocation divides the total lot basis across all
+items and assigns any rounding remainder to the final item. Each item receives
+its allocated `true_basis`, current value remains separate, and no public object
+references are created.
+
+Sale realization freezes basis at sale time. `create_sale_transaction`
+calculates canonical selling-cost buckets, net proceeds, and realized
+profit/loss as `net_proceeds - true_basis`, then writes the sale transaction,
+transaction lines, ownership event, `sale_realization` basis event, audit event,
+and sold inventory state atomically. It must not rewrite `true_basis`, must not
+update current value, must reject missing basis, and must allow known zero
+basis.
 
 Evaluation / Certification Lifecycle is the product-neutral Core concept for
 grading, authentication, appraisal, condition review, restoration review,
@@ -111,6 +175,10 @@ moderation dashboards, or product-specific community experiences.
 Notification Inspector coverage is also read-only and must not add notification
 composition UI, product notification UI, preference UI, realtime behavior, or
 delivery-provider controls.
+
+Future lot purchase work may add estimated-value proportional allocation,
+comp-based allocation, user-defined allocation templates, and receipt/import
+assistance. Those workflows are not part of the current Core RPC.
 
 Community architecture is documented in `docs/architecture/COMMUNITY_CORE.md`.
 Future media and moderation alignment is documented in

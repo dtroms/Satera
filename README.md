@@ -20,10 +20,21 @@ can write to tables at all. Inventory is private by default and belongs to a
 user, workspace, or organization. Products are category lenses and do not own
 inventory.
 
+Future product deployment planning keeps data ownership centralized in Satera
+Core. Card Vertex should eventually live at `cardvertex.com` as its own
+standalone product surface, and Satera should eventually live separately at
+`satera.app` as the platform/powering layer, portfolio/admin surface, or future
+platform home. That future separation is app-root, domain, and deployment
+separation only. Card Vertex should continue using the same Satera Core backend
+and the same Satera Supabase database; it should not get a separate Supabase
+project.
+
 Critical write workflows now run through atomic Postgres RPC functions:
 
 - `create_starting_inventory_transaction`
 - `create_purchase_transaction`
+- `create_lot_purchase_transaction`
+- `create_sale_transaction`
 - `create_trade_transaction`
 - `update_inventory_item_safe_fields`
 - `create_community`
@@ -114,6 +125,25 @@ from outgoing basis plus cash paid, minus cash received, plus trade-related
 costs. Missing outgoing basis cannot be traded yet; it must be corrected or
 confirmed before a trade workflow can preserve explainable basis.
 
+Lot purchases are atomic RPC workflows. A lot purchase creates multiple
+inventory items under one `purchase_lot` transaction and allocates the total lot
+basis pool across those items. The canonical formula is `purchase_price +
+buyer_fees + tax + shipping + other_acquisition_costs`. Supported allocation
+methods are `manual` and `equal`; allocated basis is frozen per item, the sum
+of allocated item basis must equal the total lot basis with only a tiny
+rounding adjustment, and current value is not inferred from basis. Lot purchase
+does not create public object references, variants, marketplace integrations,
+receipt parsing, OCR, AI allocation, or custom acquisition-cost categories.
+
+Sales are atomic RPC workflows. A sale freezes item basis in
+`transaction_lines`, calculates net proceeds as sale price minus canonical
+selling-cost buckets (platform fees, payment processing fees, shipping cost,
+supplies cost, consignment fees, and other selling costs), records realized
+profit/loss as `net_proceeds - true_basis`, marks the item sold and archived,
+writes a `sale_realization` basis event, and writes an audit event. Sale does
+not rewrite `true_basis` and does not update current value. Missing basis cannot
+be sold yet; known zero basis can be sold and can realize profit/loss.
+
 The TypeScript service layer routes app code through these safe workflows.
 UI components should call service functions instead of writing directly to core
 tables. In particular, UI code must not directly update `true_basis`,
@@ -123,6 +153,14 @@ tables such as `transactions`, `transaction_lines`, `ownership_events`,
 `basis_events`, `basis_lineage_edges`, or `audit_events`; those writes belong
 behind service workflows and database RPCs so ownership history and cost basis
 remain explainable.
+
+The same boundary applies to future product apps. Card Vertex should own the
+card-specific product experience, UI, workflows, terminology, layout, and
+product behavior, but it must call Satera Core services/RPCs for database
+mutations. Product UI must not contain Satera financial truth logic. Preserving
+that service/API boundary lets Card Vertex become a separate app root later
+without rewriting Core inventory, transaction, basis, lineage, permission,
+community, moderation, notification, audit, or entitlement logic.
 
 ## Local Supabase Setup
 
@@ -215,6 +253,14 @@ DATABASE_URL="postgresql://postgres:postgres@127.0.0.1:54322/postgres" npm run d
   recipient notification RLS, safe metadata guards, RPC-only status mutations,
   audit events, blocked direct writes, delivery-attempt write hardening, and
   platform-admin inspection.
+- `013_sale_transaction_lifecycle.sql`: verifies sale transaction math,
+  sold inventory state, sale realization basis event, audit event, zero-basis
+  sales, missing-basis rejection, negative input rejection, unauthorized sale
+  rejection, and already-sold/out-of-active-ownership rejection.
+- `014_lot_purchase_transaction_rpc.sql`: verifies manual and equal lot
+  allocation, rounding, zero-dollar lots, transaction/inventory/lineage/basis
+  records, audit events, invalid input rejection, reference validation, and
+  unauthorized workspace rejection.
 
 ## App Checks
 
@@ -253,6 +299,12 @@ Card Vertex crowdsourced comp planning lives in
 `docs/products/card-vertex/CROWDSOURCED_COMP_SYSTEM.md`. No Card Vertex UI,
 browser extension, public comp creation route, or internal inspector write path
 has been implemented.
+
+The future Product App Boundary / Monorepo Restructure milestone should happen
+before the Card Vertex product shell is built. It may later introduce separate
+app roots for `cardvertex.com` and `satera.app` plus shared packages for Core
+service wrappers, UI primitives, and config, but this repository has not been
+restructured yet.
 
 Card Vertex inventory workspace, saved filters, community dock, drag/drop public
 card references, and Card Context Drawer planning lives in

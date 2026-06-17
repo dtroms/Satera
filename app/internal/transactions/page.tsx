@@ -44,7 +44,9 @@ export default async function InternalTransactionsPage() {
             {
               key: "type",
               header: "Type",
-              render: (transaction) => transaction.transaction_type,
+              render: (transaction) =>
+                transaction.metadata?.transaction_kind ??
+                transaction.transaction_type,
             },
             {
               key: "owner",

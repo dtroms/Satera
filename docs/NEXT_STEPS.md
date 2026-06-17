@@ -2,12 +2,26 @@
 
 ## Current Priority
 
-1. Sale Transaction RPC.
-2. Lot Purchase RPC.
-3. Evaluation / Certification Lifecycle.
-4. Product Lens Framework hardening.
-5. Comp/Value Workflow write path.
-6. Card Vertex product shell later.
+1. Evaluation / Certification Lifecycle.
+2. Product Lens Framework hardening.
+3. Product App Boundary / Monorepo Restructure.
+4. Comp/Value Workflow write path.
+5. Card Vertex product shell later.
+
+Lot Purchase RPC is now complete as a strict Satera Core RPC. It creates
+multiple inventory items under one `purchase_lot` transaction, preserves
+`purchase_price + buyer_fees + tax + shipping + other_acquisition_costs` as the
+total lot basis pool, supports `manual` and `equal` allocation, freezes
+allocated `true_basis` per item, writes transaction lines, ownership events,
+basis events, basis lineage edges, and an audit event, and does not infer
+current value from basis.
+
+Sale Transaction RPC is now complete as a strict Satera Core RPC. It completes
+the purchase -> own -> sell -> realize profit/loss lifecycle by writing the
+sale transaction, transaction lines, ownership event, sale realization basis
+event, audit event, and sold inventory state atomically. Sale realization
+freezes basis at sale time; it does not rewrite `true_basis` and does not
+update current value.
 
 Satera Notification Foundation now exists as platform infrastructure. Core owns
 durable notification events, recipient-specific read/dismiss/archive state,
@@ -45,12 +59,22 @@ incurred.
 
 ## Future Product Work
 
-1. Build Satera Portfolio after the Core truth layer and product lens framework
+1. Keep Satera Core focused on durable truth, permissions, financial workflows,
+   lineage, public references, community, moderation, notifications, audit, and
+   entitlements.
+2. Build Satera Portfolio after the Core truth layer and product lens framework
    are stable.
-2. Build Card Vertex from product documentation, starting with manual comp UX
+3. Build Card Vertex from product documentation, starting with manual comp UX
    only after Core write boundaries are approved.
-3. Build Vertex Pro after organization/product profile workflows are ready for
+4. Build Vertex Pro after organization/product profile workflows are ready for
    operator-facing surfaces.
+
+## Future Lot Purchase Work
+
+1. Estimated-value proportional allocation.
+2. Comp-based allocation.
+3. User-defined allocation templates.
+4. Receipt/import-assisted allocation.
 
 ## Future Card Vertex Workflow
 

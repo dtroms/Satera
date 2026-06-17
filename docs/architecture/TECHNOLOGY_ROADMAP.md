@@ -4,6 +4,70 @@ This roadmap is planning documentation only. It does not authorize current
 implementation of community media, LiveKit, uploaded video, automated
 moderation, routes, migrations, or packages.
 
+## Core Transaction Workflows
+
+Lot Purchase RPC is complete. `create_lot_purchase_transaction` is the strict
+Core write path for buying multiple inventory items in one acquisition. It
+records the total lot basis pool, supports manual and equal allocation, freezes
+allocated basis per item, writes lineage and audit records, and does not infer
+market value from basis.
+
+Sale Transaction RPC is complete. `create_sale_transaction` is the strict Core
+write path for purchase -> own -> sell -> realize profit/loss. It freezes basis
+at sale time, records net proceeds and realized profit/loss, marks inventory
+sold, and does not rewrite `true_basis` or update current value.
+
+Future lot purchase work may add estimated-value proportional allocation,
+comp-based allocation, user-defined allocation templates, and receipt/import
+assistance. Marketplace integrations, receipt parsing, OCR, and AI allocation
+are not implemented in the current Core RPC.
+
+## Product App Boundary
+
+Card Vertex should eventually live at `cardvertex.com` as its own standalone
+product surface. Satera should eventually live separately at `satera.app` as
+the platform/powering layer, portfolio/admin surface, or future platform home.
+
+That future split is:
+
+- separate app root: yes, later
+- separate domain: yes, later
+- separate deployment: yes, later
+- separate database: no
+- separate Supabase project for Card Vertex: no
+
+Satera owns the database, auth, permissions, inventory truth, transactions,
+basis, lineage, public object references, communities, moderation,
+notifications, audit, and entitlements. Card Vertex owns the card-specific
+product experience, UI, workflows, terminology, layout, and product behavior.
+
+Card Vertex should not directly mutate Satera Core tables. It should call
+Satera Core services/RPCs, and product UI should not contain Satera financial
+truth logic. The service/API boundary should be preserved so Card Vertex can
+become a separate app root without rewriting Core logic.
+
+The future monorepo structure may become:
+
+```text
+Satera/
+├── apps/
+│   ├── card-vertex/        deployed to cardvertex.com
+│   ├── satera/             deployed to satera.app
+│   ├── vertex-pro/         future
+│   └── satera-portfolio/   future
+├── packages/
+│   ├── satera-core/        shared service layer / RPC wrappers
+│   ├── ui/                 shared primitives
+│   └── config/             shared config
+└── supabase/
+    ├── migrations/
+    └── tests/
+```
+
+This is a future milestone only. It should happen before the Card Vertex
+product shell, but this roadmap does not authorize creating app roots,
+packages, deployments, migrations, or Supabase projects now.
+
 ## Community Media Rule
 
 ```text

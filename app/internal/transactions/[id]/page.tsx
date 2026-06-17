@@ -98,6 +98,14 @@ export default async function InternalTransactionDetailPage({
         />
       </Section>
 
+      <Section title="Transaction Metadata">
+        {transaction.metadata ? (
+          <JsonBlock value={transaction.metadata} />
+        ) : (
+          <EmptyState message="No transaction metadata found for this transaction." />
+        )}
+      </Section>
+
       <Section title="Transaction Lines">
         <InternalTable
           rows={transactionLines}

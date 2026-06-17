@@ -9,7 +9,9 @@ import { filterInventoryByCategoryIds } from "@/lib/core/products/queries";
 import { buildPortfolioSummary } from "@/lib/core/portfolio/queries";
 import { calculatePurchaseBasis } from "@/lib/calculations/basis";
 import {
+  createLotPurchaseTransaction,
   createPurchaseTransaction,
+  createSaleTransaction,
   createStartingInventoryTransaction,
   createTradeTransaction,
   normalizeInitialBasis,
@@ -408,6 +410,265 @@ describe("transaction service basis rules", () => {
       p_cash_received: 0,
       p_trade_related_costs: 5,
     });
+  });
+
+  it("sale transaction calls the atomic RPC with sale math inputs", async () => {
+    const rpc = vi.fn().mockResolvedValue({
+      data: [
+        {
+          transaction_id: "sale-transaction-1",
+          inventory_item_id: "inventory-1",
+          gross_sale_price: 200,
+          selling_costs: 25,
+          net_proceeds: 175,
+          basis_at_sale: 130,
+          realized_profit_loss: 45,
+        },
+      ],
+      error: null,
+    });
+    const db = { from: vi.fn(), rpc };
+
+    await expect(
+      createSaleTransaction(db, {
+        ownerUserId: "user-1",
+        inventoryItemId: "inventory-1",
+        salePrice: 200,
+        platformFees: 10,
+        paymentProcessingFees: 3,
+        shippingCost: 5,
+        suppliesCost: 2,
+        consignmentFees: 4,
+        otherSellingCosts: 1,
+        transactionDate: "2026-01-01T00:00:00.000Z",
+        source: "manual",
+        counterparty: "Buyer",
+        notes: "Sale note",
+        createdBy: "user-1",
+      }),
+    ).resolves.toEqual({
+      transactionId: "sale-transaction-1",
+      inventoryItemId: "inventory-1",
+      grossSalePrice: 200,
+      sellingCosts: 25,
+      netProceeds: 175,
+      basisAtSale: 130,
+      realizedProfitLoss: 45,
+    });
+
+    expect(rpc).toHaveBeenCalledWith("create_sale_transaction", {
+      p_inventory_item_id: "inventory-1",
+      p_sale_price: 200,
+      p_platform_fees: 10,
+      p_payment_processing_fees: 3,
+      p_shipping_cost: 5,
+      p_supplies_cost: 2,
+      p_consignment_fees: 4,
+      p_other_selling_costs: 1,
+      p_owner_user_id: "user-1",
+      p_workspace_id: null,
+      p_organization_id: null,
+      p_transaction_date: "2026-01-01T00:00:00.000Z",
+      p_source: "manual",
+      p_counterparty: "Buyer",
+      p_notes: "Sale note",
+    });
+    expect(db.from).not.toHaveBeenCalled();
+  });
+
+  it("sale transaction rejects negative sale inputs before RPC", async () => {
+    const rpc = vi.fn();
+    const db = { from: vi.fn(), rpc };
+
+    await expect(
+      createSaleTransaction(db, {
+        ownerUserId: "user-1",
+        inventoryItemId: "inventory-1",
+        salePrice: -1,
+        createdBy: "user-1",
+      }),
+    ).rejects.toThrow("Sale price cannot be negative.");
+
+    await expect(
+      createSaleTransaction(db, {
+        ownerUserId: "user-1",
+        inventoryItemId: "inventory-1",
+        salePrice: 10,
+        platformFees: -1,
+        createdBy: "user-1",
+      }),
+    ).rejects.toThrow("Sale fees and costs cannot be negative.");
+
+    expect(rpc).not.toHaveBeenCalled();
+  });
+
+  it("lot purchase transaction calls the atomic RPC with item payloads", async () => {
+    const rpc = vi.fn().mockResolvedValue({
+      data: [
+        {
+          transaction_id: "lot-transaction-1",
+          inventory_item_ids: ["inventory-1", "inventory-2"],
+          total_lot_basis: 130,
+        },
+      ],
+      error: null,
+    });
+    const db = { from: vi.fn(), rpc };
+
+    await expect(
+      createLotPurchaseTransaction(db, {
+        workspaceId: "workspace-1",
+        productId: "product-1",
+        purchasePrice: 100,
+        purchasedAt: "2026-01-01T00:00:00.000Z",
+        sellerReference: "Seller",
+        marketplace: "manual",
+        orderReference: "ORDER-1",
+        buyerFees: 5,
+        tax: 8,
+        shipping: 7,
+        otherAcquisitionCosts: 10,
+        allocationMethod: "manual",
+        items: [
+          {
+            assetVariantId: "variant-1",
+            conditionType: "raw",
+            allocatedBasis: 60,
+            acquisitionNotes: "First item",
+          },
+          {
+            assetVariantId: "variant-2",
+            conditionType: "sealed",
+            allocatedBasis: 70,
+            locationId: "location-1",
+            inventoryStatus: "active",
+            availability: "available",
+            intent: "hold",
+          },
+        ],
+        notes: "Lot note",
+        createdBy: "user-1",
+      }),
+    ).resolves.toEqual({
+      transactionId: "lot-transaction-1",
+      inventoryItemIds: ["inventory-1", "inventory-2"],
+      totalLotBasis: 130,
+    });
+
+    expect(rpc).toHaveBeenCalledWith("create_lot_purchase_transaction", {
+      p_workspace_id: "workspace-1",
+      p_product_id: "product-1",
+      p_purchase_price: 100,
+      p_purchased_at: "2026-01-01T00:00:00.000Z",
+      p_seller_reference: "Seller",
+      p_marketplace: "manual",
+      p_order_reference: "ORDER-1",
+      p_buyer_fees: 5,
+      p_tax: 8,
+      p_shipping: 7,
+      p_other_acquisition_costs: 10,
+      p_allocation_method: "manual",
+      p_items: [
+        {
+          asset_variant_id: "variant-1",
+          condition_type: "raw",
+          allocated_basis: 60,
+          collection_id: null,
+          location_id: null,
+          acquisition_notes: "First item",
+          private_notes: null,
+          inventory_status: "active",
+          availability: "available",
+          intent: "hold",
+        },
+        {
+          asset_variant_id: "variant-2",
+          condition_type: "sealed",
+          allocated_basis: 70,
+          collection_id: null,
+          location_id: "location-1",
+          acquisition_notes: null,
+          private_notes: null,
+          inventory_status: "active",
+          availability: "available",
+          intent: "hold",
+        },
+      ],
+      p_notes: "Lot note",
+    });
+    expect(db.from).not.toHaveBeenCalled();
+  });
+
+  it("lot purchase transaction defaults optional numeric fields and equal allocation", async () => {
+    const rpc = vi.fn().mockResolvedValue({
+      data: {
+        transaction_id: "lot-transaction-1",
+        inventory_item_ids: ["inventory-1"],
+        total_lot_basis: 10,
+      },
+      error: null,
+    });
+    const db = { from: vi.fn(), rpc };
+
+    await createLotPurchaseTransaction(db, {
+      workspaceId: "workspace-1",
+      purchasePrice: 10,
+      allocationMethod: "equal",
+      items: [{ assetVariantId: "variant-1" }],
+      createdBy: "user-1",
+    });
+
+    expect(rpc).toHaveBeenCalledWith(
+      "create_lot_purchase_transaction",
+      expect.objectContaining({
+        p_buyer_fees: 0,
+        p_tax: 0,
+        p_shipping: 0,
+        p_other_acquisition_costs: 0,
+        p_allocation_method: "equal",
+        p_items: [
+          expect.objectContaining({
+            asset_variant_id: "variant-1",
+            allocated_basis: null,
+          }),
+        ],
+      }),
+    );
+    expect(db.from).not.toHaveBeenCalled();
+  });
+
+  it("lot purchase transaction rejects invalid inputs before RPC", async () => {
+    const rpc = vi.fn();
+    const db = { from: vi.fn(), rpc };
+
+    await expect(
+      createLotPurchaseTransaction(db, {
+        workspaceId: "workspace-1",
+        purchasePrice: -1,
+        items: [{ assetVariantId: "variant-1", allocatedBasis: 0 }],
+        createdBy: "user-1",
+      }),
+    ).rejects.toThrow("Lot purchase cost inputs cannot be negative.");
+
+    await expect(
+      createLotPurchaseTransaction(db, {
+        workspaceId: "workspace-1",
+        purchasePrice: 1,
+        items: [],
+        createdBy: "user-1",
+      }),
+    ).rejects.toThrow("Lot purchase requires at least one item.");
+
+    await expect(
+      createLotPurchaseTransaction(db, {
+        workspaceId: "workspace-1",
+        purchasePrice: 1,
+        items: [{ assetVariantId: "variant-1", allocatedBasis: -1 }],
+        createdBy: "user-1",
+      }),
+    ).rejects.toThrow("Lot purchase items require valid nonnegative basis inputs.");
+
+    expect(rpc).not.toHaveBeenCalled();
   });
 });
 

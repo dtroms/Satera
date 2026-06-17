@@ -97,6 +97,7 @@ export type BasisEventType =
   | "purchase_basis"
   | "lot_allocation"
   | "trade_allocation"
+  | "sale_realization"
   | "grading_cost"
   | "consignment_fee"
   | "correction"
