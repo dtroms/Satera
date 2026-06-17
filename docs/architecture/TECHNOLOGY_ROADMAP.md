@@ -46,6 +46,12 @@ Card Vertex should eventually live at `cardvertex.com` as its own standalone
 product surface. Satera should eventually live separately at `satera.app` as
 the platform/powering layer, portfolio/admin surface, or future platform home.
 
+The Product Lens Framework is hardened before that split. Future app roots
+should consume Satera Core through product-lens services and RPC-backed
+mutation workflows. Card Vertex, Comic Vertex, Watch Vertex, Game Vertex,
+Satera Portfolio, and Vertex Pro should feel isolated to users while sharing
+the same Core truth layer.
+
 That future split is:
 
 - separate app root: yes, later
@@ -63,6 +69,10 @@ Card Vertex should not directly mutate Satera Core tables. It should call
 Satera Core services/RPCs, and product UI should not contain Satera financial
 truth logic. The service/API boundary should be preserved so Card Vertex can
 become a separate app root without rewriting Core logic.
+
+Product entitlement does not override inventory privacy. Public object
+references remain the safe sharing bridge from private inventory into product,
+community, listing, and showcase surfaces.
 
 The future monorepo structure may become:
 

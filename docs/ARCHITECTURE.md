@@ -4,6 +4,14 @@ Satera Core is the truth layer for Satera. It owns the durable records for priva
 
 Products are lenses over Core records. Card Vertex, Vertex Pro, Satera Portfolio, and future products may present different workflows or category-specific experiences, but they do not own inventory and must not become alternate sources of truth.
 
+The Product Lens Framework hardens this rule in the service layer. Product
+lenses resolve product context, product category mappings, product profiles,
+organization product profiles, account and organization entitlements, public
+object references, communities, notifications, evaluation cases, and
+workspace-scoped inventory through explicit product constraints. Lenses filter
+and translate Core data; they do not fork the data model or create product data
+silos.
+
 Product apps may eventually become separate app roots, domains, and
 deployments, but not separate data platforms. Card Vertex should eventually
 live at `cardvertex.com` as its own standalone product surface. Satera should
@@ -46,6 +54,14 @@ It should not introduce a separate Card Vertex database or Supabase project.
 
 Inventory belongs to users, workspaces, or organizations. Every inventory item carries an owner context, and privacy starts there. Row Level Security protects row visibility so a product profile, entitlement, or product-specific surface cannot override private inventory boundaries.
 
+Product access is separate from inventory access. An active product, product
+profile, organization product profile, product admin role, or entitlement can
+authorize a product lens experience, but it cannot expose another user's
+private inventory, another workspace's inventory, private comp snapshots, or
+workspace-scoped evaluation cases. Product lens inventory starts from Core
+owner/workspace/organization access and then filters to categories mapped to
+the requested product.
+
 Public Object References are the safe sharing bridge between private inventory
 and future product/community surfaces. A private inventory item is not a public
 object reference. The platform pattern is:
@@ -59,6 +75,12 @@ fields and market/value labels, but they must never expose true basis, purchase
 price, profit, ROI, location, private notes, private tags, ownership history,
 private transaction history, or evaluation/certification costs such as grading
 costs. They are not the inventory source of truth.
+
+Product-scoped communities, notifications, evaluation cases, and public object
+references remain product-filterable through Core services. Card Vertex should
+use product-lens queries to access card categories, Card Vertex communities,
+Card Vertex notifications, Card Vertex evaluation cases, and Card Vertex public
+references without reading private inventory fields.
 
 Atomic write workflows are protected by Postgres RPCs. Starting inventory,
 purchase, lot purchase, sale, trade, and safe inventory field updates route

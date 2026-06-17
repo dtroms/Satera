@@ -44,6 +44,15 @@ The current Satera Core foundation includes:
   policies, direct-write hardening, RPC-only mutations, explicit audited basis
   increases, SQL verification, TypeScript service helpers, and read-only
   Internal Inspector visibility.
+- Product Lens Framework hardening with read-only TypeScript services for
+  product context, product-scoped inventory, public references, communities,
+  notifications, evaluation cases, entitlements, and summary counts.
+- Product-lens SQL helper functions for product access checks, category/product
+  membership, and inventory-item/product membership.
+- SQL verification that product-scoped inventory, public references,
+  communities, notifications, evaluation cases, and summary-style counts stay
+  scoped to the requested product while inventory privacy remains
+  owner/workspace-controlled.
 - Direct-write hardening for critical financial and history tables.
 - TypeScript service layer that routes application code through safe workflows.
 - Tests for calculations, service-layer protections, atomic transaction inputs,
@@ -63,6 +72,9 @@ The current Satera Core foundation includes:
   as its own app root at `cardvertex.com`, and Satera may later live separately
   at `satera.app`, while both continue to use the same Satera Core backend and
   the same Satera Supabase database.
+- Future product app boundaries should rely on the product-lens service
+  boundary. Card Vertex at `cardvertex.com` should use Satera Core
+  services/RPCs rather than direct table mutations or product-owned truth.
 - Early comp evidence schema extensions remain in Core as value-evidence infrastructure only. Direct app/client comp writes are not active, and comp mutations are not exposed through UI.
 - Public references are Core display records only. They intentionally exclude
   true basis, purchase price, profit, location, private notes, private tags,

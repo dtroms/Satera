@@ -2,10 +2,16 @@
 
 ## Current Priority
 
-1. Product Lens Framework hardening.
-2. Product App Boundary / Monorepo Restructure.
-3. Comp/Value Workflow write path.
-4. Card Vertex product shell later.
+1. Product App Boundary / Monorepo Restructure.
+2. Comp/Value Workflow write path.
+3. Card Vertex product shell later.
+
+Product Lens Framework hardening is complete as a Core read-only service
+boundary. Products are isolated experiences over shared Satera Core data, not
+data silos. Product access, product profiles, organization product profiles,
+entitlements, category mappings, public references, communities, notifications,
+and evaluation cases are queried through explicit product context while
+inventory privacy remains owner/workspace/organization-controlled.
 
 Satera Evaluation / Certification Lifecycle is now complete as product-neutral
 Core infrastructure. It stores evaluation cases, items, immutable lifecycle
@@ -124,6 +130,11 @@ private inventory item -> safe public object reference -> product/community/list
 
 They must never expose true_basis, purchase price, profit, location, private
 notes, private tags, ownership history, or private transaction history.
+
+Card Vertex should use product-lens queries for card categories, Card Vertex
+communities, Card Vertex notifications, Card Vertex evaluation cases, and Card
+Vertex public references. Card Vertex at `cardvertex.com` should continue to
+mutate Satera Core only through approved Core services/RPCs.
 
 ## Future Vertex Pro
 

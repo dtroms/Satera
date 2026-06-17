@@ -50,6 +50,14 @@ import {
   getUnreadNotificationsForCurrentUser,
 } from "@/lib/core/notifications/queries";
 import {
+  getProductLensCommunities,
+  getProductLensEvaluationCases,
+  getProductLensInventory,
+  getProductLensNotifications,
+  getProductLensPublicReferences,
+  getProductLensSummary,
+} from "@/lib/core/product-lens/queries";
+import {
   addEvaluationCaseItem,
   applyEvaluationBasisIncrease,
   createEvaluationCase,
@@ -110,6 +118,8 @@ function createSelectMockDb(data: unknown[] = []) {
   const query: any = {
     select: vi.fn(() => query),
     eq: vi.fn(() => query),
+    in: vi.fn(() => query),
+    or: vi.fn(() => query),
     order: vi.fn(() => query),
     limit: vi.fn(() => query),
     maybeSingle: vi.fn(() => Promise.resolve({ data: data[0] ?? null, error: null })),
@@ -119,6 +129,55 @@ function createSelectMockDb(data: unknown[] = []) {
   const from = vi.fn(() => query);
 
   return { db: { from, rpc: vi.fn() }, from, query };
+}
+
+function createProductLensMockDb(tableRows: Record<string, any[]>) {
+  const queries: Record<string, any[]> = {};
+
+  function createQuery(table: string) {
+    const filters: Array<{ column: string; value: unknown }> = [];
+    const inFilters: Array<{ column: string; values: unknown[] }> = [];
+
+    const applyFilters = () =>
+      (tableRows[table] ?? []).filter((row) => {
+        const matchesEq = filters.every((filter) => row[filter.column] === filter.value);
+        const matchesIn = inFilters.every((filter) =>
+          filter.values.includes(row[filter.column]),
+        );
+
+        return matchesEq && matchesIn;
+      });
+
+    const query: any = {
+      table,
+      filters,
+      select: vi.fn(() => query),
+      eq: vi.fn((column: string, value: unknown) => {
+        filters.push({ column, value });
+        return query;
+      }),
+      in: vi.fn((column: string, values: unknown[]) => {
+        inFilters.push({ column, values });
+        return query;
+      }),
+      or: vi.fn(() => query),
+      order: vi.fn(() => query),
+      limit: vi.fn(() => query),
+      maybeSingle: vi.fn(() =>
+        Promise.resolve({ data: applyFilters()[0] ?? null, error: null }),
+      ),
+      then: (resolve: (value: unknown) => unknown) =>
+        Promise.resolve({ data: applyFilters(), error: null }).then(resolve),
+    };
+
+    queries[table] = [...(queries[table] ?? []), query];
+    return query;
+  }
+
+  const from = vi.fn((table: string) => createQuery(table));
+  const rpc = vi.fn().mockResolvedValue({ data: true, error: null });
+
+  return { db: { from, rpc }, from, rpc, queries };
 }
 
 describe("inventory service protections", () => {
@@ -1332,6 +1391,206 @@ describe("product and portfolio service helpers", () => {
       totalKnownBasis: 125,
       totalCurrentValue: 200,
       noCompSavedCount: 2,
+    });
+  });
+});
+
+describe("product lens service helpers", () => {
+  const product = {
+    id: "product-card",
+    slug: "card_vertex",
+    name: "Card Vertex",
+    product_type: "vertical",
+    status: "active",
+    created_at: "2026-01-01T00:00:00.000Z",
+    updated_at: "2026-01-01T00:00:00.000Z",
+  };
+
+  function createProductLensDb() {
+    return createProductLensMockDb({
+      products: [product],
+      product_categories: [{ product_id: "product-card", category_id: "sports_cards" }],
+      inventory_items: [
+        inventoryItem({
+          id: "workspace-card",
+          workspace_id: "workspace-1",
+          owner_user_id: null,
+          category_id: "sports_cards",
+        }),
+        inventoryItem({
+          id: "workspace-comic",
+          workspace_id: "workspace-1",
+          owner_user_id: null,
+          category_id: "comics",
+        }),
+      ],
+      public_object_references: [
+        {
+          id: "reference-card",
+          product_id: "product-card",
+          visibility: "community",
+          exposure_state: "active",
+          public_metadata: { safe: true },
+        },
+        {
+          id: "reference-hidden",
+          product_id: "product-card",
+          visibility: "community",
+          exposure_state: "hidden",
+          public_metadata: { safe: true },
+        },
+      ],
+      communities: [
+        {
+          id: "community-card",
+          product_id: "product-card",
+          created_at: "2026-01-01T00:00:00.000Z",
+        },
+      ],
+      notifications: [
+        {
+          id: "notification-card",
+          product_id: "product-card",
+          recipient_user_id: "user-1",
+          status: "unread",
+          created_at: "2026-01-01T00:00:00.000Z",
+        },
+        {
+          id: "notification-read",
+          product_id: "product-card",
+          recipient_user_id: "user-1",
+          status: "read",
+          created_at: "2026-01-01T00:00:00.000Z",
+        },
+      ],
+      evaluation_cases: [
+        {
+          id: "evaluation-card",
+          product_id: "product-card",
+          workspace_id: "workspace-1",
+          status: "draft",
+          opened_at: "2026-01-01T00:00:00.000Z",
+          created_at: "2026-01-01T00:00:00.000Z",
+        },
+      ],
+      account_entitlements: [
+        { entitlement_key: "cross_vertex_portfolio" },
+      ],
+      organization_entitlements: [],
+    });
+  }
+
+  it("product lens inventory starts from scoped inventory and filters product categories", async () => {
+    const { db, queries } = createProductLensDb();
+
+    await expect(
+      getProductLensInventory(db, {
+        productSlug: "card_vertex",
+        workspaceId: "workspace-1",
+      }),
+    ).resolves.toEqual([
+      expect.objectContaining({ id: "workspace-card", category_id: "sports_cards" }),
+    ]);
+
+    expect(queries.products[0].eq).toHaveBeenCalledWith("slug", "card_vertex");
+    expect(queries.product_categories[0].eq).toHaveBeenCalledWith(
+      "product_id",
+      "product-card",
+    );
+    expect(queries.inventory_items[0].or).toHaveBeenCalledWith(
+      "workspace_id.eq.workspace-1",
+    );
+  });
+
+  it("product lens public references use product scope and safe exposure filters", async () => {
+    const { db, queries } = createProductLensDb();
+
+    await expect(
+      getProductLensPublicReferences(db, { productId: "product-card" }),
+    ).resolves.toEqual([
+      expect.objectContaining({ id: "reference-card", product_id: "product-card" }),
+    ]);
+
+    expect(queries.public_object_references[0].eq).toHaveBeenCalledWith(
+      "product_id",
+      "product-card",
+    );
+    expect(queries.public_object_references[0].eq).toHaveBeenCalledWith(
+      "exposure_state",
+      "active",
+    );
+    expect(queries.public_object_references[0].in).toHaveBeenCalledWith(
+      "visibility",
+      ["community", "listing", "showcase", "trade", "public"],
+    );
+  });
+
+  it("product lens communities use product_id scope", async () => {
+    const { db, queries } = createProductLensDb();
+
+    await getProductLensCommunities(db, { productId: "product-card" });
+
+    expect(queries.communities[0].eq).toHaveBeenCalledWith(
+      "product_id",
+      "product-card",
+    );
+  });
+
+  it("product lens notifications use product scope plus recipient RLS", async () => {
+    const { db, queries } = createProductLensDb();
+
+    await getProductLensNotifications(db, {
+      productId: "product-card",
+      status: "unread",
+    });
+
+    expect(queries.notifications[0].eq).toHaveBeenCalledWith(
+      "product_id",
+      "product-card",
+    );
+    expect(queries.notifications[0].eq).toHaveBeenCalledWith("status", "unread");
+  });
+
+  it("product lens evaluations use product and workspace scope", async () => {
+    const { db, queries } = createProductLensDb();
+
+    await getProductLensEvaluationCases(db, {
+      productId: "product-card",
+      workspaceId: "workspace-1",
+    });
+
+    expect(queries.evaluation_cases[0].eq).toHaveBeenCalledWith(
+      "workspace_id",
+      "workspace-1",
+    );
+    expect(queries.evaluation_cases[0].eq).toHaveBeenCalledWith(
+      "product_id",
+      "product-card",
+    );
+  });
+
+  it("product lens summary composes scoped query helpers", async () => {
+    const { db } = createProductLensDb();
+
+    await expect(
+      getProductLensSummary(db, {
+        productId: "product-card",
+        workspaceId: "workspace-1",
+      }),
+    ).resolves.toEqual({
+      productId: "product-card",
+      inventoryCount: 1,
+      publicReferenceCount: 1,
+      communityCount: 1,
+      unreadNotificationCount: 1,
+      evaluationCaseCount: 1,
+      entitlementFlags: {
+        account: ["cross_vertex_portfolio"],
+        organization: [],
+        hasCrossVertexPortfolio: true,
+        hasVertexPro: false,
+        hasCrossVertexInventory: false,
+      },
     });
   });
 });

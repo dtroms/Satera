@@ -13,6 +13,14 @@ lifecycle into card-specific language. This document does not implement Card
 Vertex grading UI, submission UI, PSA/SGC/BGS integrations, uploads,
 notifications, or product-specific grading workflows.
 
+The Product Lens Framework is now hardened in Satera Core. Future Card Vertex
+surfaces should query card category inventory, Card Vertex communities, Card
+Vertex notifications, Card Vertex evaluation cases, and Card Vertex public
+object references through product-lens services. Card Vertex remains a scoped
+experience over shared Core truth, not a separate inventory or community data
+silo. Product access does not override private inventory, and public object
+references remain the safe sharing boundary.
+
 ## Product Philosophy
 
 Card Vertex should feel like one connected environment, not a set of separate

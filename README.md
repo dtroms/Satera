@@ -20,6 +20,15 @@ can write to tables at all. Inventory is private by default and belongs to a
 user, workspace, or organization. Products are category lenses and do not own
 inventory.
 
+The Product Lens Framework is now hardened as a read-only Core service
+boundary. Product lenses resolve active products, product category mappings,
+product profiles, organization product profiles, entitlements, communities,
+notifications, evaluation cases, public object references, and workspace
+inventory through explicit product context. Product access does not override
+inventory privacy: lenses start from owner/workspace/organization-scoped Core
+data and then filter by product category or product_id. Product lenses are not
+data silos and do not fork Satera Core truth.
+
 Future product deployment planning keeps data ownership centralized in Satera
 Core. Card Vertex should eventually live at `cardvertex.com` as its own
 standalone product surface, and Satera should eventually live separately at
@@ -56,6 +65,12 @@ Critical write workflows now run through atomic Postgres RPC functions:
 - `update_evaluation_case_status`
 - `record_evaluation_result`
 - `apply_evaluation_basis_increase`
+
+Read-only product-lens helper functions support safe product checks:
+
+- `can_access_product`
+- `is_category_in_product`
+- `inventory_item_belongs_to_product`
 
 These RPCs create inventory, transactions, transaction lines, ownership
 events, basis events, and audit events in one database transaction. They also
@@ -171,6 +186,12 @@ mutations. Product UI must not contain Satera financial truth logic. Preserving
 that service/API boundary lets Card Vertex become a separate app root later
 without rewriting Core inventory, transaction, basis, lineage, permission,
 community, moderation, notification, audit, or entitlement logic.
+
+Card Vertex at `cardvertex.com` should use Satera Core services/RPCs and the
+product-lens query boundary to see card categories, Card Vertex communities,
+Card Vertex notifications, Card Vertex evaluation cases, and Card Vertex public
+references. It should not directly mutate Core tables or reimplement Satera
+financial truth logic in product UI.
 
 ## Local Supabase Setup
 
