@@ -22,6 +22,24 @@ comp-based allocation, user-defined allocation templates, and receipt/import
 assistance. Marketplace integrations, receipt parsing, OCR, and AI allocation
 are not implemented in the current Core RPC.
 
+## Evaluation / Certification
+
+Satera Evaluation / Certification Lifecycle is now Core infrastructure. It is
+product-neutral and can represent grading, authentication, appraisal,
+certification, condition review, restoration review, service records, and
+provenance review. Card Vertex grading, Watch Vertex service/appraisal, Comic
+Vertex grading/restoration, Coin Vertex certification, and Memorabilia
+authentication should be product workflows powered by this Core lifecycle.
+
+Evaluation results do not automatically mutate `true_basis` or market value.
+Evaluation costs may increase `true_basis` only through explicit audited basis
+increase, and `true_basis = null` blocks that increase for now. Current value is
+not updated by result recording or basis increase.
+
+Future evaluation work may include provider integrations, submission package
+generation, label/cert image uploads, automated notifications, and
+product-specific UI. Those workflows are not implemented in this Core pass.
+
 ## Product App Boundary
 
 Card Vertex should eventually live at `cardvertex.com` as its own standalone

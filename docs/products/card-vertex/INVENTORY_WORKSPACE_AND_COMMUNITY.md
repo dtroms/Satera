@@ -6,6 +6,13 @@ workflows, or Card Vertex community pages. The reusable Satera Community Core
 backend now exists in Core, but Card Vertex has not implemented the Community
 Dock or product-specific community surfaces.
 
+Satera Evaluation / Certification Lifecycle now exists in Core as a
+product-neutral backbone. Future Card Vertex grading submissions, certification
+numbers, review states, and slab/cert assets should translate that Core
+lifecycle into card-specific language. This document does not implement Card
+Vertex grading UI, submission UI, PSA/SGC/BGS integrations, uploads,
+notifications, or product-specific grading workflows.
+
 ## Product Philosophy
 
 Card Vertex should feel like one connected environment, not a set of separate

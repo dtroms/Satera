@@ -49,6 +49,13 @@ import {
   getNotificationsForCurrentUser,
   getUnreadNotificationsForCurrentUser,
 } from "@/lib/core/notifications/queries";
+import {
+  addEvaluationCaseItem,
+  applyEvaluationBasisIncrease,
+  createEvaluationCase,
+  recordEvaluationResult,
+  updateEvaluationCaseStatus,
+} from "@/lib/core/evaluations/mutations";
 
 function inventoryItem(
   overrides: Partial<InventoryItem> & { id: string },
@@ -1139,6 +1146,153 @@ describe("notification service protections", () => {
     expect(query.eq).toHaveBeenCalledWith("id", "notification-1");
     expect(query.eq).toHaveBeenCalledWith("product_id", "product-1");
     expect(query.eq).toHaveBeenCalledWith("notification_id", "notification-1");
+  });
+});
+
+describe("evaluation service protections", () => {
+  it("create evaluation case calls the RPC and not direct table writes", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: "evaluation-case-1", error: null });
+    const db = { from: vi.fn(), rpc };
+
+    await expect(
+      createEvaluationCase(db, {
+        workspaceId: "workspace-1",
+        productId: "product-1",
+        caseType: "grading",
+        providerName: "Manual Provider",
+        providerReference: "CASE-1",
+        openedAt: "2026-06-01T00:00:00.000Z",
+        expectedReturnAt: "2026-07-01T00:00:00.000Z",
+        totalDeclaredValue: 500,
+        totalEvaluationCost: 40,
+        totalShippingCost: 10,
+        totalInsuranceCost: 5,
+        totalOtherCosts: 2,
+        notes: "Evaluation note",
+        metadata: { safe_context: "test" },
+      }),
+    ).resolves.toBe("evaluation-case-1");
+
+    expect(rpc).toHaveBeenCalledWith("create_evaluation_case", {
+      p_workspace_id: "workspace-1",
+      p_product_id: "product-1",
+      p_case_type: "grading",
+      p_provider_name: "Manual Provider",
+      p_provider_reference: "CASE-1",
+      p_opened_at: "2026-06-01T00:00:00.000Z",
+      p_expected_return_at: "2026-07-01T00:00:00.000Z",
+      p_total_declared_value: 500,
+      p_total_evaluation_cost: 40,
+      p_total_shipping_cost: 10,
+      p_total_insurance_cost: 5,
+      p_total_other_costs: 2,
+      p_notes: "Evaluation note",
+      p_metadata: { safe_context: "test" },
+    });
+    expect(db.from).not.toHaveBeenCalled();
+  });
+
+  it("add evaluation case item calls the RPC and not direct table writes", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: "evaluation-case-item-1", error: null });
+    const db = { from: vi.fn(), rpc };
+
+    await expect(
+      addEvaluationCaseItem(db, {
+        evaluationCaseId: "evaluation-case-1",
+        inventoryItemId: "inventory-1",
+        declaredValue: 250,
+        allocatedEvaluationCost: 25,
+        allocatedShippingCost: 5,
+        allocatedInsuranceCost: 3,
+        allocatedOtherCosts: 2,
+        providerItemReference: "ITEM-1",
+        notes: "Item note",
+      }),
+    ).resolves.toBe("evaluation-case-item-1");
+
+    expect(rpc).toHaveBeenCalledWith("add_evaluation_case_item", {
+      p_evaluation_case_id: "evaluation-case-1",
+      p_inventory_item_id: "inventory-1",
+      p_declared_value: 250,
+      p_allocated_evaluation_cost: 25,
+      p_allocated_shipping_cost: 5,
+      p_allocated_insurance_cost: 3,
+      p_allocated_other_costs: 2,
+      p_provider_item_reference: "ITEM-1",
+      p_notes: "Item note",
+    });
+    expect(db.from).not.toHaveBeenCalled();
+  });
+
+  it("update evaluation case status calls the RPC and not direct table writes", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: "evaluation-case-1", error: null });
+    const db = { from: vi.fn(), rpc };
+
+    await updateEvaluationCaseStatus(db, {
+      evaluationCaseId: "evaluation-case-1",
+      status: "submitted",
+      occurredAt: "2026-06-02T00:00:00.000Z",
+      notes: "Submitted",
+      metadata: { safe_context: "status" },
+    });
+
+    expect(rpc).toHaveBeenCalledWith("update_evaluation_case_status", {
+      p_evaluation_case_id: "evaluation-case-1",
+      p_status: "submitted",
+      p_occurred_at: "2026-06-02T00:00:00.000Z",
+      p_notes: "Submitted",
+      p_metadata: { safe_context: "status" },
+    });
+    expect(db.from).not.toHaveBeenCalled();
+  });
+
+  it("record evaluation result calls the RPC without basis or current value mutation payloads", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: "evaluation-case-item-1", error: null });
+    const db = { from: vi.fn(), rpc };
+
+    await recordEvaluationResult(db, {
+      evaluationCaseItemId: "evaluation-case-item-1",
+      itemStatus: "completed",
+      resultSummary: "Certified",
+      resultGrade: "10",
+      resultAuthenticity: "authentic",
+      resultCertificationNumber: "CERT-1",
+      resultMetadata: { safe_result: "ok" },
+      notes: "Result note",
+    });
+
+    expect(rpc).toHaveBeenCalledWith("record_evaluation_result", {
+      p_evaluation_case_item_id: "evaluation-case-item-1",
+      p_item_status: "completed",
+      p_result_summary: "Certified",
+      p_result_grade: "10",
+      p_result_authenticity: "authentic",
+      p_result_certification_number: "CERT-1",
+      p_result_metadata: { safe_result: "ok" },
+      p_notes: "Result note",
+    });
+    expect(rpc.mock.calls[0][1]).not.toHaveProperty("p_true_basis");
+    expect(rpc.mock.calls[0][1]).not.toHaveProperty("p_current_value");
+    expect(rpc.mock.calls[0][1]).not.toHaveProperty("p_current_value_snapshot_id");
+    expect(db.from).not.toHaveBeenCalled();
+  });
+
+  it("apply evaluation basis increase calls the RPC only", async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: "evaluation-case-item-1", error: null });
+    const db = { from: vi.fn(), rpc };
+
+    await applyEvaluationBasisIncrease(db, {
+      evaluationCaseItemId: "evaluation-case-item-1",
+      basisIncreaseAmount: 35,
+      notes: "Explicit basis increase",
+    });
+
+    expect(rpc).toHaveBeenCalledWith("apply_evaluation_basis_increase", {
+      p_evaluation_case_item_id: "evaluation-case-item-1",
+      p_basis_increase_amount: 35,
+      p_notes: "Explicit basis increase",
+    });
+    expect(db.from).not.toHaveBeenCalled();
   });
 });
 

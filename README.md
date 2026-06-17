@@ -51,6 +51,11 @@ Critical write workflows now run through atomic Postgres RPC functions:
 - `mark_notifications_read`
 - `dismiss_notification`
 - `archive_notification`
+- `create_evaluation_case`
+- `add_evaluation_case_item`
+- `update_evaluation_case_status`
+- `record_evaluation_result`
+- `apply_evaluation_basis_increase`
 
 These RPCs create inventory, transactions, transaction lines, ownership
 events, basis events, and audit events in one database transaction. They also
@@ -79,13 +84,18 @@ never expose `true_basis`, purchase price, profit, ROI, location, private notes,
 private tags, ownership history, private transaction history, or
 evaluation/certification costs such as grading costs.
 
-Satera Core should model evaluation/certification as a product-neutral
-lifecycle. Products can translate that backbone into niche-specific workflows,
-such as Card Vertex grading submissions, Comic Vertex restoration review, Watch
-Vertex authentication and service records, Coin Vertex holder certification,
-or Memorabilia appraisal and provenance review. Evaluation cost may increase
-`true_basis`, but evaluation result does not automatically increase
-`true_basis`; basis and market value remain separate.
+Satera Evaluation / Certification Lifecycle now exists in Core as a
+product-neutral lifecycle. It can represent grading, authentication, appraisal,
+certification, condition review, restoration review, service, and provenance
+review. Products translate that backbone into niche-specific workflows, such as
+Card Vertex grading submissions, Comic Vertex restoration review, Watch Vertex
+authentication and service records, Coin Vertex holder certification, or
+Memorabilia appraisal and provenance review. Evaluation results do not
+automatically mutate `true_basis` or market value. Evaluation costs may
+increase `true_basis` only when explicitly applied through
+`apply_evaluation_basis_increase`; items with `true_basis = null` reject basis
+increase for now, and current value is not updated by result recording or basis
+increase.
 
 Satera Community Core MVP now exists as platform infrastructure. Communities
 are product-scoped Core records with channels, memberships, roles, messages,
@@ -261,6 +271,9 @@ DATABASE_URL="postgresql://postgres:postgres@127.0.0.1:54322/postgres" npm run d
   allocation, rounding, zero-dollar lots, transaction/inventory/lineage/basis
   records, audit events, invalid input rejection, reference validation, and
   unauthorized workspace rejection.
+- `015_evaluation_certification_lifecycle.sql`: verifies product-neutral
+  evaluation cases, items, lifecycle events, explicit audited basis increases,
+  result/basis/value separation, RLS, and direct-write hardening.
 
 ## App Checks
 
@@ -274,8 +287,9 @@ npm run build
 
 The `/internal` surface is a read-only development/internal inspector for
 Satera Core truth records. It exists to inspect inventory, transactions,
-ownership events, basis events, basis lineage, notification records, and audit
-records while the Core backbone is being verified.
+ownership events, basis events, basis lineage, notification records,
+evaluation/certification records, and audit records while the Core backbone is
+being verified.
 
 It is not Card Vertex. It is not Satera Portfolio. It is not Vertex Pro.
 
@@ -285,13 +299,15 @@ workflows that protect ownership history and cost basis.
 
 Current internal inspector routes include inventory, transactions, lineage,
 audit, products/category/catalog, public reference, communities, community
-messages, and moderation views. The moderation inspector can read reports,
-actions, user restrictions, notes, and appeals visible to the internal session.
-The products view exists to verify that Card Vertex, Vertex Pro, and Satera
-Portfolio are product/category lenses, not inventory owners. Community and
-moderation inspector views are read-only and do not provide forms, edit
-buttons, create message UI, product-facing moderation dashboards, or
-moderation write paths.
+messages, moderation, notifications, and evaluations. The moderation inspector
+can read reports, actions, user restrictions, notes, and appeals visible to the
+internal session. The evaluation inspector can read cases, items, lifecycle
+events, and attachment records only. The products view exists to verify that
+Card Vertex, Vertex Pro, and Satera Portfolio are product/category lenses, not
+inventory owners. Community, moderation, notification, and evaluation inspector
+views are read-only and do not provide forms, edit buttons, create message UI,
+product-facing moderation dashboards, grading UI, submission UI, provider
+integrations, or moderation write paths.
 
 ## Card Vertex Planning
 

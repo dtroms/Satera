@@ -76,6 +76,12 @@ export default async function InternalHomePage() {
             description:
               "Inspect durable Core notification events, recipient state, and future delivery attempt records.",
           },
+          {
+            href: "/internal/evaluations",
+            title: "Evaluations",
+            description:
+              "Inspect product-neutral evaluation and certification cases, items, lifecycle events, and attachments.",
+          },
         ].map((link) => (
           <Link
             key={link.href}

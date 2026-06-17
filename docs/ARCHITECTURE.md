@@ -90,23 +90,25 @@ and sold inventory state atomically. It must not rewrite `true_basis`, must not
 update current value, must reject missing basis, and must allow known zero
 basis.
 
-Evaluation / Certification Lifecycle is the product-neutral Core concept for
-grading, authentication, appraisal, condition review, restoration review,
-certification, service records, and provenance review. Products translate that
-backbone into niche-specific workflows: Card Vertex grading submissions through
-PSA/BGS/SGC/CGC with grade returned, cert number, and slab images; Comic Vertex
-grading, restoration review, page quality, and certification; Watch Vertex
-authentication, service records, condition review, appraisal, and box/papers
-verification; Coin Vertex grading, certification, holder, and mint/state
-details; and Memorabilia authentication, appraisal, certificate of
-authenticity, and provenance review.
+Evaluation / Certification Lifecycle now exists as the product-neutral Core
+concept for grading, authentication, appraisal, condition review, restoration
+review, certification, service records, and provenance review. Products
+translate that backbone into niche-specific workflows: Card Vertex grading
+submissions through future provider workflows with grade returned, cert number,
+and slab images; Comic Vertex grading, restoration review, page quality, and
+certification; Watch Vertex authentication, service records, condition review,
+appraisal, and box/papers verification; Coin Vertex grading, certification,
+holder, and mint/state details; and Memorabilia authentication, appraisal,
+certificate of authenticity, and provenance review.
 
-Evaluation cost may increase `true_basis`. Evaluation result does not
-automatically increase `true_basis`. A grading fee, authentication fee,
-appraisal fee, or certification fee may be capitalized into basis when
-appropriate. A PSA 10, authenticated watch, certified comic, or appraised item
-may affect market value, but the result itself does not mutate basis except for
-actual costs incurred. Basis and market value remain separate.
+Evaluation results do not automatically mutate `true_basis` or market value. A
+grading fee, authentication fee, appraisal fee, or certification fee may be
+capitalized into basis only through the explicit
+`apply_evaluation_basis_increase` RPC, which writes a basis event, evaluation
+event, and audit event. Items with `true_basis = null` reject basis increase for
+now because missing basis must not be silently converted into known basis.
+`current_value` is not updated by evaluation results or by explicit evaluation
+basis increases. Basis and market value remain separate.
 
 Ownership lineage is a core platform concept. Ownership and status changes must be explainable through `ownership_events`.
 

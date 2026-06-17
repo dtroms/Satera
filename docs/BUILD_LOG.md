@@ -39,6 +39,11 @@ The current Satera Core foundation includes:
   context, future delivery-attempt tracking, RLS policies, direct-write
   hardening, RPC-only status mutations, audit events, TypeScript service
   helpers, SQL verification, and read-only Internal Inspector visibility.
+- Satera Evaluation / Certification Lifecycle with product-neutral cases,
+  case items, immutable lifecycle events, future-safe attachment records, RLS
+  policies, direct-write hardening, RPC-only mutations, explicit audited basis
+  increases, SQL verification, TypeScript service helpers, and read-only
+  Internal Inspector visibility.
 - Direct-write hardening for critical financial and history tables.
 - TypeScript service layer that routes application code through safe workflows.
 - Tests for calculations, service-layer protections, atomic transaction inputs,
@@ -70,11 +75,19 @@ The current Satera Core foundation includes:
 - Internal Notification Inspector views are read-only and do not add
   notification UI, forms, delivery controls, product notification surfaces, or
   preference management.
+- Internal Evaluation Inspector views are read-only and do not add Card Vertex
+  pages, grading UI, submission UI, provider integrations, upload UI, or
+  evaluation write paths.
+- Evaluation results do not update `true_basis` or `current_value`. Evaluation
+  costs may increase `true_basis` only through explicit audited basis increase,
+  and items with `true_basis = null` reject basis increase for now.
 - No Card Vertex community UI, Card Vertex pages, Community Dock, Vertex Pro
   UI, realtime, LiveKit, voice, video, screenshare, uploaded video, media
-  processing, lot purchase UI, bulk import UI, marketplace integrations,
-  receipt parsing, OCR, AI allocation, custom acquisition-cost category
-  management, notification delivery, email, push, SMS, AI moderation, automated
-  moderation providers, or advanced moderation automation has been built.
+  processing, grading UI, submission UI, lot purchase UI, bulk import UI,
+  marketplace integrations, appraisal provider integrations, grading provider
+  integrations, authentication provider integrations, receipt parsing, OCR, AI
+  allocation, custom acquisition-cost category management, notification
+  delivery, email, push, SMS, AI moderation, automated moderation providers, or
+  advanced moderation automation has been built.
 - No app roots, packages, separate Card Vertex deployment, separate Card Vertex
   database, or separate Card Vertex Supabase project have been created.

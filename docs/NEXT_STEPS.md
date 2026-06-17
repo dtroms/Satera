@@ -2,11 +2,23 @@
 
 ## Current Priority
 
-1. Evaluation / Certification Lifecycle.
-2. Product Lens Framework hardening.
-3. Product App Boundary / Monorepo Restructure.
-4. Comp/Value Workflow write path.
-5. Card Vertex product shell later.
+1. Product Lens Framework hardening.
+2. Product App Boundary / Monorepo Restructure.
+3. Comp/Value Workflow write path.
+4. Card Vertex product shell later.
+
+Satera Evaluation / Certification Lifecycle is now complete as product-neutral
+Core infrastructure. It stores evaluation cases, items, immutable lifecycle
+events, and future-safe attachment records. It supports grading,
+authentication, appraisal, certification, service, condition review,
+restoration review, and provenance review without building product-specific UI
+or provider integrations.
+
+Evaluation results do not automatically mutate `true_basis` or market value.
+Evaluation costs may increase `true_basis` only through explicit audited basis
+increase. Items with `true_basis = null` reject basis increase for now, and
+`current_value` is not updated by evaluation result recording or basis
+increase.
 
 Lot Purchase RPC is now complete as a strict Satera Core RPC. It creates
 multiple inventory items under one `purchase_lot` transaction, preserves
@@ -43,19 +55,22 @@ Inspector can inspect community and moderation records through read-only views.
 Product-specific community UI and product-facing moderation UI, including Card
 Vertex community surfaces and the Community Dock, come later.
 
-Satera Core should model evaluation/certification as a product-neutral
-lifecycle. Products can translate that backbone into niche-specific workflows:
-Card Vertex grading submissions and cert numbers, Comic Vertex restoration
-review and page quality, Watch Vertex authentication and service records, Coin
-Vertex holder and mint/state details, and Memorabilia certificates of
-authenticity or provenance review.
+Products can translate the Core evaluation/certification backbone into
+niche-specific workflows: Card Vertex grading submissions and cert numbers,
+Comic Vertex restoration review and page quality, Watch Vertex authentication
+and service records, Coin Vertex holder and mint/state details, and Memorabilia
+certificates of authenticity or provenance review.
 
-Evaluation cost may increase `true_basis`. Evaluation result does not
-automatically increase `true_basis`. A grading fee, authentication fee,
-appraisal fee, or certification fee may be capitalized into basis when
-appropriate, but a PSA 10, authenticated watch, certified comic, or appraised
-item affects market value separately from basis unless actual costs were
-incurred.
+Evaluation results do not automatically increase `true_basis` or market value.
+A grading fee, authentication fee, appraisal fee, or certification fee may be
+capitalized into basis only through explicit audited basis increase. A PSA 10,
+authenticated watch, certified comic, or appraised item affects market value
+separately from basis unless actual costs were incurred.
+
+Future evaluation work includes provider integrations, submission package
+generation, label/cert image uploads, automated notifications, product-specific
+UI, Card Vertex grading workflow, Watch Vertex service/appraisal workflow, and
+Comic Vertex grading/restoration workflow.
 
 ## Future Product Work
 

@@ -31,6 +31,10 @@ const MODERATION_APPEAL_SELECT = "*";
 const NOTIFICATION_EVENT_SELECT = "*";
 const NOTIFICATION_SELECT = "*";
 const NOTIFICATION_DELIVERY_ATTEMPT_SELECT = "*";
+const EVALUATION_CASE_SELECT = "*";
+const EVALUATION_CASE_ITEM_SELECT = "*";
+const EVALUATION_EVENT_SELECT = "*";
+const EVALUATION_ATTACHMENT_SELECT = "*";
 
 function throwIfError(error: unknown): void {
   if (error) {
@@ -729,6 +733,94 @@ export async function getInternalNotificationDeliveryAttempts(filters: {
 
   if (filters.status) {
     query = query.eq("status", filters.status);
+  }
+
+  const { data, error } = await query;
+
+  throwIfError(error);
+  return data ?? [];
+}
+
+export async function getInternalEvaluationCases(): Promise<InternalRecord[]> {
+  const db = await createClient();
+  const { data, error } = await db
+    .from("evaluation_cases")
+    .select(EVALUATION_CASE_SELECT)
+    .order("opened_at", { ascending: false })
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  throwIfError(error);
+  return data ?? [];
+}
+
+export async function getInternalEvaluationCaseById(
+  id: string,
+): Promise<InternalRecord | null> {
+  const db = await createClient();
+  const { data, error } = await db
+    .from("evaluation_cases")
+    .select(EVALUATION_CASE_SELECT)
+    .eq("id", id)
+    .maybeSingle();
+
+  throwIfError(error);
+  return data ?? null;
+}
+
+export async function getInternalEvaluationCaseItems(
+  evaluationCaseId?: string,
+): Promise<InternalRecord[]> {
+  const db = await createClient();
+  let query = db
+    .from("evaluation_case_items")
+    .select(EVALUATION_CASE_ITEM_SELECT)
+    .order("created_at", { ascending: true })
+    .limit(100);
+
+  if (evaluationCaseId) {
+    query = query.eq("evaluation_case_id", evaluationCaseId);
+  }
+
+  const { data, error } = await query;
+
+  throwIfError(error);
+  return data ?? [];
+}
+
+export async function getInternalEvaluationEvents(
+  evaluationCaseId?: string,
+): Promise<InternalRecord[]> {
+  const db = await createClient();
+  let query = db
+    .from("evaluation_events")
+    .select(EVALUATION_EVENT_SELECT)
+    .order("occurred_at", { ascending: true })
+    .order("created_at", { ascending: true })
+    .limit(200);
+
+  if (evaluationCaseId) {
+    query = query.eq("evaluation_case_id", evaluationCaseId);
+  }
+
+  const { data, error } = await query;
+
+  throwIfError(error);
+  return data ?? [];
+}
+
+export async function getInternalEvaluationAttachments(
+  evaluationCaseId?: string,
+): Promise<InternalRecord[]> {
+  const db = await createClient();
+  let query = db
+    .from("evaluation_attachments")
+    .select(EVALUATION_ATTACHMENT_SELECT)
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  if (evaluationCaseId) {
+    query = query.eq("evaluation_case_id", evaluationCaseId);
   }
 
   const { data, error } = await query;
