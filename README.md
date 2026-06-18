@@ -196,25 +196,30 @@ financial truth logic in product UI.
 
 ## Product App Boundary
 
-Product App Boundary / Monorepo Prep is complete only as documentation and
-lightweight folder scaffolding. The current root `app/` and `lib/core`
-structure remains active. Full package extraction and full app-root creation
-are later milestones.
+`packages/satera-core` now exists as the first shared package boundary. It
+currently re-exports the active `lib/core` implementation through domain entry
+points for services, query helpers, RPC wrappers, and types. The current root
+`app/` remains unchanged, and `lib/core` remains both the active implementation
+and compatibility surface for existing imports. No runtime behavior changed.
+
+Future passes may migrate source logic into `packages/satera-core/src`
+gradually. Future product apps should consume Satera Core through that package
+boundary and continue routing mutations through approved Core services/RPCs.
+Card Vertex at `cardvertex.com` should use this shared package when its app root
+is created.
 
 Future product apps may include Card Vertex, Satera, Vertex Pro, and Satera
-Portfolio. Future shared packages may include `satera-core`, `ui`, and
-`config`. Future Vercel setup may use multiple Vercel projects pointing at app
-roots in one repo, but Vercel configuration has not changed in this pass.
+Portfolio. Future shared packages may also include `ui` and `config`. Future
+Vercel setup may use multiple Vercel projects pointing at app roots in one
+repo, but Vercel configuration has not changed in this pass.
 
 The intended staged roadmap is:
 
-1. Product App Boundary / Monorepo Prep.
-2. Extract Satera Core package with compatibility exports.
-3. Create minimal `apps/card-vertex` root.
-4. Create minimal `apps/satera` root only after deciding its exact role.
-5. Configure Vercel projects and domains later.
-6. Comp/Value Workflow write path.
-7. Card Vertex product shell.
+1. Create minimal `apps/card-vertex` root.
+2. Create minimal `apps/satera` root only after deciding its exact role.
+3. Configure Vercel projects and domains later.
+4. Comp/Value Workflow write path.
+5. Card Vertex product shell.
 
 Future extraction must be staged: extract Satera Core services first, keep
 compatibility exports from `lib/core`, keep Supabase migrations/tests at the

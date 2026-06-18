@@ -1,16 +1,19 @@
-# Future Shared Packages
+# Shared Packages
 
-`packages/` is reserved for future shared packages.
-No package extraction has happened yet.
+`packages/` contains shared boundaries for current and future product apps.
+
+Current package:
+
+- `packages/satera-core/`: the first shared Core package boundary. It currently
+  re-exports the active `lib/core` service functions, query helpers, RPC
+  wrappers, and types without moving their implementation.
 
 Future candidates include:
 
-- `packages/satera-core/`: shared service functions, RPC wrappers, and Core
-  types.
 - `packages/ui/`: shared primitives and design tokens.
 - `packages/config/`: shared TypeScript, ESLint, Tailwind, and related tooling
   configuration.
 
-The existing `lib/core` tree remains the active source for Satera Core service
-code for now. Future extraction should be staged and should keep compatibility
-exports from `lib/core` during the transition so existing imports keep working.
+The existing `lib/core` tree remains the active implementation and
+compatibility surface. Source logic may move into `packages/satera-core/src`
+gradually in later passes while existing imports continue to work.

@@ -1,8 +1,8 @@
 # Product App Boundary
 
 This document records the repo-boundary direction for future standalone product
-surfaces. It is documentation and lightweight folder scaffolding only. It does
-not create product app roots, packages, deployments, routes, UI, database
+surfaces. `packages/satera-core` now exists as the first package boundary, but
+this pass does not create product app roots, deployments, routes, UI, database
 schema, migrations, RLS, RPCs, or build-tooling changes.
 
 ## Core Principle
@@ -48,7 +48,7 @@ Satera/
 │   ├── vertex-pro/         future dealer/operator app
 │   └── satera-portfolio/   future portfolio app if separate from apps/satera
 ├── packages/
-│   ├── satera-core/        future shared service/RPC/type package
+│   ├── satera-core/        current shared service/RPC/type boundary
 │   ├── ui/                 future shared design primitives
 │   └── config/             future shared tooling config
 └── supabase/
@@ -57,18 +57,19 @@ Satera/
     └── seed.sql
 ```
 
-The current root `app/` and `lib/core` structure remains active until
-extraction is intentionally performed.
+The current root `app/` and `lib/core` structure remains active.
+`packages/satera-core` currently re-exports `lib/core`; no implementation logic
+has moved, existing imports remain compatible, and runtime behavior is
+unchanged. Future product apps should consume this package boundary, and future
+passes may migrate implementation logic into it gradually.
 
 ## Staged Roadmap
 
-1. Product App Boundary / Monorepo Prep.
-2. Extract Satera Core package with compatibility exports.
-3. Create minimal `apps/card-vertex` root.
-4. Create minimal `apps/satera` root only after deciding its exact role.
-5. Configure Vercel projects and domains later.
-6. Comp/Value Workflow write path.
-7. Card Vertex product shell.
+1. Create minimal `apps/card-vertex` root.
+2. Create minimal `apps/satera` root only after deciding its exact role.
+3. Configure Vercel projects and domains later.
+4. Comp/Value Workflow write path.
+5. Card Vertex product shell.
 
 ## Extraction Guardrails
 
@@ -85,4 +86,5 @@ extraction is intentionally performed.
 - Card Vertex should use product-lens queries rather than unscoped inventory
   queries.
 
-Full package extraction and full app-root creation are later milestones.
+Moving the active implementation into the package and creating app roots are
+later milestones.

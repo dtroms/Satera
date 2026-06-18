@@ -47,6 +47,10 @@ The current Satera Core foundation includes:
 - Product Lens Framework hardening with read-only TypeScript services for
   product context, product-scoped inventory, public references, communities,
   notifications, evaluation cases, entitlements, and summary counts.
+- First shared package boundary at `packages/satera-core`. Its domain entry
+  points re-export the active `lib/core` services, query helpers, RPC wrappers,
+  and types. Existing `lib/core` imports remain compatible, no implementation
+  files moved, and runtime behavior is unchanged.
 - Product-lens SQL helper functions for product access checks, category/product
   membership, and inventory-item/product membership.
 - SQL verification that product-scoped inventory, public references,
@@ -67,12 +71,9 @@ The current Satera Core foundation includes:
 - Satera Community Core architecture planning under `docs/architecture/`.
 - Vertex Pro cross-product community management planning under `docs/products/vertex-pro/`.
 - Technology roadmap planning for future community media and moderation alignment under `docs/architecture/`.
-- Product App Boundary / Monorepo Prep is documented as a completed
-  documentation/scaffolding pass before full extraction. `apps/README.md`,
-  `packages/README.md`, and
-  `docs/architecture/PRODUCT_APP_BOUNDARY.md` describe future standalone
-  product app boundaries without moving the current app, creating app roots, or
-  extracting packages.
+- Product App Boundary documentation now records the implemented incremental
+  package boundary and future standalone product app boundaries without moving
+  the current app or creating app roots.
 - Card Vertex may later live as its own app root at `cardvertex.com`, and
   Satera may later live separately at `satera.app` for account/billing,
   platform/admin, internal tooling, Satera Portfolio, or other cross-product
@@ -108,10 +109,10 @@ The current Satera Core foundation includes:
   allocation, custom acquisition-cost category management, notification
   delivery, email, push, SMS, AI moderation, automated moderation providers, or
   advanced moderation automation has been built.
-- No app roots, packages, separate Card Vertex deployment, separate Card Vertex
-  database, or separate Card Vertex Supabase project have been created.
-- Full Satera Core package extraction and full app-root creation are later
-  milestones. Future extraction should start with Satera Core services, keep
+- No app roots, separate Card Vertex deployment, separate Card Vertex database,
+  or separate Card Vertex Supabase project have been created.
+- Moving Satera Core implementation logic into the package and full app-root
+  creation are later milestones. Future extraction should keep
   compatibility exports from `lib/core`, keep Supabase migrations/tests at the
   repo root, keep database truth centralized, keep product-specific logic out
   of Core, and keep Satera financial truth logic out of product UI.

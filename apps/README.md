@@ -17,8 +17,10 @@ Satera should not be treated as a generic marketplace or generic dashboard MVP.
 Card Vertex remains the first standalone user-facing product experience.
 
 Product apps are isolated user experiences over shared Satera Core. They should
-consume Satera Core service functions and RPC wrappers, including product-lens
-queries for scoped reads. Product apps must not own separate Supabase
+eventually consume service functions, types, query helpers, and RPC wrappers
+through `packages/satera-core`, including product-lens queries for scoped
+reads. That package currently re-exports the active `lib/core` implementation;
+no app roots consume it yet. Product apps must not own separate Supabase
 databases, must not create a separate Card Vertex Supabase project, and must
 not directly mutate Satera Core tables.
 
