@@ -14,11 +14,13 @@ silos.
 
 Product apps may eventually become separate app roots, domains, and
 deployments, but not separate data platforms. Card Vertex should eventually
-live at `cardvertex.com` as its own standalone product surface. Satera should
-eventually live separately at `satera.app` as the platform/powering layer,
-portfolio/admin surface, or future platform home. Both surfaces should continue
-to use the same Satera Core backend and the same Satera Supabase database.
-Card Vertex should not have a separate Supabase project.
+live at `cardvertex.com` as its own standalone product surface. Satera may
+eventually live separately at `satera.app` for account/billing,
+platform/admin, internal tooling, Satera Portfolio, or other cross-product
+surfaces. Satera is not the generic marketplace/dashboard MVP. These surfaces
+should continue to use the same Satera Core backend, same auth model, same
+RPCs, same RLS, and the same Satera Supabase database. Card Vertex should not
+have a separate Supabase project.
 
 Satera owns the database, auth, permissions, inventory truth, transactions,
 basis, lineage, public object references, communities, moderation,
@@ -28,17 +30,17 @@ Card Vertex must call Satera Core services and RPCs instead of directly
 mutating Satera Core tables. Product UI must not contain Satera financial truth
 logic.
 
-The future Product App Boundary / Monorepo Restructure milestone may introduce
-separate app roots and shared packages before the Card Vertex product shell is
-built:
+The Product App Boundary / Monorepo Prep milestone is documentation and
+lightweight folder scaffolding only. Separate app roots and shared packages are
+later milestones before the Card Vertex product shell is built:
 
 ```text
 Satera/
 ├── apps/
 │   ├── card-vertex/        deployed to cardvertex.com
-│   ├── satera/             deployed to satera.app
-│   ├── vertex-pro/         future
-│   └── satera-portfolio/   future
+│   ├── satera/             platform/account/admin/portfolio surface
+│   ├── vertex-pro/         future dealer/operator app
+│   └── satera-portfolio/   future portfolio app if separate from apps/satera
 ├── packages/
 │   ├── satera-core/        shared service layer / RPC wrappers
 │   ├── ui/                 shared primitives
@@ -48,9 +50,31 @@ Satera/
     └── tests/
 ```
 
-That structure is planning only. It should preserve the service/API boundary
-so Card Vertex can become a separate app root without rewriting the Core logic.
-It should not introduce a separate Card Vertex database or Supabase project.
+That structure is planning only. The current root `app/` and `lib/core`
+structure remains active until extraction is intentionally performed. It should
+preserve the service/API boundary so Card Vertex can become a separate app root
+without rewriting the Core logic. It should not introduce a separate Card
+Vertex database or Supabase project. Future Vercel setup may use multiple
+Vercel projects pointing at different app roots in this repo, but Vercel
+configuration is a later milestone.
+
+The staged roadmap is:
+
+1. Product App Boundary / Monorepo Prep.
+2. Extract Satera Core package with compatibility exports.
+3. Create minimal `apps/card-vertex` root.
+4. Create minimal `apps/satera` root only after deciding its exact role.
+5. Configure Vercel projects and domains later.
+6. Comp/Value Workflow write path.
+7. Card Vertex product shell.
+
+Future extraction rules: do not move everything in one pass, extract Satera
+Core services first, keep compatibility exports from `lib/core`, keep Supabase
+migrations/tests at the repo root, keep database truth centralized, keep
+product-specific logic out of Satera Core, keep Satera financial truth logic
+out of product UI, route product app mutations through service functions/RPCs,
+allow safe reads through Satera Core services, and prefer product-lens queries
+over unscoped inventory queries.
 
 Inventory belongs to users, workspaces, or organizations. Every inventory item carries an owner context, and privacy starts there. Row Level Security protects row visibility so a product profile, entitlement, or product-specific surface cannot override private inventory boundaries.
 
@@ -207,6 +231,8 @@ assistance. Those workflows are not part of the current Core RPC.
 Community architecture is documented in `docs/architecture/COMMUNITY_CORE.md`.
 Future media and moderation alignment is documented in
 `docs/architecture/TECHNOLOGY_ROADMAP.md`.
+Product app boundary planning is documented in
+`docs/architecture/PRODUCT_APP_BOUNDARY.md`.
 
 Card Vertex inventory/community workspace planning is documented in
 `docs/products/card-vertex/INVENTORY_WORKSPACE_AND_COMMUNITY.md`. Vertex Pro

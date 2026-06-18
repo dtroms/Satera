@@ -67,11 +67,18 @@ The current Satera Core foundation includes:
 - Satera Community Core architecture planning under `docs/architecture/`.
 - Vertex Pro cross-product community management planning under `docs/products/vertex-pro/`.
 - Technology roadmap planning for future community media and moderation alignment under `docs/architecture/`.
-- Future Product App Boundary / Monorepo Restructure planning is documented as
-  a milestone before the Card Vertex product shell. Card Vertex may later live
-  as its own app root at `cardvertex.com`, and Satera may later live separately
-  at `satera.app`, while both continue to use the same Satera Core backend and
-  the same Satera Supabase database.
+- Product App Boundary / Monorepo Prep is documented as a completed
+  documentation/scaffolding pass before full extraction. `apps/README.md`,
+  `packages/README.md`, and
+  `docs/architecture/PRODUCT_APP_BOUNDARY.md` describe future standalone
+  product app boundaries without moving the current app, creating app roots, or
+  extracting packages.
+- Card Vertex may later live as its own app root at `cardvertex.com`, and
+  Satera may later live separately at `satera.app` for account/billing,
+  platform/admin, internal tooling, Satera Portfolio, or other cross-product
+  surfaces. Satera is not the generic marketplace/dashboard MVP. Future Vercel
+  setup may use multiple Vercel projects pointing at app roots in one repo, but
+  Vercel configuration is a later milestone.
 - Future product app boundaries should rely on the product-lens service
   boundary. Card Vertex at `cardvertex.com` should use Satera Core
   services/RPCs rather than direct table mutations or product-owned truth.
@@ -103,3 +110,8 @@ The current Satera Core foundation includes:
   advanced moderation automation has been built.
 - No app roots, packages, separate Card Vertex deployment, separate Card Vertex
   database, or separate Card Vertex Supabase project have been created.
+- Full Satera Core package extraction and full app-root creation are later
+  milestones. Future extraction should start with Satera Core services, keep
+  compatibility exports from `lib/core`, keep Supabase migrations/tests at the
+  repo root, keep database truth centralized, keep product-specific logic out
+  of Core, and keep Satera financial truth logic out of product UI.

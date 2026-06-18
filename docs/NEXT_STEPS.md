@@ -2,9 +2,13 @@
 
 ## Current Priority
 
-1. Product App Boundary / Monorepo Restructure.
-2. Comp/Value Workflow write path.
-3. Card Vertex product shell later.
+1. Product App Boundary / Monorepo Prep.
+2. Extract Satera Core package with compatibility exports.
+3. Create minimal `apps/card-vertex` root.
+4. Create minimal `apps/satera` root only after deciding its exact role.
+5. Configure Vercel projects/domains later.
+6. Comp/Value Workflow write path.
+7. Card Vertex product shell.
 
 Product Lens Framework hardening is complete as a Core read-only service
 boundary. Products are isolated experiences over shared Satera Core data, not
@@ -12,6 +16,20 @@ data silos. Product access, product profiles, organization product profiles,
 entitlements, category mappings, public references, communities, notifications,
 and evaluation cases are queried through explicit product context while
 inventory privacy remains owner/workspace/organization-controlled.
+
+Product App Boundary / Monorepo Prep is documentation and lightweight folder
+scaffolding only. The current root `app/` and `lib/core` structure remains
+active. Full package extraction and full app-root creation are later
+milestones. Card Vertex is intended to become a standalone product surface at
+`cardvertex.com`, while Satera may later host account/billing, platform/admin,
+internal tooling, Satera Portfolio, or other cross-product surfaces. Satera is
+not the generic marketplace/dashboard MVP. Card Vertex must not get its own
+Supabase database or Supabase project.
+
+Future app roots may include `card-vertex`, `satera`, `vertex-pro`, and
+`satera-portfolio`. Future packages may include `satera-core`, `ui`, and
+`config`. Future Vercel setup may use multiple Vercel projects pointing at
+app roots in this repo, but that configuration comes later.
 
 Satera Evaluation / Certification Lifecycle is now complete as product-neutral
 Core infrastructure. It stores evaluation cases, items, immutable lifecycle
@@ -89,6 +107,21 @@ Comic Vertex grading/restoration workflow.
    only after Core write boundaries are approved.
 4. Build Vertex Pro after organization/product profile workflows are ready for
    operator-facing surfaces.
+
+## Future Extraction Guardrails
+
+1. Do not move everything in one pass.
+2. Extract Satera Core services first.
+3. Keep compatibility exports from `lib/core` during transition.
+4. Keep Supabase migrations and tests at the repo root.
+5. Keep database truth centralized in Satera Core.
+6. Keep product-specific logic out of Satera Core.
+7. Keep Satera financial truth logic out of product UI.
+8. Product apps should call service functions and RPCs.
+9. Product apps should not call direct table mutations.
+10. Product apps may use safe read queries through Satera Core services.
+11. Card Vertex should use product-lens queries rather than unscoped inventory
+    queries.
 
 ## Future Lot Purchase Work
 
