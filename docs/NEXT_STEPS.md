@@ -2,18 +2,17 @@
 
 ## Current Priority
 
-1. Lock Satera/Card Vertex ownership boundary documentation.
-2. Define Card Vertex product-domain data-model gaps without implementing
-   schema.
-3. Define Card Vertex MVP Product Experience Specification.
-4. Define Draft Lot Workspace architecture and lifecycle.
-5. Define Card Identity and Card Catalog strategy.
-6. Define Card Vertex Signals / Goals / Trade Network MVP contracts.
-7. Plan real workspace/build configuration for `apps/card-vertex`.
-8. Create the real Card Vertex app root only after the product-domain plan is
+1. Review and approve the Card Vertex product-domain data-model gap assessment.
+2. Decide Card Identity and Card Catalog strategy.
+3. Define Draft Lot Workspace architecture and lifecycle.
+4. Define Card Vertex collector profile, trust, Goals, Signals, Trade Network,
+   search, dashboard, grading, and comp write-path contracts.
+5. Define Card Vertex MVP Product Experience Specification.
+6. Plan real workspace/build configuration for `apps/card-vertex`.
+7. Create the real Card Vertex app root only after the product-domain plan is
    approved.
-9. Build the Card Vertex Inventory Workspace shell.
-10. Add Card Vertex workflows incrementally.
+8. Build Card Vertex Inventory Workspace shell.
+9. Add Card Vertex workflows incrementally.
 
 This sequence is a planning gate. Documenting a future capability does not
 authorize implementation, and steps must not be skipped merely because Core
@@ -53,6 +52,9 @@ The canonical product boundary is documented in
 [`SATERA_CARD_VERTEX_OWNERSHIP.md`](architecture/SATERA_CARD_VERTEX_OWNERSHIP.md),
 with Card Vertex workflow distinctions in
 [`PRODUCT_DOMAIN_AND_WORKFLOWS.md`](products/card-vertex/PRODUCT_DOMAIN_AND_WORKFLOWS.md).
+The current Card Vertex product-domain data-model gap assessment is documented
+in
+[`PRODUCT_DOMAIN_DATA_MODEL_GAP_ASSESSMENT.md`](products/card-vertex/PRODUCT_DOMAIN_DATA_MODEL_GAP_ASSESSMENT.md).
 
 Satera Evaluation / Certification Lifecycle is now complete as product-neutral
 Core infrastructure. It stores evaluation cases, items, immutable lifecycle

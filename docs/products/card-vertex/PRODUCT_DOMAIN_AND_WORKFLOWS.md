@@ -6,6 +6,8 @@ UI, provider-integration, or configuration work.
 
 The ownership baseline is
 [`SATERA_CARD_VERTEX_OWNERSHIP.md`](../../architecture/SATERA_CARD_VERTEX_OWNERSHIP.md).
+The current data-model gap assessment is
+[`PRODUCT_DOMAIN_DATA_MODEL_GAP_ASSESSMENT.md`](PRODUCT_DOMAIN_DATA_MODEL_GAP_ASSESSMENT.md).
 
 ## Product Domain Principle
 

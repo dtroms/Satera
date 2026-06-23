@@ -254,3 +254,5 @@ Card Vertex inventory/community workspace planning is documented in
 `docs/products/card-vertex/INVENTORY_WORKSPACE_AND_COMMUNITY.md`. Vertex Pro
 cross-product community management planning is documented in
 `docs/products/vertex-pro/CROSS_PRODUCT_COMMUNITY_MANAGEMENT.md`.
+The Card Vertex product-domain data-model gap assessment is documented in
+`docs/products/card-vertex/PRODUCT_DOMAIN_DATA_MODEL_GAP_ASSESSMENT.md`.

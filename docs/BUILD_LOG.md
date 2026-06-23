@@ -75,6 +75,10 @@ The current Satera Core foundation includes:
   Network from logged trades, sale intent from sale truth, and Draft Lot
   Workspace behavior from final Core lot commitment. It also defines ownership
   for signals, goals, search, trust, grading, market context, and activity.
+- Card Vertex product-domain data-model gap assessment documenting current
+  Core capabilities, immediate consumption paths, missing Card Vertex-specific
+  records/contracts, future-work boundaries, and product decisions required
+  before proposing migrations.
 - Satera Community Core architecture planning under `docs/architecture/`.
 - Vertex Pro cross-product community management planning under `docs/products/vertex-pro/`.
 - Technology roadmap planning for future community media and moderation alignment under `docs/architecture/`.
