@@ -452,18 +452,17 @@ table names.
 
 ## Follow-On Sequence
 
-1. Review and approve Card Vertex Trade Network and Logged Trade Contract.
-2. Define Card Vertex collector profile and trust contract.
-3. Define Card Vertex Goals and Signals contract.
-4. Define Card Vertex Search, Dashboard, and comp write-path contract.
-5. Define Card Vertex MVP Product Experience Specification.
-6. Create a Card Vertex schema-design proposal only after the preceding
+1. Review and approve Card Vertex Collector Profile and Trust Contract.
+2. Define Card Vertex Goals and Signals contract.
+3. Define Card Vertex Search, Dashboard, and comp write-path contract.
+4. Define Card Vertex MVP Product Experience Specification.
+5. Create a Card Vertex schema-design proposal only after the preceding
    decisions are approved.
-7. Plan real workspace/build configuration for `apps/card-vertex`.
-8. Create a real Card Vertex app root only after the product-domain plan is
+6. Plan real workspace/build configuration for `apps/card-vertex`.
+7. Create a real Card Vertex app root only after the product-domain plan is
    approved.
-9. Build Card Vertex Inventory Workspace shell.
-10. Add Card Vertex workflows incrementally.
+8. Build Card Vertex Inventory Workspace shell.
+9. Add Card Vertex workflows incrementally.
 
 ## Do Not Build Yet
 

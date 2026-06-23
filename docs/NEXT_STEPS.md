@@ -2,17 +2,16 @@
 
 ## Current Priority
 
-1. Review and approve Card Vertex Trade Network and Logged Trade Contract.
-2. Define Card Vertex collector profile and trust contract.
-3. Define Card Vertex Goals and Signals contract.
-4. Define Card Vertex Search, Dashboard, and comp write-path contract.
-5. Define Card Vertex MVP Product Experience Specification.
-6. Create a Card Vertex schema-design proposal only after preceding product
+1. Review and approve Card Vertex Collector Profile and Trust Contract.
+2. Define Card Vertex Goals and Signals contract.
+3. Define Card Vertex Search, Dashboard, and comp write-path contract.
+4. Define Card Vertex MVP Product Experience Specification.
+5. Create a Card Vertex schema-design proposal only after preceding product
    decisions are approved.
-7. Plan real workspace/build configuration for `apps/card-vertex`.
-8. Create real Card Vertex app root only after product-domain plan is approved.
-9. Build Card Vertex Inventory Workspace shell.
-10. Add Card Vertex workflows incrementally.
+6. Plan real workspace/build configuration for `apps/card-vertex`.
+7. Create real Card Vertex app root only after product-domain plan is approved.
+8. Build Card Vertex Inventory Workspace shell.
+9. Add Card Vertex workflows incrementally.
 
 Available planning documents:
 
@@ -20,6 +19,7 @@ Available planning documents:
 2. [`DRAFT_LOT_WORKSPACE_ARCHITECTURE.md`](products/card-vertex/DRAFT_LOT_WORKSPACE_ARCHITECTURE.md)
 3. [`GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md`](products/card-vertex/GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md)
 4. [`TRADE_NETWORK_AND_LOGGED_TRADE_CONTRACT.md`](products/card-vertex/TRADE_NETWORK_AND_LOGGED_TRADE_CONTRACT.md)
+5. [`COLLECTOR_PROFILE_AND_TRUST_CONTRACT.md`](products/card-vertex/COLLECTOR_PROFILE_AND_TRUST_CONTRACT.md)
 
 This sequence is a planning gate. Documenting a future capability does not
 authorize implementation, and steps must not be skipped merely because Core
@@ -72,6 +72,8 @@ documented in
 The proposed Card Vertex Trade Network and Logged Trade contract is documented
 in
 [`TRADE_NETWORK_AND_LOGGED_TRADE_CONTRACT.md`](products/card-vertex/TRADE_NETWORK_AND_LOGGED_TRADE_CONTRACT.md).
+The proposed Card Vertex Collector Profile and Trust contract is documented in
+[`COLLECTOR_PROFILE_AND_TRUST_CONTRACT.md`](products/card-vertex/COLLECTOR_PROFILE_AND_TRUST_CONTRACT.md).
 
 Satera Evaluation / Certification Lifecycle is now complete as product-neutral
 Core infrastructure. It stores evaluation cases, items, immutable lifecycle

@@ -16,6 +16,8 @@ The Grading Workspace and Certification Lifecycle contract is
 [`GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md`](GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md).
 The Trade Network and Logged Trade contract is
 [`TRADE_NETWORK_AND_LOGGED_TRADE_CONTRACT.md`](TRADE_NETWORK_AND_LOGGED_TRADE_CONTRACT.md).
+The Collector Profile and Trust contract is
+[`COLLECTOR_PROFILE_AND_TRUST_CONTRACT.md`](COLLECTOR_PROFILE_AND_TRUST_CONTRACT.md).
 
 ## Product Domain Principle
 
@@ -271,6 +273,15 @@ Avoid:
 Trust presentation must not expose private transaction terms, inventory,
 financial history, restrictions, or moderation details beyond the viewer's
 authorization.
+
+The approved collector profile and trust contract is documented in
+[`COLLECTOR_PROFILE_AND_TRUST_CONTRACT.md`](COLLECTOR_PROFILE_AND_TRUST_CONTRACT.md).
+It defines a Card Vertex profile as a selective collector-facing identity
+surface, not a generic social profile, public inventory page, follower graph,
+or public reputation score. It also defines public/private profile boundaries,
+visibility concepts, organization/shop affiliation, calm positive trust
+signals, Trade Network interaction, moderation/privacy boundaries, lifecycle
+concepts, current Core mapping, and founder-review decisions.
 
 ## Card Identity, Market Context, and Activity
 

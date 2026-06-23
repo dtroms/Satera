@@ -279,3 +279,9 @@ it keeps trade discovery, availability intent, Looking For, interest,
 conversation, private negotiation, and collector-facing review in Card Vertex
 while reserving completed ownership, basis, lineage, and audit truth for the
 existing Satera Core trade transaction.
+The proposed Card Vertex Collector Profile and Trust contract is documented in
+`docs/products/card-vertex/COLLECTOR_PROFILE_AND_TRUST_CONTRACT.md`; it keeps
+collector-facing card identity, selective public presence, Looking For
+presentation, organization/shop affiliation display, and calm trust signals in
+Card Vertex while preserving Satera identity, privacy, organization,
+moderation, public-reference, transaction, and audit truth.

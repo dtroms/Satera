@@ -21,6 +21,11 @@ The Trade Network and Logged Trade contract is documented in
 and is the decision gate before any Card Vertex trade discovery, Looking For,
 interest, conversation, trust-presentation, or logged-trade draft schema
 proposal.
+The Collector Profile and Trust contract is documented in
+[`COLLECTOR_PROFILE_AND_TRUST_CONTRACT.md`](COLLECTOR_PROFILE_AND_TRUST_CONTRACT.md)
+and is the decision gate before any Card Vertex collector profile,
+organization/shop affiliation, public profile visibility, public trade
+reference, Looking For presentation, or trust-signal schema proposal.
 
 ## Baseline
 
@@ -286,11 +291,17 @@ This assessment remains a gap inventory and does not approve schema.
 - Missing records or contracts: structured collector focus areas, public
   profile visibility, private settings, profile card/reference attachments,
   relationship/trade summary contract.
-- Product decisions still needed: which fields are public, which are private,
-  whether Looking For belongs to profile or Trade Network records.
+- Product decisions still needed: which fields are MVP, how future schema
+  records preserve the approved public/private boundaries, and whether Looking
+  For belongs to profile, Trade Network records, Goals, or a separate Card
+  Vertex intent model.
 - Recommended ownership: Card Vertex first, using Satera identity/privacy.
 - Recommended phase: before Trade Network.
 - Do not build yet: generic social graph, followers, or viral profiles.
+
+The detailed Collector Profile and Trust contract is now defined in
+[`COLLECTOR_PROFILE_AND_TRUST_CONTRACT.md`](COLLECTOR_PROFILE_AND_TRUST_CONTRACT.md).
+This assessment remains a gap inventory and does not approve schema.
 
 ### 12. Trust and Endorsements
 
@@ -303,9 +314,10 @@ This assessment remains a gap inventory and does not approve schema.
   community membership are available internally.
 - Missing records or contracts: endorsements, repeat partner visibility,
   public/private trust rules, partner identity resolution, trust presentation.
-- Product decisions still needed: endorsement vocabulary, who can endorse,
-  whether endorsements are public, whether declined/negative feedback exists
-  at all.
+- Product decisions still needed: whether completed trade count appears in
+  MVP, whether Would Trade Again or endorsements are deferred, endorsement
+  vocabulary, who can endorse, whether endorsements are public, and how to
+  preserve the approved no-ratings/no-scores boundary.
 - Recommended ownership: Card Vertex first; Core may later own reusable
   endorsement primitives only after reuse is proven.
 - Recommended phase: after collector profiles and logged trade partner model.
@@ -707,9 +719,9 @@ rights, and admin verification criteria.
 ## Part 8 - Recommended Implementation Sequence
 
 1. Documentation / decision work:
-   review and approve the Card Vertex Trade Network and Logged Trade Contract;
-   define the collector profile and trust contract; define Goals and Signals;
-   define Search, Dashboard, and comp write-path contracts.
+   review and approve the Card Vertex Collector Profile and Trust Contract;
+   define Goals and Signals; define Search, Dashboard, and comp write-path
+   contracts.
 2. Future schema design:
    only after decisions, propose Card Vertex-specific records for card identity
    gaps, draft lots, collector profiles/Looking For, goals, trade opportunities,
@@ -728,9 +740,8 @@ rights, and admin verification criteria.
    build the real app root and inventory workspace only after workspace/build
    planning and product-domain contracts are approved.
 
-Foundational priority order: approve Trade Network/logged trade, collector
-profile/trust, goals/signals, search/dashboard/comp write path, MVP product
-experience, then schema design.
+Foundational priority order: approve collector profile/trust, goals/signals,
+search/dashboard/comp write path, MVP product experience, then schema design.
 
 ## Part 9 - Explicit Non-Goals / Do Not Build Yet
 

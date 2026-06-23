@@ -143,10 +143,13 @@ out of Core.
 - Card Vertex product-domain records and contracts have not been defined.
 - A Draft Lot Workspace lifecycle is missing above the final lot commit RPC.
 - Card identity and catalog strategy is not yet defined.
-- Signals, Goals, search, and trust contracts are not defined.
+- Signals, Goals, and search contracts are not defined.
 - Trade Network and Logged Trade behavior is now defined in
   `docs/products/card-vertex/TRADE_NETWORK_AND_LOGGED_TRADE_CONTRACT.md`.
-- Grading behavior has not been mapped onto the Core evaluation lifecycle.
+- Collector Profile and Trust behavior is now defined in
+  `docs/products/card-vertex/COLLECTOR_PROFILE_AND_TRUST_CONTRACT.md`.
+- Grading behavior is now mapped onto the Core evaluation lifecycle in
+  `docs/products/card-vertex/GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md`.
 - A Card Vertex MVP Product Experience Specification has not been approved.
 - Real Card Vertex workspace, build, deployment, routes, and UI remain future
   work.
