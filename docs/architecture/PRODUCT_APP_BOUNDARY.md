@@ -2,8 +2,9 @@
 
 This document records the repo-boundary direction for future standalone product
 surfaces. `packages/satera-core` now exists as the first package boundary, but
-this pass does not create product app roots, deployments, routes, UI, database
-schema, migrations, RLS, RPCs, or build-tooling changes.
+`apps/card-vertex` now exists only as a documented placeholder for a future app
+root. This pass does not create a runnable product app, deployment, routes, UI,
+database schema, migrations, RLS, RPCs, or build-tooling changes.
 
 ## Core Principle
 
@@ -13,6 +14,13 @@ Satera remains the shared Core backend, source of truth, platform/company
 layer, and powering infrastructure. Product apps call Satera Core services and
 RPCs. Product apps do not fork the data model, do not own their own Supabase
 databases, and do not directly mutate Satera Core tables.
+
+App ownership and data ownership are separate concerns. Card Vertex-specific
+domain records may live in the shared Satera database and use shared RLS,
+permissions, audit, and product scoping. Card Vertex still owns their
+card-specific meaning and behavior. See
+[`SATERA_CARD_VERTEX_OWNERSHIP.md`](SATERA_CARD_VERTEX_OWNERSHIP.md) for the
+canonical three-layer boundary and decision matrix.
 
 Card Vertex is intended to become a standalone product surface at
 `cardvertex.com`, but it should continue using the same Satera Core backend,
@@ -57,17 +65,22 @@ Satera/
     └── seed.sql
 ```
 
+The `apps/card-vertex` entry currently contains only its placeholder README.
 The current root `app/` and `lib/core` structure remains active.
 `packages/satera-core` currently re-exports `lib/core`; no implementation logic
 has moved, existing imports remain compatible, and runtime behavior is
 unchanged. Future product apps should consume this package boundary, and future
 passes may migrate implementation logic into it gradually.
 
+No Card Vertex UI has been built, and no Vercel/domain or Supabase
+configuration has been added. Converting the placeholder into a runnable app
+requires intentional workspace/build configuration in a later pass.
+
 ## Staged Roadmap
 
-1. Create minimal `apps/card-vertex` root.
+1. Plan workspace/build configuration for real app roots.
 2. Create minimal `apps/satera` root only after deciding its exact role.
-3. Configure Vercel projects and domains later.
+3. Configure real monorepo/workspace tooling later.
 4. Comp/Value Workflow write path.
 5. Card Vertex product shell.
 
@@ -86,5 +99,5 @@ passes may migrate implementation logic into it gradually.
 - Card Vertex should use product-lens queries rather than unscoped inventory
   queries.
 
-Moving the active implementation into the package and creating app roots are
-later milestones.
+Moving the active implementation into the package and creating runnable app
+roots are later milestones.

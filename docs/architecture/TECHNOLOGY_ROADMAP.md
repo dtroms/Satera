@@ -4,6 +4,12 @@ This roadmap is planning documentation. It does not authorize current
 implementation of community media, LiveKit, uploaded video, automated
 moderation, routes, migrations, or additional packages.
 
+Before Card Vertex implementation, follow the ownership and promotion rules in
+[`SATERA_CARD_VERTEX_OWNERSHIP.md`](SATERA_CARD_VERTEX_OWNERSHIP.md). Build an
+initial card-specific behavior in Card Vertex and promote it to Satera only
+after a second product proves a reusable need. Shared storage alone is not a
+reason to generalize a product concept.
+
 ## Core Transaction Workflows
 
 Lot Purchase RPC is complete. `create_lot_purchase_transaction` is the strict
@@ -21,6 +27,13 @@ Future lot purchase work may add estimated-value proportional allocation,
 comp-based allocation, user-defined allocation templates, and receipt/import
 assistance. Marketplace integrations, receipt parsing, OCR, and AI allocation
 are not implemented in the current Core RPC.
+
+The current architecture has a deliberate product-layer gap: the existing Lot
+Purchase Transaction RPC is the final Commit Lot truth mechanism, but Card
+Vertex still needs a separately designed, long-lived Draft Lot Workspace above
+it. Drafts are not inventory or transactions. The target lifecycle is defined
+in
+[`PRODUCT_DOMAIN_AND_WORKFLOWS.md`](../products/card-vertex/PRODUCT_DOMAIN_AND_WORKFLOWS.md).
 
 ## Evaluation / Certification
 
@@ -56,8 +69,10 @@ the same Core truth layer.
 `packages/satera-core` now exists as the first package boundary and re-exports
 the active `lib/core` implementation. Existing imports remain compatible and
 runtime behavior is unchanged. The current root `app/` and `lib/core` structure
-remains active. Gradual source migration and full app-root creation are later
-milestones.
+remains active. `apps/card-vertex` now exists as a documentation-only
+placeholder; it is not runnable and contains no Card Vertex UI. Gradual source
+migration and runnable app-root creation are later milestones after intentional
+workspace/build planning.
 
 That future split is:
 
@@ -100,13 +115,14 @@ Satera/
 ```
 
 Future Vercel setup may use multiple Vercel projects pointing at app roots in
-this repo, but that configuration is a later milestone.
+this repo, but that configuration is a later milestone. No Vercel/domain or
+Supabase configuration was added with the placeholder.
 
 The staged roadmap is:
 
-1. Create minimal `apps/card-vertex` root.
+1. Plan workspace/build configuration for real app roots.
 2. Create minimal `apps/satera` root only after deciding its exact role.
-3. Configure Vercel projects and domains later.
+3. Configure real monorepo/workspace tooling later.
 4. Comp/Value Workflow write path.
 5. Card Vertex product shell.
 

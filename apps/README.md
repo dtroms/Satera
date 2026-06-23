@@ -1,7 +1,8 @@
 # Future Product Apps
 
 `apps/` is reserved for future independently deployable product surfaces.
-No product app roots have been created yet.
+`apps/card-vertex` now exists as a documentation-only placeholder for the first
+future standalone product app. It is not runnable and contains no product UI.
 
 Future candidates include:
 
@@ -25,3 +26,8 @@ databases, must not create a separate Card Vertex Supabase project, and must
 not directly mutate Satera Core tables.
 
 Satera owns the truth. Products render scoped experiences.
+
+Standalone apps should be added incrementally. Do not add full app roots
+without first planning the workspace and build configuration. After Card
+Vertex becomes a real app, its intended Vercel project root is
+`apps/card-vertex`; no Vercel or domain configuration has been added yet.

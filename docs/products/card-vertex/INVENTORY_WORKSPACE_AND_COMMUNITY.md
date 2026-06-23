@@ -21,6 +21,14 @@ experience over shared Core truth, not a separate inventory or community data
 silo. Product access does not override private inventory, and public object
 references remain the safe sharing boundary.
 
+This experience plan is governed by
+[`PRODUCT_DOMAIN_AND_WORKFLOWS.md`](PRODUCT_DOMAIN_AND_WORKFLOWS.md) and the
+canonical
+[`SATERA_CARD_VERTEX_OWNERSHIP.md`](../../architecture/SATERA_CARD_VERTEX_OWNERSHIP.md)
+boundary. Card Vertex is not only presentation: it owns card-specific meaning,
+workflow behavior, signals, goals, search interpretation, and collector-facing
+trust while Core preserves canonical truth and reusable guarantees.
+
 ## Product Philosophy
 
 Card Vertex should feel like one connected environment, not a set of separate

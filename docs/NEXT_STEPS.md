@@ -2,11 +2,22 @@
 
 ## Current Priority
 
-1. Create minimal `apps/card-vertex` root.
-2. Create minimal `apps/satera` root only after deciding its exact role.
-3. Configure Vercel projects/domains later.
-4. Comp/Value Workflow write path.
-5. Card Vertex product shell.
+1. Lock Satera/Card Vertex ownership boundary documentation.
+2. Define Card Vertex product-domain data-model gaps without implementing
+   schema.
+3. Define Card Vertex MVP Product Experience Specification.
+4. Define Draft Lot Workspace architecture and lifecycle.
+5. Define Card Identity and Card Catalog strategy.
+6. Define Card Vertex Signals / Goals / Trade Network MVP contracts.
+7. Plan real workspace/build configuration for `apps/card-vertex`.
+8. Create the real Card Vertex app root only after the product-domain plan is
+   approved.
+9. Build the Card Vertex Inventory Workspace shell.
+10. Add Card Vertex workflows incrementally.
+
+This sequence is a planning gate. Documenting a future capability does not
+authorize implementation, and steps must not be skipped merely because Core
+infrastructure already exists.
 
 Product Lens Framework hardening is complete as a Core read-only service
 boundary. Products are isolated experiences over shared Satera Core data, not
@@ -18,9 +29,12 @@ inventory privacy remains owner/workspace/organization-controlled.
 `packages/satera-core` now provides the first real shared package boundary. It
 re-exports the active `lib/core` implementation without moving source logic,
 so existing imports remain compatible and runtime behavior is unchanged. The
-current root `app/` and `lib/core` structure remains active. Source logic may
-migrate into the package gradually in future passes; full app-root creation is
-a later milestone. Card Vertex is intended to become a standalone product
+current root `app/` and `lib/core` structure remains active. The new
+`apps/card-vertex` directory is documentation/scaffolding only: it is not
+runnable and contains no Card Vertex UI. Source logic may migrate into the
+package gradually in future passes; runnable app-root creation is a later
+milestone after intentional workspace/build planning. Card Vertex is intended
+to become a standalone product
 surface at `cardvertex.com`, while Satera may later host account/billing,
 platform/admin, internal tooling, Satera Portfolio, or other cross-product
 surfaces. Satera is not the generic marketplace/dashboard MVP. Card Vertex
@@ -31,6 +45,14 @@ Future app roots may include `card-vertex`, `satera`, `vertex-pro`, and
 should eventually consume Satera Core services and RPC wrappers through
 `packages/satera-core`. Future Vercel setup may use multiple Vercel projects
 pointing at app roots in this repo, but that configuration comes later.
+
+This placeholder pass adds no Vercel/domain configuration and makes no
+Supabase changes.
+
+The canonical product boundary is documented in
+[`SATERA_CARD_VERTEX_OWNERSHIP.md`](architecture/SATERA_CARD_VERTEX_OWNERSHIP.md),
+with Card Vertex workflow distinctions in
+[`PRODUCT_DOMAIN_AND_WORKFLOWS.md`](products/card-vertex/PRODUCT_DOMAIN_AND_WORKFLOWS.md).
 
 Satera Evaluation / Certification Lifecycle is now complete as product-neutral
 Core infrastructure. It stores evaluation cases, items, immutable lifecycle

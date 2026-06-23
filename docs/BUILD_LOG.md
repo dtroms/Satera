@@ -68,12 +68,24 @@ The current Satera Core foundation includes:
   and moderation views.
 - Card Vertex crowdsourced comp system documentation under `docs/products/card-vertex/`.
 - Card Vertex inventory workspace and community interaction planning under `docs/products/card-vertex/`.
+- Satera Core/Card Vertex three-layer ownership documentation with a detailed
+  current-state decision matrix, promotion rule, and explicit shared-database
+  boundary under `docs/architecture/`.
+- Card Vertex product-domain workflow documentation distinguishing Trade
+  Network from logged trades, sale intent from sale truth, and Draft Lot
+  Workspace behavior from final Core lot commitment. It also defines ownership
+  for signals, goals, search, trust, grading, market context, and activity.
 - Satera Community Core architecture planning under `docs/architecture/`.
 - Vertex Pro cross-product community management planning under `docs/products/vertex-pro/`.
 - Technology roadmap planning for future community media and moderation alignment under `docs/architecture/`.
 - Product App Boundary documentation now records the implemented incremental
   package boundary and future standalone product app boundaries without moving
-  the current app or creating app roots.
+  the current app.
+- Added `apps/card-vertex` as a documentation-only placeholder for the future
+  standalone Card Vertex app root. It contains no runnable app, routes, product
+  UI, workspace, inventory screens, or Community Dock. The current root app
+  remains active, and `packages/satera-core` remains the package boundary for
+  future product apps.
 - Card Vertex may later live as its own app root at `cardvertex.com`, and
   Satera may later live separately at `satera.app` for account/billing,
   platform/admin, internal tooling, Satera Portfolio, or other cross-product
@@ -109,8 +121,13 @@ The current Satera Core foundation includes:
   allocation, custom acquisition-cost category management, notification
   delivery, email, push, SMS, AI moderation, automated moderation providers, or
   advanced moderation automation has been built.
-- No app roots, separate Card Vertex deployment, separate Card Vertex database,
-  or separate Card Vertex Supabase project have been created.
+- The existing Lot Purchase Transaction RPC remains the correct final Commit
+  Lot truth mechanism. A long-lived Card Vertex Draft Lot Workspace above it is
+  an identified architecture gap and has not been implemented.
+- No runnable app roots, separate Card Vertex deployment, Card Vertex
+  Vercel/domain configuration, separate Card Vertex database, or separate Card
+  Vertex Supabase project have been created. No Supabase files, workspace/build
+  tooling, or runtime behavior changed for the placeholder.
 - Moving Satera Core implementation logic into the package and full app-root
   creation are later milestones. Future extraction should keep
   compatibility exports from `lib/core`, keep Supabase migrations/tests at the

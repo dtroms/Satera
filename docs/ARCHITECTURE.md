@@ -30,10 +30,20 @@ Card Vertex must call Satera Core services and RPCs instead of directly
 mutating Satera Core tables. Product UI must not contain Satera financial truth
 logic.
 
+The detailed three-layer ownership model, decision matrix, and promotion rule
+live in
+[`SATERA_CARD_VERTEX_OWNERSHIP.md`](architecture/SATERA_CARD_VERTEX_OWNERSHIP.md).
+Satera owning canonical truth does not reduce Card Vertex to a UI skin: Card
+Vertex owns card-specific semantics, product rules, intelligence, and workflow
+behavior. Product-specific records may live in the shared database while using
+shared RLS, permissions, audit, and product scoping.
+
 `packages/satera-core` is now the first shared package boundary. It currently
 re-exports the active `lib/core` implementation without moving logic, changing
 runtime behavior, or breaking existing `lib/core` imports. Separate app roots
-remain later milestones before the Card Vertex product shell is built:
+remain later milestones before the Card Vertex product shell is built.
+`apps/card-vertex` now provides a documentation-only placeholder for the
+future Card Vertex app root; it is not runnable and contains no product UI:
 
 ```text
 Satera/
@@ -51,8 +61,9 @@ Satera/
     └── tests/
 ```
 
-The app-root and remaining package structure is planning only. The current root
-`app/` and `lib/core` structure remains active; `lib/core` is the active
+Except for the placeholder directory, the app-root and remaining package
+structure is planning only. The current root `app/` and `lib/core` structure
+remains active; `lib/core` is the active
 implementation and compatibility surface. Future passes may migrate source
 logic into `packages/satera-core/src` gradually while preserving the service/API
 boundary so Card Vertex can become a separate app root
@@ -61,11 +72,15 @@ Vertex database or Supabase project. Future Vercel setup may use multiple
 Vercel projects pointing at different app roots in this repo, but Vercel
 configuration is a later milestone.
 
+Creating a runnable Card Vertex app requires intentionally introducing
+workspace/build configuration later. This placeholder adds no Card Vertex UI,
+Vercel/domain configuration, runtime changes, or Supabase changes.
+
 The staged roadmap is:
 
-1. Create minimal `apps/card-vertex` root.
+1. Plan workspace/build configuration for real app roots.
 2. Create minimal `apps/satera` root only after deciding its exact role.
-3. Configure Vercel projects and domains later.
+3. Configure real monorepo/workspace tooling later.
 4. Comp/Value Workflow write path.
 5. Card Vertex product shell.
 

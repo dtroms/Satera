@@ -188,6 +188,13 @@ that service/API boundary lets Card Vertex become a separate app root later
 without rewriting Core inventory, transaction, basis, lineage, permission,
 community, moderation, notification, audit, or entitlement logic.
 
+The canonical ownership model and decision matrix are documented in
+[`docs/architecture/SATERA_CARD_VERTEX_OWNERSHIP.md`](docs/architecture/SATERA_CARD_VERTEX_OWNERSHIP.md).
+Card Vertex domain workflows are documented in
+[`docs/products/card-vertex/PRODUCT_DOMAIN_AND_WORKFLOWS.md`](docs/products/card-vertex/PRODUCT_DOMAIN_AND_WORKFLOWS.md).
+Card Vertex-specific records may live in the shared Satera database without
+transferring card-specific behavior to Core.
+
 Card Vertex at `cardvertex.com` should use Satera Core services/RPCs and the
 product-lens query boundary to see card categories, Card Vertex communities,
 Card Vertex notifications, Card Vertex evaluation cases, and Card Vertex public
@@ -205,8 +212,16 @@ and compatibility surface for existing imports. No runtime behavior changed.
 Future passes may migrate source logic into `packages/satera-core/src`
 gradually. Future product apps should consume Satera Core through that package
 boundary and continue routing mutations through approved Core services/RPCs.
-Card Vertex at `cardvertex.com` should use this shared package when its app root
-is created.
+Card Vertex at `cardvertex.com` should use this shared package when its runnable
+app is created from the placeholder.
+
+`apps/card-vertex` now exists as a documentation-only placeholder for that
+future standalone app root. No runnable Card Vertex app, routes, or UI have
+been created there. The current root `app/` remains the active application,
+and no files were moved from it or from `lib/core`. Turning the placeholder
+into a real app requires intentional workspace and build configuration in a
+later pass. No Vercel/domain configuration or Supabase changes accompany this
+placeholder.
 
 Future product apps may include Card Vertex, Satera, Vertex Pro, and Satera
 Portfolio. Future shared packages may also include `ui` and `config`. Future
@@ -215,9 +230,9 @@ repo, but Vercel configuration has not changed in this pass.
 
 The intended staged roadmap is:
 
-1. Create minimal `apps/card-vertex` root.
+1. Plan workspace/build configuration for real app roots.
 2. Create minimal `apps/satera` root only after deciding its exact role.
-3. Configure Vercel projects and domains later.
+3. Configure real monorepo/workspace tooling later.
 4. Comp/Value Workflow write path.
 5. Card Vertex product shell.
 
