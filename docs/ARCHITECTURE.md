@@ -259,8 +259,16 @@ The Card Vertex product-domain data-model gap assessment is documented in
 The proposed Card Vertex card identity and catalog strategy is documented in
 `docs/products/card-vertex/CARD_IDENTITY_AND_CATALOG_STRATEGY.md`; it treats
 current generic asset family and variant records as temporary infrastructure,
-not the approved sports-card catalog model. The proposed Draft Lot Workspace
-architecture is documented in
+not the approved sports-card catalog model, and treats grade and certification
+as owned-card/evaluation state rather than catalog identity by default. The
+proposed Card Vertex grading workspace and certification lifecycle is
+documented in
+`docs/products/card-vertex/GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md`.
+It translates the Core evaluation/certification lifecycle into Card Vertex
+submission preparation, provider/service language, inventory availability
+behavior, Return Review, certification handling, cost allocation review, and
+explicit basis capitalization decisions without adding product-specific grading
+truth to Core. The proposed Draft Lot Workspace architecture is documented in
 `docs/products/card-vertex/DRAFT_LOT_WORKSPACE_ARCHITECTURE.md`; it keeps
 long-lived incomplete lot preparation in Card Vertex and reserves canonical
 inventory, transaction, ownership, basis, lineage, and audit creation for the

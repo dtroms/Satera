@@ -91,6 +91,14 @@ The current Satera Core foundation includes:
   provisional identity handling, Core commit contract, correction model,
   starting-inventory distinction, current Core mapping, future schema
   requirements, decision matrix, founder decisions, and explicit non-goals.
+- Card Vertex Grading Workspace and Certification Lifecycle documentation
+  defining grading as evaluation/certification state on an owned physical card
+  instance rather than a new catalog identity; documenting grading workspace
+  purpose, submission lifecycle, submission structure, cost/basis/value
+  separation, certification handling, inventory availability behavior, entry
+  points, Return Review, correction rules, Core/Card Vertex ownership mapping,
+  decision matrix, founder decisions, follow-on sequence, and explicit
+  non-goals.
 - Satera Community Core architecture planning under `docs/architecture/`.
 - Vertex Pro cross-product community management planning under `docs/products/vertex-pro/`.
 - Technology roadmap planning for future community media and moderation alignment under `docs/architecture/`.
@@ -129,6 +137,10 @@ The current Satera Core foundation includes:
 - Evaluation results do not update `true_basis` or `current_value`. Evaluation
   costs may increase `true_basis` only through explicit audited basis increase,
   and items with `true_basis = null` reject basis increase for now.
+- The Card Vertex grading contract preserves this Core rule: predicted grading
+  costs, actual grading costs, final grades, and certification numbers never
+  automatically update basis or market value. Any eligible cost capitalization
+  must happen through explicit audited basis increase after Return Review.
 - No Card Vertex community UI, Card Vertex pages, Community Dock, Vertex Pro
   UI, realtime, LiveKit, voice, video, screenshare, uploaded video, media
   processing, grading UI, submission UI, lot purchase UI, bulk import UI,

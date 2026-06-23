@@ -13,6 +13,9 @@ reference infrastructure rather than an approved sports-card catalog model.
 The Draft Lot Workspace architecture and lifecycle is documented in
 [`DRAFT_LOT_WORKSPACE_ARCHITECTURE.md`](DRAFT_LOT_WORKSPACE_ARCHITECTURE.md)
 and is the decision gate before any Draft Lot schema proposal.
+The Grading Workspace and Certification Lifecycle contract is documented in
+[`GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md`](GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md)
+and is the decision gate before any Card Vertex grading schema proposal.
 
 ## Baseline
 
@@ -237,6 +240,12 @@ generalize a concept now.
 - Recommended phase: after grading mapping and identity decisions.
 - Do not build yet: provider integrations, uploads, grading UI, automatic
   basis/value updates.
+
+Detailed lifecycle, return review, correction, availability, certification,
+cost allocation, Core mapping, decision matrix, and founder-review decisions
+are defined in
+[`GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md`](GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md).
+This assessment remains a gap inventory and does not approve schema.
 
 ### 10. Community and Card Sharing
 
@@ -689,10 +698,10 @@ rights, and admin verification criteria.
 ## Part 8 - Recommended Implementation Sequence
 
 1. Documentation / decision work:
-   review and approve the Draft Lot Workspace architecture and lifecycle;
-   define collector profile and Trade Network visibility;
-   define grading workspace product mapping; define comp source/write policy;
-   define first goals/signals/search/dashboard contracts.
+   review and approve the Card Vertex Grading Workspace and Certification
+   Lifecycle; define the Trade Network and logged trade contract; define the
+   collector profile and trust contract; define Goals and Signals; define
+   Search, Dashboard, and comp write-path contracts.
 2. Future schema design:
    only after decisions, propose Card Vertex-specific records for card identity
    gaps, draft lots, collector profiles/Looking For, goals, trade opportunities,
@@ -711,9 +720,9 @@ rights, and admin verification criteria.
    build the real app root and inventory workspace only after workspace/build
    planning and product-domain contracts are approved.
 
-Foundational priority order: approve Draft Lot lifecycle,
-public/private profile and reference visibility, comp write policy, grading
-mapping, then goals/signals/search/dashboard.
+Foundational priority order: approve grading lifecycle, Trade Network/logged
+trade, collector profile/trust, goals/signals, search/dashboard/comp write
+path, MVP product experience, then schema design.
 
 ## Part 9 - Explicit Non-Goals / Do Not Build Yet
 

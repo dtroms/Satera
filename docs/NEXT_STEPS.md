@@ -2,21 +2,25 @@
 
 ## Current Priority
 
-1. Review and approve Draft Lot Workspace Architecture and Lifecycle.
-2. Define Card Vertex collector profile, trust, Goals, Signals, Trade Network,
-   search, dashboard, grading, and comp write-path contracts.
-3. Define Card Vertex MVP Product Experience Specification.
-4. Create a Card Vertex schema-design proposal only after preceding product
+1. Review and approve Card Vertex Grading Workspace and Certification
+   Lifecycle.
+2. Define Card Vertex Trade Network and logged trade contract.
+3. Define Card Vertex collector profile and trust contract.
+4. Define Card Vertex Goals and Signals contract.
+5. Define Card Vertex Search, Dashboard, and comp write-path contract.
+6. Define Card Vertex MVP Product Experience Specification.
+7. Create a Card Vertex schema-design proposal only after preceding product
    decisions are approved.
-5. Plan real workspace/build configuration for `apps/card-vertex`.
-6. Create real Card Vertex app root only after product-domain plan is approved.
-7. Build Card Vertex Inventory Workspace shell.
-8. Add Card Vertex workflows incrementally.
+8. Plan real workspace/build configuration for `apps/card-vertex`.
+9. Create real Card Vertex app root only after product-domain plan is approved.
+10. Build Card Vertex Inventory Workspace shell.
+11. Add Card Vertex workflows incrementally.
 
 Available planning documents:
 
 1. [`CARD_IDENTITY_AND_CATALOG_STRATEGY.md`](products/card-vertex/CARD_IDENTITY_AND_CATALOG_STRATEGY.md)
 2. [`DRAFT_LOT_WORKSPACE_ARCHITECTURE.md`](products/card-vertex/DRAFT_LOT_WORKSPACE_ARCHITECTURE.md)
+3. [`GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md`](products/card-vertex/GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md)
 
 This sequence is a planning gate. Documenting a future capability does not
 authorize implementation, and steps must not be skipped merely because Core
@@ -63,6 +67,9 @@ The proposed Card Vertex identity and catalog strategy is documented in
 [`CARD_IDENTITY_AND_CATALOG_STRATEGY.md`](products/card-vertex/CARD_IDENTITY_AND_CATALOG_STRATEGY.md).
 The proposed Draft Lot Workspace architecture and lifecycle is documented in
 [`DRAFT_LOT_WORKSPACE_ARCHITECTURE.md`](products/card-vertex/DRAFT_LOT_WORKSPACE_ARCHITECTURE.md).
+The proposed Card Vertex grading workspace and certification lifecycle is
+documented in
+[`GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md`](products/card-vertex/GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md).
 
 Satera Evaluation / Certification Lifecycle is now complete as product-neutral
 Core infrastructure. It stores evaluation cases, items, immutable lifecycle

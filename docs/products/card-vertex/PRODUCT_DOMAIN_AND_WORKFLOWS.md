@@ -12,6 +12,8 @@ The proposed card identity and catalog strategy is
 [`CARD_IDENTITY_AND_CATALOG_STRATEGY.md`](CARD_IDENTITY_AND_CATALOG_STRATEGY.md).
 The Draft Lot Workspace architecture and lifecycle is
 [`DRAFT_LOT_WORKSPACE_ARCHITECTURE.md`](DRAFT_LOT_WORKSPACE_ARCHITECTURE.md).
+The Grading Workspace and Certification Lifecycle contract is
+[`GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md`](GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md).
 
 ## Product Domain Principle
 
@@ -180,6 +182,14 @@ goals. A grading result does not automatically change basis or market value.
 The product workflow should translate the existing lifecycle rather than fork
 it. Provider integrations, submission packages, uploads, and Card Vertex UI are
 not part of the current state.
+
+The approved grading contract is documented in
+[`GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md`](GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md).
+It defines grading as evaluation/certification state on an owned physical card,
+not a new catalog card; requires Return Review before completion; keeps cards
+visible as inventory but operationally unavailable while grading; preserves
+grade/certification history; and keeps grading costs, basis capitalization,
+and market value interpretation separate.
 
 ## Signals and Notifications
 

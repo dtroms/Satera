@@ -63,6 +63,12 @@ The existing Satera Core lot-purchase RPC is the final commit mechanism. Draft
 Lots must not redesign, replace, weaken, duplicate, or bypass that Core
 capability.
 
+After cards become owned inventory, they may later enter the separate Card
+Vertex Grading Workspace. Grading is evaluation/certification state on owned
+physical cards, not a Draft Lot extension and not a new catalog identity. That
+separate lifecycle is documented in
+[`GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md`](GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md).
+
 ## Intended Collector Workflows
 
 ### Card Show / Convention Purchase
