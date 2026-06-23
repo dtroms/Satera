@@ -68,6 +68,10 @@ Vertex Grading Workspace. Grading is evaluation/certification state on owned
 physical cards, not a Draft Lot extension and not a new catalog identity. That
 separate lifecycle is documented in
 [`GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md`](GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md).
+After owned cards are intentionally made trade-visible, they may later appear
+as safe public trade references in the separate Trade Network. That trade
+contract is documented in
+[`TRADE_NETWORK_AND_LOGGED_TRADE_CONTRACT.md`](TRADE_NETWORK_AND_LOGGED_TRADE_CONTRACT.md).
 
 ## Intended Collector Workflows
 
@@ -570,6 +574,8 @@ Before any schema proposal, decide:
 - Starting Inventory Workspace relationship to Draft Lot primitives.
 - Public reference and comp restrictions for provisional or recently corrected
   identities.
+- Trade Network eligibility and public trade reference behavior for committed
+  owned cards.
 
 ## Decision Matrix
 

@@ -273,3 +273,9 @@ truth to Core. The proposed Draft Lot Workspace architecture is documented in
 long-lived incomplete lot preparation in Card Vertex and reserves canonical
 inventory, transaction, ownership, basis, lineage, and audit creation for the
 existing Satera Core lot-purchase RPC at explicit commit.
+The proposed Card Vertex Trade Network and Logged Trade contract is documented
+in `docs/products/card-vertex/TRADE_NETWORK_AND_LOGGED_TRADE_CONTRACT.md`;
+it keeps trade discovery, availability intent, Looking For, interest,
+conversation, private negotiation, and collector-facing review in Card Vertex
+while reserving completed ownership, basis, lineage, and audit truth for the
+existing Satera Core trade transaction.

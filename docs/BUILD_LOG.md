@@ -99,6 +99,14 @@ The current Satera Core foundation includes:
   points, Return Review, correction rules, Core/Card Vertex ownership mapping,
   decision matrix, founder decisions, follow-on sequence, and explicit
   non-goals.
+- Card Vertex Trade Network and Logged Trade Contract documentation defining
+  Trade Network as relationship-first collector opportunity discovery rather
+  than a marketplace, auction, public inventory browser, or binding proposal
+  engine; documenting safe public trade references, availability intent,
+  Looking For, interest, conversation, private negotiation boundaries,
+  logged-trade workflow and lifecycle, Core/Card Vertex ownership boundaries,
+  current Core mapping, decision matrix, founder decisions, follow-on sequence,
+  and explicit non-goals.
 - Satera Community Core architecture planning under `docs/architecture/`.
 - Vertex Pro cross-product community management planning under `docs/products/vertex-pro/`.
 - Technology roadmap planning for future community media and moderation alignment under `docs/architecture/`.

@@ -16,6 +16,11 @@ and is the decision gate before any Draft Lot schema proposal.
 The Grading Workspace and Certification Lifecycle contract is documented in
 [`GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md`](GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md)
 and is the decision gate before any Card Vertex grading schema proposal.
+The Trade Network and Logged Trade contract is documented in
+[`TRADE_NETWORK_AND_LOGGED_TRADE_CONTRACT.md`](TRADE_NETWORK_AND_LOGGED_TRADE_CONTRACT.md)
+and is the decision gate before any Card Vertex trade discovery, Looking For,
+interest, conversation, trust-presentation, or logged-trade draft schema
+proposal.
 
 ## Baseline
 
@@ -177,6 +182,10 @@ generalize a concept now.
 - Recommended phase: after public profile and trust contracts.
 - Do not build yet: formal trade proposals, escrow, disputes, or automatic
   trade completion.
+
+The detailed Trade Network and Logged Trade contract is now defined in
+[`TRADE_NETWORK_AND_LOGGED_TRADE_CONTRACT.md`](TRADE_NETWORK_AND_LOGGED_TRADE_CONTRACT.md).
+This assessment remains a gap inventory and does not approve schema.
 
 ### 7. Sale Intent and Sale Recording
 
@@ -698,10 +707,9 @@ rights, and admin verification criteria.
 ## Part 8 - Recommended Implementation Sequence
 
 1. Documentation / decision work:
-   review and approve the Card Vertex Grading Workspace and Certification
-   Lifecycle; define the Trade Network and logged trade contract; define the
-   collector profile and trust contract; define Goals and Signals; define
-   Search, Dashboard, and comp write-path contracts.
+   review and approve the Card Vertex Trade Network and Logged Trade Contract;
+   define the collector profile and trust contract; define Goals and Signals;
+   define Search, Dashboard, and comp write-path contracts.
 2. Future schema design:
    only after decisions, propose Card Vertex-specific records for card identity
    gaps, draft lots, collector profiles/Looking For, goals, trade opportunities,
@@ -720,9 +728,9 @@ rights, and admin verification criteria.
    build the real app root and inventory workspace only after workspace/build
    planning and product-domain contracts are approved.
 
-Foundational priority order: approve grading lifecycle, Trade Network/logged
-trade, collector profile/trust, goals/signals, search/dashboard/comp write
-path, MVP product experience, then schema design.
+Foundational priority order: approve Trade Network/logged trade, collector
+profile/trust, goals/signals, search/dashboard/comp write path, MVP product
+experience, then schema design.
 
 ## Part 9 - Explicit Non-Goals / Do Not Build Yet
 

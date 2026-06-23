@@ -496,6 +496,8 @@ until a precise Core guarantee is required.
 - Correction and exception taxonomy.
 - Evidence/image handling policy.
 - Public reference behavior for graded cards.
+- Trade Network behavior for cards that are unavailable because they are in
+  active grading.
 
 No exact SQL, table definitions, column types, migration names, or RPC names
 are proposed here.
@@ -543,19 +545,17 @@ are proposed here.
 
 ## Follow-On Sequence
 
-1. Review and approve Card Vertex Grading Workspace and Certification
-   Lifecycle.
-2. Define Card Vertex Trade Network and logged trade contract.
-3. Define Card Vertex collector profile and trust contract.
-4. Define Card Vertex Goals and Signals contract.
-5. Define Card Vertex Search, Dashboard, and comp write-path contract.
-6. Define Card Vertex MVP Product Experience Specification.
-7. Create a Card Vertex schema-design proposal only after preceding product
+1. Review and approve Card Vertex Trade Network and Logged Trade Contract.
+2. Define Card Vertex collector profile and trust contract.
+3. Define Card Vertex Goals and Signals contract.
+4. Define Card Vertex Search, Dashboard, and comp write-path contract.
+5. Define Card Vertex MVP Product Experience Specification.
+6. Create a Card Vertex schema-design proposal only after preceding product
    decisions are approved.
-8. Plan real workspace/build configuration for `apps/card-vertex`.
-9. Create real Card Vertex app root only after product-domain plan is approved.
-10. Build Card Vertex Inventory Workspace shell.
-11. Add Card Vertex workflows incrementally.
+7. Plan real workspace/build configuration for `apps/card-vertex`.
+8. Create real Card Vertex app root only after product-domain plan is approved.
+9. Build Card Vertex Inventory Workspace shell.
+10. Add Card Vertex workflows incrementally.
 
 ## Do Not Build Yet
 

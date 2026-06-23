@@ -239,6 +239,11 @@ The Grading Workspace and Certification Lifecycle contract defines how grading
 submissions, grades, certification numbers, reholder/crossover/resubmission
 history, Return Review, and grading costs remain owned-card/evaluation state:
 [`GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md`](GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md).
+The Trade Network and Logged Trade contract defines how public trade
+references may expose only safe, intentional card identity and availability
+context while private inventory identity, basis, transaction history, notes,
+and strategy remain protected:
+[`TRADE_NETWORK_AND_LOGGED_TRADE_CONTRACT.md`](TRADE_NETWORK_AND_LOGGED_TRADE_CONTRACT.md).
 
 Private provisional identity may be appropriate when the collector needs to
 track a physical item privately before review but the identity is not ready for
@@ -447,20 +452,18 @@ table names.
 
 ## Follow-On Sequence
 
-1. Review and approve Card Vertex Grading Workspace and Certification
-   Lifecycle.
-2. Define Card Vertex Trade Network and logged trade contract.
-3. Define Card Vertex collector profile and trust contract.
-4. Define Card Vertex Goals and Signals contract.
-5. Define Card Vertex Search, Dashboard, and comp write-path contract.
-6. Define Card Vertex MVP Product Experience Specification.
-7. Create a Card Vertex schema-design proposal only after the preceding
+1. Review and approve Card Vertex Trade Network and Logged Trade Contract.
+2. Define Card Vertex collector profile and trust contract.
+3. Define Card Vertex Goals and Signals contract.
+4. Define Card Vertex Search, Dashboard, and comp write-path contract.
+5. Define Card Vertex MVP Product Experience Specification.
+6. Create a Card Vertex schema-design proposal only after the preceding
    decisions are approved.
-8. Plan real workspace/build configuration for `apps/card-vertex`.
-9. Create a real Card Vertex app root only after the product-domain plan is
+7. Plan real workspace/build configuration for `apps/card-vertex`.
+8. Create a real Card Vertex app root only after the product-domain plan is
    approved.
-10. Build Card Vertex Inventory Workspace shell.
-11. Add Card Vertex workflows incrementally.
+9. Build Card Vertex Inventory Workspace shell.
+10. Add Card Vertex workflows incrementally.
 
 ## Do Not Build Yet
 

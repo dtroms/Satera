@@ -14,6 +14,8 @@ The Draft Lot Workspace architecture and lifecycle is
 [`DRAFT_LOT_WORKSPACE_ARCHITECTURE.md`](DRAFT_LOT_WORKSPACE_ARCHITECTURE.md).
 The Grading Workspace and Certification Lifecycle contract is
 [`GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md`](GRADING_WORKSPACE_AND_CERTIFICATION_LIFECYCLE.md).
+The Trade Network and Logged Trade contract is
+[`TRADE_NETWORK_AND_LOGGED_TRADE_CONTRACT.md`](TRADE_NETWORK_AND_LOGGED_TRADE_CONTRACT.md).
 
 ## Product Domain Principle
 
@@ -88,6 +90,15 @@ and Trade Center Sheet behavior.
 The Trade Center Sheet records a completed trade; it is not the first version
 of a negotiation engine. Completion must invoke the approved Satera trade
 transaction mechanism rather than reconstructing basis in product code.
+
+The approved Trade Network and Logged Trade contract is documented in
+[`TRADE_NETWORK_AND_LOGGED_TRADE_CONTRACT.md`](TRADE_NETWORK_AND_LOGGED_TRADE_CONTRACT.md).
+It defines Trade Network as relationship-first collector opportunity discovery
+rather than a marketplace, auction, public inventory browser, or binding
+proposal engine. It also defines public trade references as safe projections,
+availability intent as non-binding, interest and conversation as non-binding
+MVP behavior, and Logged Trade as the only path that creates completed
+ownership and basis truth.
 
 ## Sale Intent and Sale Truth
 
