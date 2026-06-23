@@ -8,6 +8,8 @@ The ownership baseline is
 [`SATERA_CARD_VERTEX_OWNERSHIP.md`](../../architecture/SATERA_CARD_VERTEX_OWNERSHIP.md).
 The current data-model gap assessment is
 [`PRODUCT_DOMAIN_DATA_MODEL_GAP_ASSESSMENT.md`](PRODUCT_DOMAIN_DATA_MODEL_GAP_ASSESSMENT.md).
+The proposed card identity and catalog strategy is
+[`CARD_IDENTITY_AND_CATALOG_STRATEGY.md`](CARD_IDENTITY_AND_CATALOG_STRATEGY.md).
 
 ## Product Domain Principle
 
@@ -248,6 +250,12 @@ Card Vertex owns interpretation of players, teams, sets, parallels,
 serial-number semantics, grading presentation, and card-market matching. Satera
 owns canonical inventory association, access, durable evidence, and the strict
 separation between value evidence and financial basis.
+
+Card identity should follow the four-layer strategy: Catalog Card Identity,
+Owned Card Instance, Evaluation / Certification State, and Public Card
+Reference. Grade and certification should not create a new catalog-card
+identity by default, exact serial number belongs to the owned physical copy,
+and safe public display must be mediated through public object references.
 
 Card Vertex market/comps behavior should explain evidence, matching rationale,
 recency, source, grade/parallel context, inclusion or exclusion, and confidence.

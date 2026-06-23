@@ -2,12 +2,13 @@
 
 ## Current Priority
 
-1. Review and approve the Card Vertex product-domain data-model gap assessment.
-2. Decide Card Identity and Card Catalog strategy.
-3. Define Draft Lot Workspace architecture and lifecycle.
-4. Define Card Vertex collector profile, trust, Goals, Signals, Trade Network,
+1. Review and approve the Card Identity and Card Catalog Strategy.
+2. Define Draft Lot Workspace architecture and lifecycle.
+3. Define Card Vertex collector profile, trust, Goals, Signals, Trade Network,
    search, dashboard, grading, and comp write-path contracts.
-5. Define Card Vertex MVP Product Experience Specification.
+4. Define Card Vertex MVP Product Experience Specification.
+5. Create a Card Vertex schema-design proposal only after the preceding
+   decisions are approved.
 6. Plan real workspace/build configuration for `apps/card-vertex`.
 7. Create the real Card Vertex app root only after the product-domain plan is
    approved.
@@ -55,6 +56,8 @@ with Card Vertex workflow distinctions in
 The current Card Vertex product-domain data-model gap assessment is documented
 in
 [`PRODUCT_DOMAIN_DATA_MODEL_GAP_ASSESSMENT.md`](products/card-vertex/PRODUCT_DOMAIN_DATA_MODEL_GAP_ASSESSMENT.md).
+The proposed Card Vertex identity and catalog strategy is documented in
+[`CARD_IDENTITY_AND_CATALOG_STRATEGY.md`](products/card-vertex/CARD_IDENTITY_AND_CATALOG_STRATEGY.md).
 
 Satera Evaluation / Certification Lifecycle is now complete as product-neutral
 Core infrastructure. It stores evaluation cases, items, immutable lifecycle

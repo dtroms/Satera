@@ -256,3 +256,7 @@ cross-product community management planning is documented in
 `docs/products/vertex-pro/CROSS_PRODUCT_COMMUNITY_MANAGEMENT.md`.
 The Card Vertex product-domain data-model gap assessment is documented in
 `docs/products/card-vertex/PRODUCT_DOMAIN_DATA_MODEL_GAP_ASSESSMENT.md`.
+The proposed Card Vertex card identity and catalog strategy is documented in
+`docs/products/card-vertex/CARD_IDENTITY_AND_CATALOG_STRATEGY.md`; it treats
+the current generic `asset_families` and `asset_variants` records as useful
+Core reference infrastructure, not as the approved sports-card catalog design.

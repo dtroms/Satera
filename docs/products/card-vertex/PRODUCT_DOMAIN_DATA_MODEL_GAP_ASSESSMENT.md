@@ -5,6 +5,12 @@ Satera Core schema, RPCs, service layer, and architecture documentation. It is
 documentation only. It does not authorize migrations, RPCs, routes, UI, service
 work, provider integrations, or build configuration.
 
+The proposed Card Vertex card identity and catalog strategy is documented in
+[`CARD_IDENTITY_AND_CATALOG_STRATEGY.md`](CARD_IDENTITY_AND_CATALOG_STRATEGY.md).
+That strategy is the decision gate before schema design and treats current
+generic `asset_families` and `asset_variants` as temporary/generic Core
+reference infrastructure rather than an approved sports-card catalog model.
+
 ## Baseline
 
 Satera Core owns canonical truth, privacy, access, audit, reusable primitives,

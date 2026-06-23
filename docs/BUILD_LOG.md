@@ -79,6 +79,11 @@ The current Satera Core foundation includes:
   Core capabilities, immediate consumption paths, missing Card Vertex-specific
   records/contracts, future-work boundaries, and product decisions required
   before proposing migrations.
+- Card Vertex card identity and catalog strategy documentation defining the
+  proposed separation between catalog card identity, owned physical copies,
+  evaluation/certification state, and public card references; catalog hierarchy;
+  source strategy; provisional intake; aliases; image provenance; current Core
+  mapping; decision matrix; and founder-review decisions.
 - Satera Community Core architecture planning under `docs/architecture/`.
 - Vertex Pro cross-product community management planning under `docs/products/vertex-pro/`.
 - Technology roadmap planning for future community media and moderation alignment under `docs/architecture/`.
