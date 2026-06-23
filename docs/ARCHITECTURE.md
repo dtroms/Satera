@@ -258,5 +258,10 @@ The Card Vertex product-domain data-model gap assessment is documented in
 `docs/products/card-vertex/PRODUCT_DOMAIN_DATA_MODEL_GAP_ASSESSMENT.md`.
 The proposed Card Vertex card identity and catalog strategy is documented in
 `docs/products/card-vertex/CARD_IDENTITY_AND_CATALOG_STRATEGY.md`; it treats
-the current generic `asset_families` and `asset_variants` records as useful
-Core reference infrastructure, not as the approved sports-card catalog design.
+current generic asset family and variant records as temporary infrastructure,
+not the approved sports-card catalog model. The proposed Draft Lot Workspace
+architecture is documented in
+`docs/products/card-vertex/DRAFT_LOT_WORKSPACE_ARCHITECTURE.md`; it keeps
+long-lived incomplete lot preparation in Card Vertex and reserves canonical
+inventory, transaction, ownership, basis, lineage, and audit creation for the
+existing Satera Core lot-purchase RPC at explicit commit.

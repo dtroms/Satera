@@ -10,6 +10,8 @@ The current data-model gap assessment is
 [`PRODUCT_DOMAIN_DATA_MODEL_GAP_ASSESSMENT.md`](PRODUCT_DOMAIN_DATA_MODEL_GAP_ASSESSMENT.md).
 The proposed card identity and catalog strategy is
 [`CARD_IDENTITY_AND_CATALOG_STRATEGY.md`](CARD_IDENTITY_AND_CATALOG_STRATEGY.md).
+The Draft Lot Workspace architecture and lifecycle is
+[`DRAFT_LOT_WORKSPACE_ARCHITECTURE.md`](DRAFT_LOT_WORKSPACE_ARCHITECTURE.md).
 
 ## Product Domain Principle
 
@@ -158,6 +160,11 @@ Card Vertex Draft Lot Workspace
 The Draft Lot Workspace lifecycle, persistence needs, permissions, deletion
 semantics, and commit contract must be designed before schema is proposed. Do
 not modify the existing final commit mechanism merely to represent draft work.
+That architecture is now defined in
+[`DRAFT_LOT_WORKSPACE_ARCHITECTURE.md`](DRAFT_LOT_WORKSPACE_ARCHITECTURE.md):
+Draft Lots are reversible Card Vertex preparation workspaces, not inventory,
+transactions, or final accounting records; commit is the only boundary where
+Satera Core truth is created.
 
 ## Grading and Evaluation
 

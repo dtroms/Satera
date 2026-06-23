@@ -10,6 +10,9 @@ The proposed Card Vertex card identity and catalog strategy is documented in
 That strategy is the decision gate before schema design and treats current
 generic `asset_families` and `asset_variants` as temporary/generic Core
 reference infrastructure rather than an approved sports-card catalog model.
+The Draft Lot Workspace architecture and lifecycle is documented in
+[`DRAFT_LOT_WORKSPACE_ARCHITECTURE.md`](DRAFT_LOT_WORKSPACE_ARCHITECTURE.md)
+and is the decision gate before any Draft Lot schema proposal.
 
 ## Baseline
 
@@ -506,6 +509,12 @@ and audit truth.
 
 No migration design is proposed here.
 
+The detailed Draft Lot lifecycle, allocation behavior, provisional identity
+policy, commit contract, correction model, starting-inventory distinction,
+decision matrix, and founder decisions are now defined in
+[`DRAFT_LOT_WORKSPACE_ARCHITECTURE.md`](DRAFT_LOT_WORKSPACE_ARCHITECTURE.md).
+This assessment remains a gap inventory and does not approve schema.
+
 ## Part 5 - Grading Workspace Mapping
 
 | Workflow element | Current support | Gap / ownership |
@@ -680,8 +689,8 @@ rights, and admin verification criteria.
 ## Part 8 - Recommended Implementation Sequence
 
 1. Documentation / decision work:
-   finalize card identity and catalog strategy; define Draft Lot lifecycle and
-   commit contract; define collector profile and Trade Network visibility;
+   review and approve the Draft Lot Workspace architecture and lifecycle;
+   define collector profile and Trade Network visibility;
    define grading workspace product mapping; define comp source/write policy;
    define first goals/signals/search/dashboard contracts.
 2. Future schema design:
@@ -702,7 +711,7 @@ rights, and admin verification criteria.
    build the real app root and inventory workspace only after workspace/build
    planning and product-domain contracts are approved.
 
-Foundational priority order: card identity strategy, Draft Lot lifecycle,
+Foundational priority order: approve Draft Lot lifecycle,
 public/private profile and reference visibility, comp write policy, grading
 mapping, then goals/signals/search/dashboard.
 

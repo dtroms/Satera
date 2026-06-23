@@ -84,6 +84,13 @@ The current Satera Core foundation includes:
   evaluation/certification state, and public card references; catalog hierarchy;
   source strategy; provisional intake; aliases; image provenance; current Core
   mapping; decision matrix; and founder-review decisions.
+- Card Vertex Draft Lot Workspace architecture and lifecycle documentation
+  defining Draft Lots as reversible Card Vertex preparation workspaces rather
+  than inventory, transactions, or accounting records; documenting collector
+  workflows, lifecycle states, information architecture, allocation behavior,
+  provisional identity handling, Core commit contract, correction model,
+  starting-inventory distinction, current Core mapping, future schema
+  requirements, decision matrix, founder decisions, and explicit non-goals.
 - Satera Community Core architecture planning under `docs/architecture/`.
 - Vertex Pro cross-product community management planning under `docs/products/vertex-pro/`.
 - Technology roadmap planning for future community media and moderation alignment under `docs/architecture/`.
@@ -132,7 +139,8 @@ The current Satera Core foundation includes:
   advanced moderation automation has been built.
 - The existing Lot Purchase Transaction RPC remains the correct final Commit
   Lot truth mechanism. A long-lived Card Vertex Draft Lot Workspace above it is
-  an identified architecture gap and has not been implemented.
+  now documented as an approved planning architecture, but has not been
+  implemented.
 - No runnable app roots, separate Card Vertex deployment, Card Vertex
   Vercel/domain configuration, separate Card Vertex database, or separate Card
   Vertex Supabase project have been created. No Supabase files, workspace/build

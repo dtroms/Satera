@@ -232,6 +232,10 @@ Draft-only data may include raw notes, quick photos, uncertain player/set
 guesses, dealer/show context, unresolved groups, allocation working notes, and
 cards not yet split from a bulk lot.
 
+The Draft Lot Workspace architecture defines how those incomplete intake
+records move through identity review and final commit:
+[`DRAFT_LOT_WORKSPACE_ARCHITECTURE.md`](DRAFT_LOT_WORKSPACE_ARCHITECTURE.md).
+
 Private provisional identity may be appropriate when the collector needs to
 track a physical item privately before review but the identity is not ready for
 shared catalog use.
@@ -439,18 +443,17 @@ table names.
 
 ## Follow-On Sequence
 
-1. Review and approve this Card Identity and Card Catalog Strategy.
-2. Define Draft Lot Workspace architecture and lifecycle.
-3. Define Card Vertex collector profile, trust, Goals, Signals, Trade Network,
+1. Review and approve Draft Lot Workspace Architecture and Lifecycle.
+2. Define Card Vertex collector profile, trust, Goals, Signals, Trade Network,
    search, dashboard, grading, and comp write-path contracts.
-4. Define Card Vertex MVP Product Experience Specification.
-5. Create a Card Vertex schema-design proposal only after the preceding
+3. Define Card Vertex MVP Product Experience Specification.
+4. Create a Card Vertex schema-design proposal only after the preceding
    decisions are approved.
-6. Plan real workspace/build configuration for `apps/card-vertex`.
-7. Create a real Card Vertex app root only after the product-domain plan is
+5. Plan real workspace/build configuration for `apps/card-vertex`.
+6. Create a real Card Vertex app root only after the product-domain plan is
    approved.
-8. Build Card Vertex Inventory Workspace shell.
-9. Add Card Vertex workflows incrementally.
+7. Build Card Vertex Inventory Workspace shell.
+8. Add Card Vertex workflows incrementally.
 
 ## Do Not Build Yet
 
